@@ -1,0 +1,7 @@
+{
+  "name": "new",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node ../../bin/index.js"
+  }
+}

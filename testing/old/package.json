@@ -12,6 +12,7 @@
 	},
 	"scripts": {
 		"build": "npm run copy-sources && npm run copy-assets && liferay-npm-bundler",
+		"deploy": "npm run build && lnbs-deploy",
 		"copy-assets": "lnbs-copy-assets",
 		"start": "lnbs-start",
 		"copy-sources": "lnbs-copy-sources"
