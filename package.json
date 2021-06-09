@@ -5,6 +5,7 @@
     "liferay-npm-bundler-improved": "bin/index.js"
   },
   "dependencies": {
+    "jszip": "^3.6.0",
     "rollup": "^2.51.1"
   },
   "devDependencies": {
