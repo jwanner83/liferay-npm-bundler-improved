@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: New Vue
+Bundle-SymbolicName: new-vue
+Bundle-Version: 1.0.0
+Provide-Capability: osgi.webresource;osgi.webresource=old;version:Version="1.0.0"
+Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"
+Tool: liferay-npm-bundler-2.25.0
+Web-ContextPath: /new-vue

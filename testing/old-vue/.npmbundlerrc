@@ -1,0 +1,11 @@
+{
+	"create-jar": {
+		"output-dir": "dist",
+		"features": {
+			"js-extender": true,
+			"web-context": "/jspdf-portlet",
+			"localization": "features/localization/Language",
+			"configuration": "features/configuration.json"
+		}
+	}
+}

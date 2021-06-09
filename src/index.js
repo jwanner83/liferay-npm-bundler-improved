@@ -1,7 +1,18 @@
 #!/usr/bin/env node
 
+const loadConfigFile = require('rollup/dist/loadConfigFile');
+const path = require('path');
 const rollup = require('rollup').rollup
 const JSZip = require('jszip')
+const vuePlugin = require('rollup-plugin-vue')
+const nodeResolve = require('@rollup/plugin-node-resolve')
+const commonjs = require('@rollup/plugin-commonjs')
+
+import { promisify } from 'util'
+import { readFile } from 'fs'
+
+const readFilePromisified = promisify(readFile)
+
 import { saveAsZip } from './save'
 import { getJavaScript, getManifestJSON, getManifestMF } from './create'
 
@@ -56,21 +67,15 @@ async function build() {
   console.log(`build finished`)
 }
 
-const inputOptions = {
-  input: 'src/index.js'
-}
-const outputOptions = {
-  format: 'cjs',
-  strict: false
-}
-
 export async function bundle () {
-  const bundle = await rollup(inputOptions)
-  const { output } = await bundle.generate(outputOptions)
-  const code = output[0].code
+  const { options, warnings } = await loadConfigFile(process.cwd() + '/rollup.config.js')
+
+  const bundle = await rollup(options[0])
+
+  await bundle.write(options[0].output[0])
   await bundle.close()
 
-  return code
+  return await readFilePromisified('dist/index.js')
 }
 
 build();
