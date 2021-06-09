@@ -143,6 +143,7 @@ export default class Bundler {
       Log.write(Log.chalk.green(`successfully deployed ${this.name} to ${destination}`))
     } catch (exception) {
       Log.write(Log.chalk.red(`failed to deploy ${this.name} to ${destination}, ${exception.message}`))
+      throw exception
     }
   }
 }

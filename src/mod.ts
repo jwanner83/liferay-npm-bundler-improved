@@ -12,31 +12,36 @@ async function initialization () {
 
   const bundler: Bundler = new Bundler()
 
-  Log.write('\npreparation')
-  await bundler.loadRollupConfiguration()
+  try {
 
-  Log.write('\nbundle code with rollup')
-  await bundler.bundle()
+    Log.write('\npreparation')
+    await bundler.loadRollupConfiguration()
 
-  Log.write('\nwrap liferay code into the Liferay.Loader')
-  await bundler.wrap()
+    Log.write('\nbundle code with rollup')
+    await bundler.bundle()
 
-  Log.write('\ncreate and save jar')
-  await bundler.create()
+    Log.write('\nwrap liferay code into the Liferay.Loader')
+    await bundler.wrap()
 
-  const arg: any = yargs(process.argv.slice(2)).options({
-    deploy: {
-      alias: 'd',
-      type: 'string'
+    Log.write('\ncreate and save jar')
+    await bundler.create()
+
+    const arg: any = yargs(process.argv.slice(2)).options({
+      deploy: {
+        alias: 'd',
+        type: 'string'
+      }
+    }).argv
+
+    if (arg.deploy) {
+      Log.write('\nadditional: deploying')
+      await bundler.deploy(arg.deploy)
     }
-  }).argv
 
-  if (arg.deploy) {
-    Log.write('\nadditional: deploying')
-    await bundler.deploy(arg.deploy)
+    Log.write(Log.chalk.bgGreen(`\nbundler finished successfully`), Log.chalk.bgBlack(`took ${(new Date().getTime() - start.getTime()) / 1000 }s`))
+  } catch (exception) {
+    Log.write(Log.chalk.bgRed(`\nbundler finished with an error`), Log.chalk.bgBlack(`took ${(new Date().getTime() - start.getTime()) / 1000 }s`))
   }
-
-  Log.write(Log.chalk.bgGreen(`\nbundler finished successfully`), Log.chalk.bgBlack(`took ${(new Date().getTime() - start.getTime()) / 1000 }s`))
 }
 
 initialization()
