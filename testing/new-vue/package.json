@@ -3,8 +3,8 @@
   "description": "New Vue",
   "version": "1.0.0",
   "scripts": {
-    "build": "node ../../bin/index.js",
-    "deploy": "node ../../bin/index.js"
+    "index": "node ../../bin/index.js",
+    "bundler": "node ../../bin/bundler.js"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",
