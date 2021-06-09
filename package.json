@@ -11,8 +11,10 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
+    "ora": "^5.4.1",
     "rollup": "^2.51.1",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
     "yargs": "^17.0.1"
