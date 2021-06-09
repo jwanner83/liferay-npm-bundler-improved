@@ -4,7 +4,7 @@ import Bundler from './Bundler'
 import Log from './Log'
 
 async function initialization () {
-  const start = new Date()
+  const start: Date = new Date()
 
   Log.write(Log.chalk.blue('liferay-npm-bundler-improved'), Log.chalk.bgRed('unstable'))
   Log.write(Log.chalk.gray('this is a very experimental npm-bundler which takes a javascript portlet, bundles it with rollup and creates a jar file which then can be deployed to a liferay instance.'))

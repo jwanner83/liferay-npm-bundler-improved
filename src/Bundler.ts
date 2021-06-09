@@ -96,7 +96,7 @@ export default class Bundler {
   }
 
   public wrap = async () => {
-    let start: Date = new Date()
+    const start: Date = new Date()
 
     const bundled = await readFilePromisified('dist/index.js')
     this.setWrapped(bundled)
@@ -105,7 +105,7 @@ export default class Bundler {
   }
 
   public create = async () => {
-    let start: Date = new Date()
+    const start: Date = new Date()
     const spinner = ora({
       text: Log.chalk.gray('create jar structure\n'),
       color: 'gray'
