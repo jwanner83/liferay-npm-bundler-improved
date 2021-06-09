@@ -14,6 +14,7 @@ export default class Configuration {
   public setConfigurationFromFile = (options: Array<any>): void => {
     if (Array.isArray(options) && options.length > 0) {
       this.complete = options[0]
+      this.inputConfiguration = this.complete
 
       if (Array.isArray(this.complete.output) && this.complete.output.length > 0) {
         this.outputConfiguration = this.complete.output[0]
