@@ -6,9 +6,7 @@
   },
   "dependencies": {
     "jszip": "^3.6.0",
-    "rollup": "^2.51.1",
-    "rollup-plugin-vue": "^4.0.0",
-    "vue-template-compiler": "^2.6.14"
+    "rollup": "^2.51.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",

@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 
 const loadConfigFile = require('rollup/dist/loadConfigFile');
-const path = require('path');
 const rollup = require('rollup').rollup
 const JSZip = require('jszip')
-const vuePlugin = require('rollup-plugin-vue')
-const nodeResolve = require('@rollup/plugin-node-resolve')
-const commonjs = require('@rollup/plugin-commonjs')
 
 import { promisify } from 'util'
 import { readFile } from 'fs'
