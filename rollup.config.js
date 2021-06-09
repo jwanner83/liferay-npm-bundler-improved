@@ -1,6 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript'
+import json from '@rollup/plugin-json'
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
 
 export default [
@@ -23,8 +24,11 @@ export default [
     input: 'src/new/mod.ts',
     plugins: [
       preserveShebangs(),
-      resolve(),
+      resolve({
+        preferBuiltins: true
+      }),
       commonjs(),
+      json(),
       typescript()
     ],
     output: [
