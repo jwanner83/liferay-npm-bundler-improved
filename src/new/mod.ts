@@ -9,11 +9,14 @@ async function initialization () {
 
   const bundler: Bundler = new Bundler()
 
-  Log.write('\nloading custom rollup configuration')
-  await bundler.loadRollupConfiguration();
+  Log.write('\npreparation')
+  await bundler.loadRollupConfiguration()
 
-  Log.write('\nstarting to bundle the code')
-  await bundler.bundle();
+  Log.write('\nbundle code with rollup')
+  await bundler.bundle()
+
+  Log.write('\nwrap liferay code into the Liferay.Loader')
+  await bundler.wrap()
 }
 
 initialization()
