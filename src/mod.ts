@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+const yargs = require('yargs')
 
-import Bundler from './Bundler'
-import Log from './Log'
+import Bundler from './classes/Bundler'
+import Log from './classes/Log'
 
 async function initialization () {
   const start: Date = new Date()
@@ -22,6 +23,18 @@ async function initialization () {
 
   Log.write('\ncreate and save jar')
   await bundler.create()
+
+  const arg: any = yargs(process.argv.slice(2)).options({
+    deploy: {
+      alias: 'd',
+      type: 'string'
+    }
+  }).argv
+
+  if (arg.deploy) {
+    Log.write('\nadditional: deploying')
+    await bundler.deploy(arg.deploy)
+  }
 
   Log.write(Log.chalk.bgGreen(`\nbundler finished successfully`), Log.chalk.bgBlack(`took ${(new Date().getTime() - start.getTime()) / 1000 }s`))
 }

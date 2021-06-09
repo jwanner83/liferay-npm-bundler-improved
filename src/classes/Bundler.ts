@@ -2,15 +2,17 @@ const rollup = require('rollup').rollup
 const loadConfigFile = require('rollup/dist/loadConfigFile')
 const ora = require('ora')
 const JSZip = require('jszip')
+const path = require('path')
 
 // the package json of the portlet
 const pack = require(process.cwd() + '/package.json')
 
 import { promisify } from 'util'
-import { readFile, writeFile } from 'fs'
+import { readFile, writeFile, copyFile } from 'fs'
 
 const readFilePromisified = promisify(readFile)
 const writeFilePromisified = promisify(writeFile)
+const copyFilePromisified = promisify(copyFile)
 
 
 import Configuration from './Configuration'
@@ -18,6 +20,9 @@ import Log from './Log'
 
 export default class Bundler {
   private configuration: Configuration = new Configuration()
+
+  private name: string = `${pack.name}-${pack.version}.jar`
+
   private wrapped: string = ''
 
   private manifestMF: string =
@@ -126,9 +131,18 @@ export default class Bundler {
     const content = await zip.generateAsync({
       type: 'nodebuffer'
     })
-    await writeFilePromisified(`dist/${pack.name}-${pack.version}.jar`, content)
+    await writeFilePromisified(`dist/${this.name}`, content)
 
     spinner.stop()
     Log.write(Log.chalk.green(`created and saved jar file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+  }
+
+  public deploy = async (destination) => {
+    try {
+      await copyFilePromisified(`dist/${this.name}`, path.join(destination, this.name))
+      Log.write(Log.chalk.green(`successfully deployed ${this.name} to ${destination}`))
+    } catch (exception) {
+      Log.write(Log.chalk.red(`failed to deploy ${this.name} to ${destination}, ${exception.message}`))
+    }
   }
 }

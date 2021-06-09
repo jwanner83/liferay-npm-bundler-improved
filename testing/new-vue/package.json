@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "index": "node ../../bin/index.js",
-    "bundler": "node ../../bin/bundler.js"
+    "bundler": "node ../../bin/bundler.js -d /Users/jonaswanner/dev/playground/projects/liferay-npm-bundler-improved/bin"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",
