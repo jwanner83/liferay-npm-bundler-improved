@@ -19,6 +19,8 @@ import { getJavaScript, getManifestJSON, getManifestMF } from './create'
 const pack = require(process.cwd() + '/package.json')
 
 async function build() {
+  const start = new Date()
+
   console.log('liferay npm bundler - improved')
   console.log('')
   console.log('start bundle code with rollup')
@@ -65,6 +67,17 @@ async function build() {
   console.log('finished saving jar')
   console.log('')
   console.log(`build finished`)
+
+  const end = new Date();
+
+  const fs = require('fs');
+
+  fs.copyFile(`dist/${pack.name}-${pack.version}.jar`, `/opt/liferayPlaygroundDXP73/deploy/${pack.name}-${pack.version}.jar`, (err) => {
+    if (err) throw err;
+    console.log('jar file deployed successfully')
+  })
+
+  console.log(`build took ${(end.getTime() - start.getTime()) / 1000}s`)
 }
 
 export async function bundle () {

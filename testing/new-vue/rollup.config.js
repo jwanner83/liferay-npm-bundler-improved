@@ -18,7 +18,8 @@ export default {
   output: [
     {
       file: 'dist/index.js',
-      format: 'commonjs'
+      format: 'commonjs',
+      exports: 'default'
     }
   ]
 }

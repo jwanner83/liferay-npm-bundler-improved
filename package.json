@@ -7,14 +7,14 @@
   "dependencies": {
     "jszip": "^3.6.0",
     "rollup": "^2.51.1",
-    "rollup-plugin-vue": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@rollup/plugin-commonjs": "^19.0.0"
+    "rollup-plugin-vue": "^4.0.0",
+    "vue-template-compiler": "^2.6.14"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "rollup": "^2.51.1",
+    "rollup-plugin-preserve-shebangs": "^0.2.0",
     "yargs": "^17.0.1"
   },
   "scripts": {
