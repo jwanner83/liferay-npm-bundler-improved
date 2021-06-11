@@ -64,17 +64,18 @@ export default class Bundler {
     const start: Date = new Date()
     Log.write(Log.chalk.gray('loading custom rollup configuration'))
 
-    try {
-      const { options } = await loadConfigFile(process.cwd() + '/rollup.config.js')
-
-      if (options) {
+    if (existsSync('rollup.config.js')) {
+      try {
+        const { options } = await loadConfigFile(process.cwd() + '/rollup.config.js')
         this.configuration.setConfigurationFromFile(options)
         Log.write(Log.chalk.green(`custom rollup configuration has been found and loaded in ${(new Date().getTime() - start.getTime()) / 1000}s.`))
-      } else {
-        Log.write(Log.chalk.gray(`no custom rollup configuration has been found in ${(new Date().getTime() - start.getTime()) / 1000}s. The default will be used.`))
+      } catch (exception) {
+        Log.write(Log.chalk.red(`configuration file contains errors in ${(new Date().getTime() - start.getTime()) / 1000}s.`))
+        Log.write(Log.chalk.red(exception))
+        throw exception
       }
-    } catch (exception) {
-      Log.write(Log.chalk.gray(`configuration file isn't readable in ${(new Date().getTime() - start.getTime()) / 1000}s. The default will be used.`))
+    } else {
+      Log.write(Log.chalk.gray(`no custom rollup configuration has been found in ${(new Date().getTime() - start.getTime()) / 1000}s. The default will be used.`))
     }
   }
 
@@ -115,7 +116,7 @@ export default class Bundler {
       await bundle.write(this.configuration.outputConfiguration)
     } catch (exception) {
       spinner.stop()
-      Log.write(Log.chalk.green(`failed to write bundle to file in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+      Log.write(Log.chalk.red(`failed to write bundle to file in ${(new Date().getTime() - start.getTime()) / 1000}s`))
       Log.write(Log.chalk.red(exception))
       throw exception
     }
