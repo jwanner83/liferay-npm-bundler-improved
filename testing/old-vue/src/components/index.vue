@@ -1,18 +1,18 @@
 <template>
   <div>
     <h1>{{ title }}</h1>
-    <jonas />
+    <scene />
   </div>
 </template>
 
 <script>
-import jonas from './jonas.vue'
+import scene from './scene.vue'
 
 export default {
-  components: { jonas },
+  components: { scene },
   data () {
     return {
-      title: 'helloo'
+      title: 'Title'
     }
   }
 }

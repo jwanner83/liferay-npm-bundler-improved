@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'jonas',
+  name: 'scene',
   data () {
     return {
       content: 'content'
