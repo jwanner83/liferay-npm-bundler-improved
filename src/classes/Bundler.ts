@@ -60,7 +60,7 @@ export default class Bundler {
     split.pop()
     const filename = split.join('.')
 
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${filename}', ['module', 'exports', 'require'], function (module, exports, require) { var define = undefined; var global = window; { ${bundled} }});`
+    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${filename}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
   }
 
   public loadRollupConfiguration = async () => {
@@ -95,7 +95,7 @@ export default class Bundler {
     Log.write(Log.chalk.green(`bundle with rollup successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
 
     start = new Date()
-    spinner.start(Log.chalk.gray('writing to bundle to file\n'))
+    spinner.start(Log.chalk.gray('writing bundle to file\n'))
 
     // write the bundled code to a file
     await bundle.write(this.configuration.outputConfiguration)
