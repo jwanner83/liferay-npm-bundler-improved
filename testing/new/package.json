@@ -3,7 +3,8 @@
   "description": "New",
   "version": "1.0.0",
   "scripts": {
-    "build": "node ../../bin/index.js"
+    "build": "node ../../bin/bundler.js",
+    "deploy": "node ../../bin/bundler.js -d /opt/liferayPlaygroundDXP73/deploy"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",
@@ -12,6 +13,5 @@
     "javax.portlet.security-role-ref": "power-user,user",
     "javax.portlet.display-name": "New"
   },
-  "main": "index.js",
-  "dependencies": {}
+  "main": "index.js"
 }
