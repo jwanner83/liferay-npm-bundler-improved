@@ -56,11 +56,7 @@ export default class Bundler {
   })
 
   private setWrapped = (bundled: Buffer) => {
-    const split = 'index.js'.split('.')
-    split.pop()
-    const filename = split.join('.')
-
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${filename}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
+    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/index', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
   }
 
   public loadRollupConfiguration = async () => {
