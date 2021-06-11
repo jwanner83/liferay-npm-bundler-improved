@@ -3,8 +3,10 @@
   "description": "New Vue",
   "version": "1.0.0",
   "scripts": {
-    "build": "node ../../bin/bundler.js",
-    "deploy": "node ../../bin/bundler.js -d /opt/liferayPlaygroundDXP73/deploy"
+    "build": "liferay-npm-bundler-improved",
+    "deploy": "liferay-npm-bundler-improved -d /opt/liferayPlaygroundDXP73/deploy",
+    "build:local": "node ../../bin/bundler.js",
+    "deploy:local": "node ../../bin/bundler.js -d /opt/liferayPlaygroundDXP73/deploy"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",
@@ -20,11 +22,12 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
+    "liferay-npm-bundler-improved": "^1.0.0-beta.2",
+    "postcss": "^8.3.0",
     "rollup": "^2.51.1",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-vue": "^4.7.2",
-    "vue-template-compiler": "^2.6.14",
-    "postcss": "^8.3.0"
+    "vue-template-compiler": "^2.6.14"
   }
 }
