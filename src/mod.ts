@@ -15,6 +15,7 @@ async function initialization () {
 
     Log.write('\npreparation')
     await bundler.loadRollupConfiguration()
+    await bundler.createDistDirectory()
 
     Log.write('\nbundle code with rollup')
     await bundler.bundle()
@@ -24,6 +25,9 @@ async function initialization () {
 
     Log.write('\ncreate and save jar')
     await bundler.create()
+
+    Log.write('\ncleanup')
+    await bundler.cleanup()
 
     const arg: any = yargs(process.argv.slice(2)).options({
       deploy: {

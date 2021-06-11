@@ -8,11 +8,12 @@ const path = require('path')
 const pack = require(process.cwd() + '/package.json')
 
 import { promisify } from 'util'
-import { readFile, writeFile, copyFile } from 'fs'
+import { readFile, writeFile, copyFile, existsSync, mkdirSync, unlink } from 'fs'
 
 const readFilePromisified = promisify(readFile)
 const writeFilePromisified = promisify(writeFile)
 const copyFilePromisified = promisify(copyFile)
+const unlinkPromisified = promisify(unlink)
 
 
 import Configuration from './Configuration'
@@ -77,6 +78,18 @@ export default class Bundler {
     }
   }
 
+  public createDistDirectory = async () => {
+    const start: Date = new Date()
+    Log.write(Log.chalk.gray('creating dist directory if it doesn\'t exist'))
+
+    if (!existsSync('dist')) {
+      mkdirSync('dist')
+      Log.write(Log.chalk.green(`directory created successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    } else {
+      Log.write(Log.chalk.gray(`directory already exists in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    }
+  }
+
   public bundle = async () => {
     let start: Date = new Date()
     const spinner = ora({
@@ -135,6 +148,18 @@ export default class Bundler {
 
     spinner.stop()
     Log.write(Log.chalk.green(`created and saved jar file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+  }
+
+  public cleanup = async () => {
+    const start: Date = new Date()
+    Log.write(Log.chalk.gray('remove index.js file from dist'))
+
+    if (existsSync('dist/index.js')) {
+      await unlinkPromisified('dist/index.js')
+      Log.write(Log.chalk.green(`deleted index.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    } else {
+      Log.write(Log.chalk.gray(`index.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
+    }
   }
 
   public deploy = async (deploy) => {
