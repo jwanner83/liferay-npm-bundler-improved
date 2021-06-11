@@ -80,13 +80,10 @@ export default class Bundler {
 
   public createDistDirectory = async () => {
     const start: Date = new Date()
-    Log.write(Log.chalk.gray('creating dist directory if it doesn\'t exist'))
 
     if (!existsSync('dist')) {
       mkdirSync('dist')
-      Log.write(Log.chalk.green(`directory created successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-    } else {
-      Log.write(Log.chalk.gray(`directory already exists in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+      Log.write(Log.chalk.green(`dist directory created successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     }
   }
 
