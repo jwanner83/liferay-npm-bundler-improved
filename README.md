@@ -1,6 +1,6 @@
 # liferay-npm-bundler-improved
-This is a highly experimental and non-official module which uses rollup to bundle javascript and provides it through a 
-jar file to liferay.
+This is a highly experimental and non-official module which uses rollup to bundle javascript and provides it to liferay 
+through a jar file.
 
 ### Usage
 #### 1. Install via npm
