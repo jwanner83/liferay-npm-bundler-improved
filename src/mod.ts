@@ -11,8 +11,18 @@ async function initialization () {
 
   const bundler: Bundler = new Bundler()
 
-  try {
+  const arg: any = yargs(process.argv.slice(2)).options({
+    deploy: {
+      alias: 'd',
+      type: 'string'
+    },
+    keep: {
+      alias: 'k',
+      type: 'boolean'
+    }
+  }).argv
 
+  try {
     Log.write('\npreparation')
     await bundler.loadRollupConfiguration()
     await bundler.createDistDirectory()
@@ -26,15 +36,10 @@ async function initialization () {
     Log.write('\ncreate and save jar')
     await bundler.create()
 
-    Log.write('\ncleanup')
-    await bundler.cleanup()
-
-    const arg: any = yargs(process.argv.slice(2)).options({
-      deploy: {
-        alias: 'd',
-        type: 'string'
-      }
-    }).argv
+    if (!arg.keep) {
+      Log.write('\ncleanup')
+      await bundler.cleanup()
+    }
 
     if (arg.deploy || arg.deploy === '') {
       Log.write('\nadditional: deploying')
