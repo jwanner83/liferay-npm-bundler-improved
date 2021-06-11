@@ -56,7 +56,11 @@ export default class Bundler {
   })
 
   private setWrapped = (bundled: Buffer) => {
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/index', ['module', 'exports', 'require'], function (module, exports, require) { var define = undefined; var global = window; { ${bundled} }});`
+    const split = 'index.js'.split('.')
+    split.pop()
+    const filename = split.join('.')
+
+    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${filename}', ['module', 'exports', 'require'], function (module, exports, require) { var define = undefined; var global = window; { ${bundled} }});`
   }
 
   public loadRollupConfiguration = async () => {
@@ -137,12 +141,33 @@ export default class Bundler {
     Log.write(Log.chalk.green(`created and saved jar file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
   }
 
-  public deploy = async (destination) => {
+  public deploy = async (deploy) => {
+    const start: Date = new Date()
+
+    let destination = deploy
+
+    try {
+      const data = await readFilePromisified('.npmbuildrc')
+      const file = JSON.parse(data.toString())
+
+      if (file.liferayDir) {
+        destination = path.join(file.liferayDir, 'deploy')
+        Log.write(Log.chalk.gray(`found .npmbuildrc file with valid destination`))
+      }
+    } catch (exception) {
+      // ignore
+    }
+
+    if (!destination) {
+      Log.write(Log.chalk.red(`failed to deploy ${this.name} in ${(new Date().getTime() - start.getTime()) / 1000}s. destination is not set either through .npmbuildrc or flag`))
+      throw new Error()
+    }
+
     try {
       await copyFilePromisified(`dist/${this.name}`, path.join(destination, this.name))
-      Log.write(Log.chalk.green(`successfully deployed ${this.name} to ${destination}`))
+      Log.write(Log.chalk.green(`successfully deployed ${this.name} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     } catch (exception) {
-      Log.write(Log.chalk.red(`failed to deploy ${this.name} to ${destination}, ${exception.message}`))
+      Log.write(Log.chalk.red(`failed to deploy ${this.name} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s, ${exception.message}`))
       throw exception
     }
   }

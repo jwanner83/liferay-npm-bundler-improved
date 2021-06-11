@@ -33,7 +33,7 @@ async function initialization () {
       }
     }).argv
 
-    if (arg.deploy) {
+    if (arg.deploy || arg.deploy === '') {
       Log.write('\nadditional: deploying')
       await bundler.deploy(arg.deploy)
     }
