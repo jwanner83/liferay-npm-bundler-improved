@@ -1,7 +1,7 @@
 {
   "name": "liferay-npm-bundler-improved",
   "description": "This is a highly experimental and non-official module which uses rollup to bundle javascript and provides it to liferay through a jar file.",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "author": "Jonas Wanner",
   "license": "ISC",
   "repository": {
