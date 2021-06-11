@@ -97,8 +97,16 @@ export default class Bundler {
       color: 'gray'
     }).start()
 
-    // bundle the code into one file
-    const bundle = await rollup(this.configuration.inputConfiguration)
+    let bundle
+
+    try {
+      bundle = await rollup(this.configuration.inputConfiguration)
+    } catch (exception) {
+      spinner.stop()
+      Log.write(Log.chalk.red(`failed to bundle code with rollup in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+      Log.write(Log.chalk.red(exception))
+      throw exception
+    }
 
     spinner.stop()
     Log.write(Log.chalk.green(`bundle with rollup successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
@@ -106,8 +114,14 @@ export default class Bundler {
     start = new Date()
     spinner.start(Log.chalk.gray('writing bundle to file\n'))
 
-    // write the bundled code to a file
-    await bundle.write(this.configuration.outputConfiguration)
+    try {
+      await bundle.write(this.configuration.outputConfiguration)
+    } catch (exception) {
+      spinner.stop()
+      Log.write(Log.chalk.green(`failed to write bundle to file in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+      Log.write(Log.chalk.red(exception))
+      throw exception
+    }
 
     spinner.stop()
     Log.write(Log.chalk.green(`writing bundle to file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
