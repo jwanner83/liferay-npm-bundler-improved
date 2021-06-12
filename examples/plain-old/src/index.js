@@ -12,30 +12,40 @@ import Follow from 'follow-js'
 function main(params) {
     const follow = new Follow()
 
-    var node = document.getElementById(params.portletElementId);
+    setTimeout(() => {
+        follow.initiate()
+        console.log('initiated follow.js')
+
+        setTimeout(() => {
+            follow.destroy()
+            console.log('destroyed follow.js')
+        }, 5000)
+    }, 5000)
+
+    const node = document.getElementById(params.portletElementId);
 
     node.innerHTML =
         '<div>' +
-            '<span class="tag">' + 
+            '<span class="tag" data-follow>' +
                 'Portlet Namespace' + ':' +
             '</span>' +
-            '<span class="value">' +
+            '<span class="value" data-follow>' +
                 params.portletNamespace +
             '</span>' +
         '</div>' +
         '<div>' +
-            '<span class="tag">' + 
+            '<span class="tag" data-follow>' +
                 'Context Path' + ':' +
             '</span>' +
-            '<span class="value">' +
+            '<span class="value" data-follow>' +
                 params.contextPath +
             '</span>' +
         '</div>' +
         '<div>' +
-            '<span class="tag">' +
+            '<span class="tag" data-follow>' +
                 'Portlet Element Id' + ':' +
             '</span>' +
-            '<span class="value">' +
+            '<span class="value" data-follow>' +
                 params.portletElementId +
             '</span>' +
         '</div>';
