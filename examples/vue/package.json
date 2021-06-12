@@ -4,9 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "liferay-npm-bundler-improved",
-    "deploy": "liferay-npm-bundler-improved -d /opt/liferayPlaygroundDXP73/deploy",
-    "build:local": "node ../../bin/bundler.js -k",
-    "deploy:local": "node ../../bin/bundler.js -d /opt/liferayPlaygroundDXP73/deploy"
+    "deploy": "liferay-npm-bundler-improved -d /opt/liferayPlaygroundDXP73/deploy"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",
