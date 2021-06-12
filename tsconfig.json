@@ -5,5 +5,8 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true
   },
-  "esModuleInterop": true
+  "esModuleInterop": true,
+  "exclude": [
+    "examples/*"
+  ]
 }
