@@ -1,0 +1,22 @@
+{
+  "name": "plain-old",
+  "description": "plain-old",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "liferay-npm-bundler"
+  },
+  "portlet": {
+    "com.liferay.portlet.display-category": "category.sample",
+    "com.liferay.portlet.instanceable": true,
+    "javax.portlet.name": "plain-old",
+    "javax.portlet.security-role-ref": "power-user,user",
+    "javax.portlet.display-name": "Plain Old"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "follow-js": "^2.2.1"
+  },
+  "devDependencies": {
+    "liferay-npm-bundler": "^2.26.0"
+  }
+}
