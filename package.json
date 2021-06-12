@@ -11,6 +11,13 @@
   "bugs": {
     "url": "https://github.com/jwanner83/liferay-npm-bundler-improved/issues"
   },
+  "keywords": [
+    "liferay",
+    "liferay-npm-bundler",
+    "npm-bundler",
+    "liferay-frontend",
+    "rollup"
+  ],
   "bin": {
     "liferay-npm-bundler-improved": "bin/bundler.js"
   },
