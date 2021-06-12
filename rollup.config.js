@@ -7,9 +7,6 @@ import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
 
 export default {
   input: 'src/mod.ts',
-  ignore: [
-    'testing/*'
-  ],
   plugins: [
     preserveShebangs(),
     resolve({
