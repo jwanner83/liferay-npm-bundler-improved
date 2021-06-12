@@ -7,7 +7,7 @@ import Log from './classes/Log'
 async function initialization () {
   const start: Date = new Date()
 
-  Log.write(Log.chalk.blue('liferay-npm-bundler-improved - 1.0.0-beta.0'))
+  Log.write(Log.chalk.blue('liferay-npm-bundler-improved - 1.0.0-beta.2'))
 
   const bundler: Bundler = new Bundler()
 
