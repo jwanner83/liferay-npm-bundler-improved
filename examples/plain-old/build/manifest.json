@@ -1,0 +1,32 @@
+{
+  "packages": {
+    "/": {
+      "dest": {
+        "dir": "./build",
+        "id": "/",
+        "name": "plain-old",
+        "version": "1.0.0"
+      },
+      "src": {
+        "dir": ".",
+        "id": "/",
+        "name": "plain-old",
+        "version": "1.0.0"
+      }
+    },
+    "follow-js@2.2.1": {
+      "dest": {
+        "dir": "./build/node_modules/plain-old$follow-js@2.2.1",
+        "id": "plain-old$follow-js@2.2.1",
+        "name": "plain-old$follow-js",
+        "version": "2.2.1"
+      },
+      "src": {
+        "dir": "./node_modules/follow-js",
+        "id": "follow-js@2.2.1",
+        "name": "follow-js",
+        "version": "2.2.1"
+      }
+    }
+  }
+}
