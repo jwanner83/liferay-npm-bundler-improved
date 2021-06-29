@@ -21,11 +21,9 @@ import Log from './Log'
 
 export default class Bundler {
   private configuration: Configuration = new Configuration()
-
   private name: string = `${pack.name}-${pack.version}.jar`
-
+  private main: string = pack.main || 'index'
   private wrapped: string = ''
-
   private manifestMF: string =
     `Manifest-Version: 1.0\n` +
     `Bundle-ManifestVersion: 2\n` +
@@ -36,7 +34,6 @@ export default class Bundler {
     `Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"\n` +
     `Tool: liferay-npm-bundler-2.26.0\n` +
     `Web-ContextPath: /${pack.name}`
-
   private manifestJSON: string = JSON.stringify({
     "packages": {
       "/": {
@@ -56,18 +53,8 @@ export default class Bundler {
     }
   })
 
-  private setWrapped = (bundled: Buffer, index: string) => {
-    const parts: string[] = index.split('.')
-    parts.pop()
-
-    let filename: string
-    if (Array.isArray(parts)) {
-      filename = parts.join('.')
-    } else {
-      filename = parts as string
-    }
-
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${filename}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
+  private setWrapped = (bundled: Buffer) => {
+    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${this.main}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
   }
 
   public loadRollupConfiguration = async () => {
@@ -138,9 +125,8 @@ export default class Bundler {
   public wrap = async () => {
     const start: Date = new Date()
 
-    const index = pack.main + '.js' || 'index.js'
-    const bundled = await readFilePromisified(`dist/${index}`)
-    this.setWrapped(bundled, index)
+    const bundled = await readFilePromisified(`dist/${this.main}.js`)
+    this.setWrapped(bundled)
 
     Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
   }
@@ -175,13 +161,13 @@ export default class Bundler {
 
   public cleanup = async () => {
     const start: Date = new Date()
-    Log.write(Log.chalk.gray('remove index.js file from dist'))
+    Log.write(Log.chalk.gray(`remove ${this.main}.js file from dist`))
 
-    if (existsSync('dist/index.js')) {
-      await unlinkPromisified('dist/index.js')
-      Log.write(Log.chalk.green(`deleted index.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    if (existsSync(`dist/${this.main}.js`)) {
+      await unlinkPromisified(`dist/${this.main}.js`)
+      Log.write(Log.chalk.green(`deleted ${this.main}.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     } else {
-      Log.write(Log.chalk.gray(`index.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
+      Log.write(Log.chalk.gray(`${this.main}.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
     }
   }
 
