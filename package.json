@@ -1,6 +1,6 @@
 {
   "name": "liferay-npm-bundler-improved",
-  "description": "This is a highly experimental and non-official module which uses rollup to bundle javascript and provides it to liferay through a jar file.",
+  "description": "A highly experimental and non-official module which uses rollup to bundle javascript and provides it to liferay through a jar file.",
   "version": "1.0.0-beta.3",
   "author": "Jonas Wanner",
   "license": "ISC",
@@ -11,6 +11,13 @@
   "bugs": {
     "url": "https://github.com/jwanner83/liferay-npm-bundler-improved/issues"
   },
+  "keywords": [
+    "liferay",
+    "liferay-npm-bundler",
+    "npm-bundler",
+    "liferay-frontend",
+    "rollup"
+  ],
   "bin": {
     "liferay-npm-bundler-improved": "bin/bundler.js"
   },
@@ -28,7 +35,9 @@
     "rollup": "^2.51.1",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
     "rollup-plugin-terser": "^7.0.2",
-    "yargs": "^17.0.1"
+    "yargs": "^17.0.1",
+    "typescript": "^4.3.2",
+    "tslib": "^2.3.0"
   },
   "scripts": {
     "build": "rollup -c",

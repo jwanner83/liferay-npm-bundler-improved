@@ -1,17 +1,19 @@
 {
-  "name": "new",
-  "description": "New",
+  "name": "plain",
+  "description": "plain",
   "version": "1.0.0",
   "scripts": {
-    "build": "node ../../bin/bundler.js",
-    "deploy": "node ../../bin/bundler.js -d /opt/liferayPlaygroundDXP73/deploy"
+    "build": "liferay-npm-bundler-improved",
+    "deploy": "liferay-npm-bundler-improved -d /opt/liferayPlaygroundDXP73/deploy"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",
     "com.liferay.portlet.instanceable": true,
-    "javax.portlet.name": "new",
+    "javax.portlet.name": "plain",
     "javax.portlet.security-role-ref": "power-user,user",
-    "javax.portlet.display-name": "New"
+    "javax.portlet.display-name": "Plain"
   },
-  "main": "index.js"
+  "devDependencies": {
+    "liferay-npm-bundler-improved": "^1.0.0-beta.2"
+  }
 }
