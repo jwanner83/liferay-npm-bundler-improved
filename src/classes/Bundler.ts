@@ -33,8 +33,8 @@ export default class Bundler {
     `Bundle-SymbolicName: ${pack.name}\n` +
     `Bundle-Version: ${pack.version}\n` +
     `Provide-Capability: osgi.webresource;osgi.webresource=${pack.name};version:Version="${pack.version}"\n` +
-    `Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=${pack.version}))"\n` +
-    `Tool: liferay-npm-bundler-2.25.0\n` +
+    `Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"\n` +
+    `Tool: liferay-npm-bundler-2.26.0\n` +
     `Web-ContextPath: /${pack.name}`
 
   private manifestJSON: string = JSON.stringify({
