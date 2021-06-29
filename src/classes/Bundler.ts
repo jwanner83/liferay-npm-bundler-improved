@@ -146,7 +146,7 @@ export default class Bundler {
     const resources = meta.folder('resources')
     resources.file('manifest.json', this.manifestJSON)
     resources.file('package.json', JSON.stringify(pack))
-    resources.file('index.js', this.wrapped)
+    resources.file(`${this.main}.js`, this.wrapped)
 
     spinner.text = Log.chalk.gray('save jar\n')
 
