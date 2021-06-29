@@ -56,8 +56,18 @@ export default class Bundler {
     }
   })
 
-  private setWrapped = (bundled: Buffer) => {
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/index', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
+  private setWrapped = (bundled: Buffer, index: string) => {
+    const parts: string[] = index.split('.')
+    parts.pop()
+
+    let filename: string
+    if (Array.isArray(parts)) {
+      filename = parts.join('.')
+    } else {
+      filename = parts as string
+    }
+
+    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${filename}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
   }
 
   public loadRollupConfiguration = async () => {
@@ -128,8 +138,9 @@ export default class Bundler {
   public wrap = async () => {
     const start: Date = new Date()
 
-    const bundled = await readFilePromisified('dist/index.js')
-    this.setWrapped(bundled)
+    const index = pack.main + '.js' || 'index.js'
+    const bundled = await readFilePromisified(`dist/${index}`)
+    this.setWrapped(bundled, index)
 
     Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
   }
