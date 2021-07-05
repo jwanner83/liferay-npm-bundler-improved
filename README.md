@@ -2,6 +2,26 @@
 A highly experimental and non-official module which uses rollup to bundle javascript and provides it to liferay 
 through a jar file.
 
+## Disclaimer
+In this state, the `liferay-npm-bundler-improved` isn't intended to be used as a replacement of the original 
+liferay-npm-bundler. It is currently lacking features like the support for Portlet configurations, localization or 
+package deduplication which are essential.
+
+### Reason for existence
+Although some essential features are missing, it can be really useful for development because of one thing: speed. In
+comparison to the default liferay-npm-bundler it is up to **14 times faster** while bundling vue / react / vanilla js
+portlets.
+
+If you want to develop a portlet, and you are not able to use a life-reload module like 
+(lfr-js-start)[https://github.com/faragos/lfr-js-portlet-utils] because you need to be able to use the portlet like a 
+normal one, you can just use the liferay-npm-bundler-improved to do so. For production although, it is highly advised 
+to use the official liferay-npm-bundler.
+
+### Missing Features:
+- Package Deduplication
+- Portlet Configuration Support
+- Portlet Translation Support
+
 ### Usage
 #### 1. Install via npm
 To use the bundler, you have to install it via npm or yarn `npm i --save-dev liferay-npm-bundler-improved` and create a
