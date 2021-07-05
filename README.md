@@ -22,12 +22,12 @@ to use the official liferay-npm-bundler.
 - Portlet Configuration Support
 - Portlet Translation Support
 
-### Usage
-#### 1. Install via npm
+## Usage
+### 1. Install via npm
 To use the bundler, you have to install it via npm or yarn `npm i --save-dev liferay-npm-bundler-improved` and create a
 script tag in the `package.json` like so: `"build": "liferay-npm-bundler-improved"`.
 
-#### 2. Set package.json properties
+### 2. Set package.json properties
 The `package.json` has to contain the following properties. These are exactly the same as you would have to set if you 
 use the official bundler. Because of that, the migration should be very easy.
 ```json
@@ -45,7 +45,7 @@ use the official bundler. Because of that, the migration should be very easy.
 }
 ```
 
-#### 3. Add rollup.config.js
+### 3. Add rollup.config.js
 If you use a framework in your portlet, you'll need a custom rollup.config.js file. See the 
 [rollup docs](https://rollupjs.org/guide/en/) for more information on how to use this file.
 
@@ -70,7 +70,7 @@ export default {
 }
 ```
 
-#### 4. Enable deployment
+### 4. Enable deployment
 The bundler also supports the functionality to move the created jar file to a specified directory automatically. To 
 enable it, you have to add a `-d` or `-deploy` after the call of the bundler: 
 ``"deploy": "liferay-npm-bundler-improved -d"``
@@ -88,7 +88,7 @@ or through the parameter in the call of the bundler:
 (the `.npmbuildrc` only needs the root of the liferay directory and adds a `/deploy` automatically. If you specify the 
 path with the parameter, you need to specify the `deploy` folder specifically.)
 
-### Additional Information
+## Additional Information
 > Where is the official bundler?
 > - [github](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/js-toolkit/packages/npm-bundler)
 > - [npm - liferay-npm-bundler - v2](https://www.npmjs.com/package/liferay-npm-bundler)
