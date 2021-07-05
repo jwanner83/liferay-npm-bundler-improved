@@ -13,7 +13,7 @@ comparison to the default liferay-npm-bundler it is up to **14 times faster** wh
 portlets.
 
 If you want to develop a portlet, and you are not able to use a life-reload module like 
-(lfr-js-start)[https://github.com/faragos/lfr-js-portlet-utils] because you need to be able to use the portlet like a 
+[lfr-js-start](https://github.com/faragos/lfr-js-portlet-utils) because you need to be able to use the portlet like a 
 normal one, you can just use the liferay-npm-bundler-improved to do so. For production although, it is highly advised 
 to use the official liferay-npm-bundler.
 
