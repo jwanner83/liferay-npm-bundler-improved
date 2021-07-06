@@ -18,9 +18,6 @@
     "javax.portlet.display-name": "Plain"
   },
   "main": "index.js",
-  "dependencies": {
-    "follow-js": "^2.2.1"
-  },
   "devDependencies": {
     "copy-webpack-plugin": "4.6.0",
     "liferay-npm-bundler-improved": "^1.0.0-beta.6",

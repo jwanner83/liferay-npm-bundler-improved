@@ -33,8 +33,6 @@ async function initialization () {
     Log.write('\nwrap liferay code into the Liferay.Loader')
     await bundler.wrap()
 
-    Log.write('\nget assets from portlet')
-
     Log.write('\ncreate and save jar')
     await bundler.create()
 

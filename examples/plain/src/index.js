@@ -10,18 +10,6 @@ import Follow from 'follow-js'
  * @return {void}
  */
 function main(params) {
-    const follow = new Follow()
-
-    setTimeout(() => {
-        follow.initiate()
-        console.log('initiated follow.js')
-
-        setTimeout(() => {
-            follow.destroy()
-            console.log('destroyed follow.js')
-        }, 5000)
-    }, 5000)
-
     const node = document.getElementById(params.portletElementId);
 
     node.innerHTML =
