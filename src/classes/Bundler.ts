@@ -21,11 +21,9 @@ import Log from './Log'
 
 export default class Bundler {
   private configuration: Configuration = new Configuration()
-
   private name: string = `${pack.name}-${pack.version}.jar`
-
+  private main: string = pack.main || 'index'
   private wrapped: string = ''
-
   private manifestMF: string =
     `Manifest-Version: 1.0\n` +
     `Bundle-ManifestVersion: 2\n` +
@@ -33,10 +31,9 @@ export default class Bundler {
     `Bundle-SymbolicName: ${pack.name}\n` +
     `Bundle-Version: ${pack.version}\n` +
     `Provide-Capability: osgi.webresource;osgi.webresource=${pack.name};version:Version="${pack.version}"\n` +
-    `Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=${pack.version}))"\n` +
-    `Tool: liferay-npm-bundler-2.25.0\n` +
+    `Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"\n` +
+    `Tool: liferay-npm-bundler-2.26.0\n` +
     `Web-ContextPath: /${pack.name}`
-
   private manifestJSON: string = JSON.stringify({
     "packages": {
       "/": {
@@ -57,7 +54,7 @@ export default class Bundler {
   })
 
   private setWrapped = (bundled: Buffer) => {
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/index', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
+    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${this.main}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
   }
 
   public loadRollupConfiguration = async () => {
@@ -128,7 +125,7 @@ export default class Bundler {
   public wrap = async () => {
     const start: Date = new Date()
 
-    const bundled = await readFilePromisified('dist/index.js')
+    const bundled = await readFilePromisified(`dist/${this.main}.js`)
     this.setWrapped(bundled)
 
     Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
@@ -149,7 +146,7 @@ export default class Bundler {
     const resources = meta.folder('resources')
     resources.file('manifest.json', this.manifestJSON)
     resources.file('package.json', JSON.stringify(pack))
-    resources.file('index.js', this.wrapped)
+    resources.file(`${this.main}.js`, this.wrapped)
 
     spinner.text = Log.chalk.gray('save jar\n')
 
@@ -164,13 +161,13 @@ export default class Bundler {
 
   public cleanup = async () => {
     const start: Date = new Date()
-    Log.write(Log.chalk.gray('remove index.js file from dist'))
+    Log.write(Log.chalk.gray(`remove ${this.main}.js file from dist`))
 
-    if (existsSync('dist/index.js')) {
-      await unlinkPromisified('dist/index.js')
-      Log.write(Log.chalk.green(`deleted index.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    if (existsSync(`dist/${this.main}.js`)) {
+      await unlinkPromisified(`dist/${this.main}.js`)
+      Log.write(Log.chalk.green(`deleted ${this.main}.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     } else {
-      Log.write(Log.chalk.gray(`index.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
+      Log.write(Log.chalk.gray(`${this.main}.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
     }
   }
 
