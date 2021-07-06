@@ -1,3 +1,4 @@
-build
-dist
-node_modules
+dist/
+build/
+yarn.lock
+package-lock.json

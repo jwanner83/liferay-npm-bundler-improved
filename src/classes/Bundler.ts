@@ -15,7 +15,6 @@ const writeFilePromisified = promisify(writeFile)
 const copyFilePromisified = promisify(copyFile)
 const unlinkPromisified = promisify(unlink)
 
-
 import Configuration from './Configuration'
 import Log from './Log'
 
@@ -52,6 +51,7 @@ export default class Bundler {
       }
     }
   })
+
 
   private setWrapped = (bundled: Buffer) => {
     this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${this.main}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
@@ -130,6 +130,36 @@ export default class Bundler {
 
     Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
   }
+
+  public features = async () => {
+    const start: Date = new Date()
+
+    if (!existsSync('.npmbundlerrc')) {
+      Log.write(Log.chalk.gray(`The file .npmbundlerrc doesn't exist. No features will be added to the portlet. Took ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
+    }
+
+    let configuration: string
+    let localization: string
+
+    const data = await readFilePromisified('.npmbundlerrc')
+    const file = JSON.parse(data.toString())
+
+    const createJarKey = 'create-jar'
+    const featuresKey = 'features'
+
+    if (file[createJarKey] && file[createJarKey][featuresKey]) {
+      const features = file[createJarKey][featuresKey]
+
+      if (features.configuration) {
+        Log.write(Log.chalk.gray(`Found the configuration feature.`))
+        configuration = features.configuration
+      }
+      if (features.localization) {
+        Log.write(Log.chalk.gray(`Found the localization feature.`))
+        localization = features.localization
+      }
+    }
+  };
 
   public create = async () => {
     const start: Date = new Date()

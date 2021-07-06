@@ -8,31 +8,30 @@
  * @return {void}
  */
 function main(params) {
-    
-    var node = document.getElementById(params.portletElementId);
+    const node = document.getElementById(params.portletElementId);
 
     node.innerHTML =
         '<div>' +
-            '<span class="tag">' + 
+            '<span class="tag" data-follow>' +
                 'Portlet Namespace' + ':' +
             '</span>' +
-            '<span class="value">' +
+            '<span class="value" data-follow>' +
                 params.portletNamespace +
             '</span>' +
         '</div>' +
         '<div>' +
-            '<span class="tag">' + 
+            '<span class="tag" data-follow>' +
                 'Context Path' + ':' +
             '</span>' +
-            '<span class="value">' +
+            '<span class="value" data-follow>' +
                 params.contextPath +
             '</span>' +
         '</div>' +
         '<div>' +
-            '<span class="tag">' +
+            '<span class="tag" data-follow>' +
                 'Portlet Element Id' + ':' +
             '</span>' +
-            '<span class="value">' +
+            '<span class="value" data-follow>' +
                 params.portletElementId +
             '</span>' +
         '</div>';
