@@ -7,7 +7,7 @@ import Log from './classes/Log'
 async function initialization () {
   const start: Date = new Date()
 
-  Log.write(Log.chalk.blue('liferay-npm-bundler-improved - 1.0.0-beta.6'))
+  Log.write(Log.chalk.blue('liferay-npm-bundler-improved - 1.0.0-beta.7'))
 
   const bundler: Bundler = new Bundler()
 
@@ -32,6 +32,9 @@ async function initialization () {
 
     Log.write('\nwrap liferay code into the Liferay.Loader')
     await bundler.wrap()
+
+    Log.write('\ncheck additional portlet features')
+    await bundler.features()
 
     Log.write('\ncreate and save jar')
     await bundler.create()

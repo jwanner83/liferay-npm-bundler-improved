@@ -1,6 +1,6 @@
 {
-  "name": "plain-old",
-  "description": "plain-old",
+  "name": "plain",
+  "description": "plain",
   "version": "1.0.0",
   "scripts": {
     "dev:build": "liferay-npm-bundler-improved",

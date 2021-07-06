@@ -1,5 +1,3 @@
-import Follow from 'follow-js'
-
 /**
  * This is the main entry point of the portlet.
  *
