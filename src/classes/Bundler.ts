@@ -7,9 +7,7 @@ import { promisify } from 'util'
 import { readFile, writeFile, copyFile, existsSync, mkdirSync, unlink } from 'fs'
 import Configuration from './Configuration'
 import Log from './Log'
-
-// the package json of the portlet
-const pack = require(process.cwd() + '/package.json')
+import PackageHandler from '../handlers/PackageHandler'
 
 const readFilePromisified = promisify(readFile)
 const writeFilePromisified = promisify(writeFile)
@@ -17,42 +15,35 @@ const copyFilePromisified = promisify(copyFile)
 const unlinkPromisified = promisify(unlink)
 
 export default class Bundler {
+  /**
+   * Bundler configuration
+   * @private
+   */
   private configuration: Configuration = new Configuration()
-  private name: string = `${pack.name}-${pack.version}.jar`
-  private main: string = pack.main || 'index'
-  private wrapped: string = ''
-  private manifestMF: string =
-    `Manifest-Version: 1.0\n` +
-    `Bundle-ManifestVersion: 2\n` +
-    `Bundle-Name: ${pack.description}\n` +
-    `Bundle-SymbolicName: ${pack.name}\n` +
-    `Bundle-Version: ${pack.version}\n` +
-    `Provide-Capability: osgi.webresource;osgi.webresource=${pack.name};version:Version="${pack.version}"\n` +
-    `Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"\n` +
-    `Tool: liferay-npm-bundler-2.26.0\n` +
-    `Web-ContextPath: /${pack.name}`
-  private manifestJSON: string = JSON.stringify({
-    "packages": {
-      "/": {
-        "dest": {
-          "dir": "./build",
-          "id": "/",
-          "name": pack.name,
-          "version": pack.version
-        },
-        "src": {
-          "dir": ".",
-          "id": "/",
-          "name": pack.name,
-          "version": pack.version
-        }
-      }
-    }
-  })
 
+  /**
+   * The name of the jar file
+   * @private
+   */
+  private readonly jarName: string
 
-  private setWrapped = (bundled: Buffer) => {
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${this.main}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
+  /**
+   * The js entry point
+   * @private
+   */
+  private readonly entryPoint: string
+
+  /**
+   * The external package.json file
+   * @private
+   */
+  private readonly pack: any
+
+  constructor () {
+    PackageHandler.check()
+    this.pack = PackageHandler.pack
+    this.jarName = `${this.pack.name}-${this.pack.version}.jar`
+    this.entryPoint = this.pack.main || 'index'
   }
 
   public loadRollupConfiguration = async () => {
@@ -123,7 +114,7 @@ export default class Bundler {
   public wrap = async () => {
     const start: Date = new Date()
 
-    const bundled = await readFilePromisified(`dist/${this.main}.js`)
+    const bundled = await readFilePromisified(`dist/${this.entryPoint}.js`)
     this.setWrapped(bundled)
 
     Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
@@ -174,14 +165,14 @@ export default class Bundler {
     const resources = meta.folder('resources')
     resources.file('manifest.json', this.manifestJSON)
     resources.file('package.json', JSON.stringify(pack))
-    resources.file(`${this.main}.js`, this.wrapped)
+    resources.file(`${this.entryPoint}.js`, this.wrapped)
 
     spinner.text = Log.chalk.gray('save jar\n')
 
     const content = await zip.generateAsync({
       type: 'nodebuffer'
     })
-    await writeFilePromisified(`dist/${this.name}`, content)
+    await writeFilePromisified(`dist/${this.jarName}`, content)
 
     spinner.stop()
     Log.write(Log.chalk.green(`created and saved jar file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
@@ -189,13 +180,13 @@ export default class Bundler {
 
   public cleanup = async () => {
     const start: Date = new Date()
-    Log.write(Log.chalk.gray(`remove ${this.main}.js file from dist`))
+    Log.write(Log.chalk.gray(`remove ${this.entryPoint}.js file from dist`))
 
-    if (existsSync(`dist/${this.main}.js`)) {
-      await unlinkPromisified(`dist/${this.main}.js`)
-      Log.write(Log.chalk.green(`deleted ${this.main}.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    if (existsSync(`dist/${this.entryPoint}.js`)) {
+      await unlinkPromisified(`dist/${this.entryPoint}.js`)
+      Log.write(Log.chalk.green(`deleted ${this.entryPoint}.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     } else {
-      Log.write(Log.chalk.gray(`${this.main}.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
+      Log.write(Log.chalk.gray(`${this.entryPoint}.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
     }
   }
 
@@ -217,15 +208,15 @@ export default class Bundler {
     }
 
     if (!destination) {
-      Log.write(Log.chalk.red(`failed to deploy ${this.name} in ${(new Date().getTime() - start.getTime()) / 1000}s. destination is not set either through .npmbuildrc or flag`))
+      Log.write(Log.chalk.red(`failed to deploy ${this.jarName} in ${(new Date().getTime() - start.getTime()) / 1000}s. destination is not set either through .npmbuildrc or flag`))
       throw new Error()
     }
 
     try {
-      await copyFilePromisified(`dist/${this.name}`, path.join(destination, this.name))
-      Log.write(Log.chalk.green(`successfully deployed ${this.name} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+      await copyFilePromisified(`dist/${this.jarName}`, path.join(destination, this.jarName))
+      Log.write(Log.chalk.green(`successfully deployed ${this.jarName} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     } catch (exception) {
-      Log.write(Log.chalk.red(`failed to deploy ${this.name} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s, ${exception.message}`))
+      Log.write(Log.chalk.red(`failed to deploy ${this.jarName} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s, ${exception.message}`))
       throw exception
     }
   }
