@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-const yargs = require('yargs')
-
+import yargs from 'yargs'
 import Bundler from './classes/Bundler'
 import Log from './classes/Log'
 
