@@ -1,22 +1,20 @@
-const rollup = require('rollup').rollup
-const loadConfigFile = require('rollup/dist/loadConfigFile')
-const ora = require('ora')
-const JSZip = require('jszip')
-const path = require('path')
+import { rollup } from 'rollup'
+import loadConfigFile from 'rollup/dist/loadConfigFile'
+import ora from 'ora'
+import JSZip from 'jszip'
+import path from 'path'
+import { promisify } from 'util'
+import { readFile, writeFile, copyFile, existsSync, mkdirSync, unlink } from 'fs'
+import Configuration from './Configuration'
+import Log from './Log'
 
 // the package json of the portlet
 const pack = require(process.cwd() + '/package.json')
-
-import { promisify } from 'util'
-import { readFile, writeFile, copyFile, existsSync, mkdirSync, unlink } from 'fs'
 
 const readFilePromisified = promisify(readFile)
 const writeFilePromisified = promisify(writeFile)
 const copyFilePromisified = promisify(copyFile)
 const unlinkPromisified = promisify(unlink)
-
-import Configuration from './Configuration'
-import Log from './Log'
 
 export default class Bundler {
   private configuration: Configuration = new Configuration()
