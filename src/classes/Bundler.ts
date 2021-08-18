@@ -1,121 +1,75 @@
-import { rollup } from 'rollup'
-import loadConfigFile from 'rollup/dist/loadConfigFile'
-import ora from 'ora'
-import JSZip from 'jszip'
-import path from 'path'
-import { promisify } from 'util'
-import { readFile, writeFile, copyFile, existsSync, mkdirSync, unlink } from 'fs'
-import Configuration from './Configuration'
+import { existsSync, mkdirSync } from 'fs'
 import Log from './Log'
 import PackageHandler from '../handlers/PackageHandler'
-
-const readFilePromisified = promisify(readFile)
-const writeFilePromisified = promisify(writeFile)
-const copyFilePromisified = promisify(copyFile)
-const unlinkPromisified = promisify(unlink)
+import TimeHandler from '../handlers/TimeHandler'
+import RollupHandler from '../handlers/RollupHandler'
 
 export default class Bundler {
-  /**
-   * Bundler configuration
-   * @private
-   */
-  private configuration: Configuration = new Configuration()
-
   /**
    * The name of the jar file
    * @private
    */
-  private readonly jarName: string
+  private jarName: string
 
   /**
    * The js entry point
    * @private
    */
-  private readonly entryPoint: string
+  private entryPoint: string
 
   /**
    * The external package.json file
    * @private
    */
-  private readonly pack: any
+  private pack: any
 
-  constructor () {
+  /**
+   * The rollup handler
+   * @private
+   */
+  private rollupHandler: RollupHandler = new RollupHandler()
+
+  public async prepare () {
+    const timer = new TimeHandler()
+
+    Log.write(Log.chalk.white('basic'))
+    Log.write(Log.chalk.gray('verify external package.json file'))
     PackageHandler.check()
+
+    Log.write(Log.chalk.gray('set globaly used variables'))
     this.pack = PackageHandler.pack
     this.jarName = `${this.pack.name}-${this.pack.version}.jar`
     this.entryPoint = this.pack.main || 'index'
-  }
-
-  public loadRollupConfiguration = async () => {
-    const start: Date = new Date()
-    Log.write(Log.chalk.gray('loading custom rollup configuration'))
-
-    if (existsSync('rollup.config.js')) {
-      try {
-        const { options } = await loadConfigFile(process.cwd() + '/rollup.config.js')
-        this.configuration.setConfigurationFromFile(options)
-        Log.write(Log.chalk.green(`custom rollup configuration has been found and loaded in ${(new Date().getTime() - start.getTime()) / 1000}s.`))
-      } catch (exception) {
-        Log.write(Log.chalk.red(`configuration file contains errors in ${(new Date().getTime() - start.getTime()) / 1000}s.`))
-        Log.write(Log.chalk.red(exception))
-        throw exception
-      }
-    } else {
-      Log.write(Log.chalk.gray(`no custom rollup configuration has been found in ${(new Date().getTime() - start.getTime()) / 1000}s. The default will be used.`))
-    }
-  }
-
-  public createDistDirectory = async () => {
-    const start: Date = new Date()
 
     if (!existsSync('dist')) {
+      Log.write(Log.chalk.gray('create dist directory'))
       mkdirSync('dist')
-      Log.write(Log.chalk.green(`dist directory created successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     }
+
+    Log.write(timer.getSecondsPretty(), Log.chalk.green(`finished basic prepare tasks successfully`))
+    timer.reset()
+
+    Log.write(Log.chalk.white('\nrollup'))
+    Log.write(Log.chalk.gray('load custom rollup configuration file if exists'))
+    await this.rollupHandler.loadExternalConfiguration()
+    Log.write(timer.getSecondsPretty(), Log.chalk.green(`finished rollup prepare tasks successfully`))
   }
 
-  public bundle = async () => {
-    let start: Date = new Date()
-    const spinner = ora({
-      text: Log.chalk.gray('bundle with rollup in progress\n'),
-      color: 'gray'
-    }).start()
+  public async bundle () {
+    const timer = new TimeHandler()
 
-    let bundle
+    Log.write(Log.chalk.white('bundle code'))
+    await this.rollupHandler.bundle()
 
-    try {
-      bundle = await rollup(this.configuration.inputConfiguration)
-    } catch (exception) {
-      spinner.stop()
-      Log.write(Log.chalk.red(`failed to bundle code with rollup in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-      Log.write(Log.chalk.red(exception))
-      throw exception
-    }
-
-    spinner.stop()
-    Log.write(Log.chalk.green(`bundle with rollup successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-
-    start = new Date()
-    spinner.start(Log.chalk.gray('writing bundle to file\n'))
-
-    try {
-      await bundle.write(this.configuration.outputConfiguration)
-    } catch (exception) {
-      spinner.stop()
-      Log.write(Log.chalk.red(`failed to write bundle to file in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-      Log.write(Log.chalk.red(exception))
-      throw exception
-    }
-
-    spinner.stop()
-    Log.write(Log.chalk.green(`writing bundle to file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    Log.write(Log.chalk.white('write code to file'))
+    await this.rollupHandler.writeToFile()
   }
 
-  public wrap = async () => {
+  /*public wrap = async () => {
     const start: Date = new Date()
 
+    // use output option file
     const bundled = await readFilePromisified(`dist/${this.entryPoint}.js`)
-    this.setWrapped(bundled)
 
     Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
   }
@@ -219,5 +173,5 @@ export default class Bundler {
       Log.write(Log.chalk.red(`failed to deploy ${this.jarName} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s, ${exception.message}`))
       throw exception
     }
-  }
+  }*/
 }
