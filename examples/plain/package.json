@@ -20,11 +20,13 @@
   "main": "index.js",
   "devDependencies": {
     "copy-webpack-plugin": "4.6.0",
-    "liferay-npm-bundler-improved": "^1.0.0-beta.6",
     "liferay-npm-build-support": "^2.25.0",
     "liferay-npm-bundler": "^2.25.0",
     "webpack": "4.29.6",
     "webpack-cli": "3.3.0",
     "webpack-dev-server": "3.2.1"
+  },
+  "dependencies": {
+    "liferay-npm-bundler-improved": "^1.0.0-beta.7"
   }
 }
