@@ -1,12 +1,20 @@
-const { getInstalledPathSync } = require('get-installed-path')
+
 import { existsSync, readFileSync } from 'fs'
 import Log from '../classes/Log'
+import * as path from 'path'
 
 /**
  * The template handler which gets the template by its name and replaces the placeholder
  * variables with the passed values
  */
 export default class TemplateHandler {
+    /**
+     * The path to the liferay-npm-bundler-improved folder to be
+     * able to access the templates
+     * @private
+     */
+    private readonly scripPath: string
+
     /**
      * The location of the templates
      * @private
@@ -34,12 +42,15 @@ export default class TemplateHandler {
     public processed: string
 
     constructor(templateName: string) {
+        let scriptPath: string | Array<string> = __dirname.split(path.sep)
+        scriptPath.pop()
+        scriptPath = scriptPath.join(path.sep)
+
         this.templateName = templateName
-        const scriptPath = getInstalledPathSync('liferay-npm-bundler-improved')
         this.templatePath = `${scriptPath}/${this.templatesPath}/${this.templateName}`
 
         if (!existsSync(this.templatePath)) {
-            Log.write(Log.chalk.red(`template with name '${templateName}' in path '${scriptPath}' doesn't exist`))
+            Log.write(Log.chalk.red(`template with name '${templateName}' in path '${this.templatePath}' doesn't exist`))
             throw new Error()
         } else {
             this.raw = readFileSync(this.templatePath)
