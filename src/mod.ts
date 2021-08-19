@@ -40,10 +40,10 @@ async function initialization () {
       await bundler.cleanup()
     }
 
-    /*if (arg.deploy || arg.deploy === '') {
-      Log.write('\nadditional: deploying')
+    if (arg.deploy || arg.deploy === '') {
+      Log.write(Log.chalk.bgCyan('\n DEPLOY '))
       await bundler.deploy(arg.deploy)
-    }*/
+    }
 
     Log.write(Log.chalk.bgGreen('\n SUCCESS '), timer.getSecondsPretty(), Log.chalk.green(`bundler finished successfully`))
   } catch (exception) {
