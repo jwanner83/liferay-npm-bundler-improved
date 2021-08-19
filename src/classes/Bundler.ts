@@ -6,6 +6,7 @@ import TimeHandler from '../handlers/TimeHandler'
 import RollupHandler from '../handlers/RollupHandler'
 import TemplateHandler from '../handlers/TemplateHandler'
 import JarHandler from '../handlers/JarHandler'
+import DeploymentHandler from '../handlers/DeploymentHandler'
 
 const unlinkPromisified = promisify(unlink)
 
@@ -127,113 +128,13 @@ export default class Bundler {
     }
   }
 
-  /*public wrap = async () => {
-    const start: Date = new Date()
+  public async deploy (location: string = '') {
+    const deploymentHandler = new DeploymentHandler(location)
 
-    // use output option file
-    const bundled = await readFilePromisified(`dist/${this.entryPoint}.js`)
+    Log.write(Log.chalk.white('resolve deployment destination'))
+    await deploymentHandler.resolveDestination()
 
-    Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    Log.write(Log.chalk.white(`\ncopy ${this.jarHandler.name} to ${deploymentHandler.destination}`))
+    await deploymentHandler.deploy(this.jarHandler.name)
   }
-
-  public features = async () => {
-    const start: Date = new Date()
-
-    if (!existsSync('.npmbundlerrc')) {
-      Log.write(Log.chalk.gray(`The file .npmbundlerrc doesn't exist. No features will be added to the portlet. Took ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
-    }
-
-    let configuration: string
-    let localization: string
-
-    const data = await readFilePromisified('.npmbundlerrc')
-    const file = JSON.parse(data.toString())
-
-    const createJarKey = 'create-jar'
-    const featuresKey = 'features'
-
-    if (file[createJarKey] && file[createJarKey][featuresKey]) {
-      const features = file[createJarKey][featuresKey]
-
-      if (features.configuration) {
-        Log.write(Log.chalk.gray(`Found the configuration feature.`))
-        configuration = features.configuration
-      }
-      if (features.localization) {
-        Log.write(Log.chalk.gray(`Found the localization feature.`))
-        localization = features.localization
-      }
-    }
-  };
-
-  public create = async () => {
-    const start: Date = new Date()
-    const spinner = ora({
-      text: Log.chalk.gray('create jar structure\n'),
-      color: 'gray'
-    }).start()
-
-    const zip = new JSZip()
-
-    const meta = zip.folder('META-INF')
-    meta.file('MANIFEST.MF', this.manifestMF)
-
-    const resources = meta.folder('resources')
-    resources.file('manifest.json', this.manifestJSON)
-    resources.file('package.json', JSON.stringify(pack))
-    resources.file(`${this.entryPoint}.js`, this.wrapped)
-
-    spinner.text = Log.chalk.gray('save jar\n')
-
-    const content = await zip.generateAsync({
-      type: 'nodebuffer'
-    })
-    await writeFilePromisified(`dist/${this.jarName}`, content)
-
-    spinner.stop()
-    Log.write(Log.chalk.green(`created and saved jar file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-  }
-
-  public cleanup = async () => {
-    const start: Date = new Date()
-    Log.write(Log.chalk.gray(`remove ${this.entryPoint}.js file from dist`))
-
-    if (existsSync(`dist/${this.entryPoint}.js`)) {
-      await unlinkPromisified(`dist/${this.entryPoint}.js`)
-      Log.write(Log.chalk.green(`deleted ${this.entryPoint}.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-    } else {
-      Log.write(Log.chalk.gray(`${this.entryPoint}.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
-    }
-  }
-
-  public deploy = async (deploy) => {
-    const start: Date = new Date()
-
-    let destination = deploy
-
-    try {
-      const data = await readFilePromisified('.npmbuildrc')
-      const file = JSON.parse(data.toString())
-
-      if (file.liferayDir) {
-        destination = path.join(file.liferayDir, 'deploy')
-        Log.write(Log.chalk.gray(`found .npmbuildrc file with valid destination`))
-      }
-    } catch (exception) {
-      // ignore
-    }
-
-    if (!destination) {
-      Log.write(Log.chalk.red(`failed to deploy ${this.jarName} in ${(new Date().getTime() - start.getTime()) / 1000}s. destination is not set either through .npmbuildrc or flag`))
-      throw new Error()
-    }
-
-    try {
-      await copyFilePromisified(`dist/${this.jarName}`, path.join(destination, this.jarName))
-      Log.write(Log.chalk.green(`successfully deployed ${this.jarName} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-    } catch (exception) {
-      Log.write(Log.chalk.red(`failed to deploy ${this.jarName} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s, ${exception.message}`))
-      throw exception
-    }
-  }*/
 }
