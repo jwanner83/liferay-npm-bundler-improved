@@ -3,6 +3,7 @@ import Log from './Log'
 import PackageHandler from '../handlers/PackageHandler'
 import TimeHandler from '../handlers/TimeHandler'
 import RollupHandler from '../handlers/RollupHandler'
+import TemplateHandler from '../handlers/TemplateHandler'
 
 export default class Bundler {
   /**
@@ -63,6 +64,20 @@ export default class Bundler {
 
     Log.write(Log.chalk.white('write code to file'))
     await this.rollupHandler.writeToFile()
+
+    Log.write(timer.getSecondsPretty(), Log.chalk.green(`finished rollup bundle tasks successfully`))
+  }
+
+  public async process () {
+    const timer = new TimeHandler()
+
+    Log.write(Log.chalk.gray('serve code with the Liferay.Loader'))
+    const wrapperJsTemplate = new TemplateHandler('wrapper.js')
+    wrapperJsTemplate.replace('name', this.pack.name)
+    wrapperJsTemplate.replace('version', this.pack.version)
+    wrapperJsTemplate.replace('main', this.entryPoint)
+    const bundle = await this.rollupHandler.getBundledCode()
+    wrapperJsTemplate.replace('bundle', bundle)
   }
 
   /*public wrap = async () => {
