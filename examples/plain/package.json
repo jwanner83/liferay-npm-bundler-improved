@@ -17,7 +17,7 @@
     "javax.portlet.security-role-ref": "power-user,user",
     "javax.portlet.display-name": "Plain"
   },
-  "main": "index.js",
+  "main": "index",
   "devDependencies": {
     "copy-webpack-plugin": "4.6.0",
     "liferay-npm-build-support": "^2.25.0",
