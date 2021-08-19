@@ -18,13 +18,15 @@
     "liferay-frontend",
     "rollup"
   ],
+  "files": ["/bin"],
   "bin": {
     "liferay-npm-bundler-improved": "bin/bundler.js"
   },
   "dependencies": {
     "jszip": "^3.6.0",
     "ora": "^5.4.1",
-    "rollup": "^2.51.1"
+    "rollup": "^2.51.1",
+    "get-installed-path": "^4.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
