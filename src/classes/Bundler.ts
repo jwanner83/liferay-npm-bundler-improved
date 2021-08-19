@@ -1,10 +1,13 @@
-import { existsSync, mkdirSync } from 'fs'
+import { existsSync, mkdirSync, unlink } from 'fs'
+import { promisify } from 'util'
 import Log from './Log'
 import PackageHandler from '../handlers/PackageHandler'
 import TimeHandler from '../handlers/TimeHandler'
 import RollupHandler from '../handlers/RollupHandler'
 import TemplateHandler from '../handlers/TemplateHandler'
 import JarHandler from '../handlers/JarHandler'
+
+const unlinkPromisified = promisify(unlink)
 
 export default class Bundler {
   /**
@@ -57,8 +60,6 @@ export default class Bundler {
   }
 
   public async bundle () {
-    const timer = new TimeHandler()
-
     Log.write(Log.chalk.white('bundle code'))
     await this.rollupHandler.bundle()
 
@@ -111,6 +112,19 @@ export default class Bundler {
     Log.write(Log.chalk.white('create jar file'))
     await this.jarHandler.createJarFile()
     Log.write(timer.getSecondsPretty(), Log.chalk.green('finished creating jar successful'))
+  }
+
+  public async cleanup () {
+    const timer = new TimeHandler()
+
+    Log.write(Log.chalk.white('cleanup dist folder'))
+    Log.write(Log.chalk.gray(`remove ${this.entryPoint}.js file from dist`))
+    if (existsSync(`dist/${this.entryPoint}.js`)) {
+      await unlinkPromisified(`dist/${this.entryPoint}.js`)
+      Log.write(timer.getSecondsPretty(), Log.chalk.green(`deleted ${this.entryPoint}.js file from dist successful`))
+    } else {
+      Log.write(timer.getSecondsPretty(), Log.chalk.gray(`${this.entryPoint}.js file doesn't exist in dist. build will continue.`))
+    }
   }
 
   /*public wrap = async () => {

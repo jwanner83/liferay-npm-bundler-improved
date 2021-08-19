@@ -35,12 +35,12 @@ async function initialization () {
     Log.write(Log.chalk.bgCyan('\n CREATE '))
     await bundler.create()
 
-    /*if (!arg.keep) {
-      Log.write('\ncleanup')
+    if (!arg.keep) {
+      Log.write(Log.chalk.bgCyan('\n CLEANUP '))
       await bundler.cleanup()
     }
 
-    if (arg.deploy || arg.deploy === '') {
+    /*if (arg.deploy || arg.deploy === '') {
       Log.write('\nadditional: deploying')
       await bundler.deploy(arg.deploy)
     }*/
