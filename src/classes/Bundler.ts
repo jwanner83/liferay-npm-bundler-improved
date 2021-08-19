@@ -112,7 +112,7 @@ export default class Bundler {
 
     Log.write(Log.chalk.white('create jar file'))
     await this.jarHandler.createJarFile()
-    Log.write(timer.getSecondsPretty(), Log.chalk.green('finished creating jar successful'))
+    Log.write(timer.getSecondsPretty(), Log.chalk.green(`finished creating 'dist/${this.jarHandler.name}' successful`))
   }
 
   public async cleanup () {
