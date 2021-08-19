@@ -10,18 +10,18 @@ export default class PackageHandler {
      * The external package.json
      * @private
      */
-    public static readonly pack = pack
+    public readonly pack = pack
 
     /**
      * The required fields which have to be present inside the external package.json
      * @private
      */
-    private static readonly necessaryFields = ['name', 'version', 'description']
+    private readonly necessaryFields = ['name', 'version', 'description']
 
     /**
      * Check if the package.json contains all the necessary fields
      */
-    public static check () {
+    public check () {
         if (pack) {
             for (const necessaryField of this.necessaryFields) {
                 if (!pack[necessaryField]) {
