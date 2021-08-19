@@ -4,14 +4,9 @@ import PackageHandler from '../handlers/PackageHandler'
 import TimeHandler from '../handlers/TimeHandler'
 import RollupHandler from '../handlers/RollupHandler'
 import TemplateHandler from '../handlers/TemplateHandler'
+import JarHandler from '../handlers/JarHandler'
 
 export default class Bundler {
-  /**
-   * The name of the jar file
-   * @private
-   */
-  private jarName: string
-
   /**
    * The js entry point
    * @private
@@ -19,10 +14,10 @@ export default class Bundler {
   private entryPoint: string
 
   /**
-   * The external package.json file
+   * The package handler
    * @private
    */
-  private pack: any
+  private packageHandler: PackageHandler = new PackageHandler()
 
   /**
    * The rollup handler
@@ -30,17 +25,22 @@ export default class Bundler {
    */
   private rollupHandler: RollupHandler = new RollupHandler()
 
+  /**
+   * The jar handler
+   * @private
+   */
+  private jarHandler: JarHandler = new JarHandler()
+
   public async prepare () {
     const timer = new TimeHandler()
 
     Log.write(Log.chalk.white('basic'))
     Log.write(Log.chalk.gray('verify external package.json file'))
-    PackageHandler.check()
+    this.packageHandler.check()
 
     Log.write(Log.chalk.gray('set globaly used variables'))
-    this.pack = PackageHandler.pack
-    this.jarName = `${this.pack.name}-${this.pack.version}.jar`
-    this.entryPoint = this.pack.main || 'index'
+    this.jarHandler.name = `${this.packageHandler.pack.name}-${this.packageHandler.pack.version}.jar`
+    this.entryPoint = this.packageHandler.pack.main || 'index'
 
     if (!existsSync('dist')) {
       Log.write(Log.chalk.gray('create dist directory'))
@@ -71,13 +71,24 @@ export default class Bundler {
   public async process () {
     const timer = new TimeHandler()
 
-    Log.write(Log.chalk.gray('serve code with the Liferay.Loader'))
+    Log.write(Log.chalk.gray('wrap code in liferay loader'))
     const wrapperJsTemplate = new TemplateHandler('wrapper.js')
-    wrapperJsTemplate.replace('name', this.pack.name)
-    wrapperJsTemplate.replace('version', this.pack.version)
+    wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
+    wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
     const bundle = await this.rollupHandler.getBundledCode()
     wrapperJsTemplate.replace('bundle', bundle)
+
+    const meta = this.jarHandler.jar.folder('META-INF')
+    // meta.file('MANIFEST.MF', this.manifestMF)
+
+    const resources = meta.folder('resources')
+    // resources.file('manifest.json', this.manifestJSON)
+    resources.file('package.json', JSON.stringify(this.packageHandler.pack))
+    resources.file(`${this.entryPoint}.js`, bundle)
+
+    await this.jarHandler.createJarFile()
+    Log.write(timer.getSecondsPretty(), Log.chalk.green('finished creating the jar file in the `dist` folder'))
   }
 
   /*public wrap = async () => {
