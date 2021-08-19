@@ -1,10 +1,13 @@
 import Configuration from '../classes/Configuration'
 import Log from '../classes/Log'
-import { existsSync } from 'fs'
+import { existsSync, readFile } from 'fs'
+import { promisify } from 'util'
 const ora = require('ora')
-import { rollup } from 'rollup'
 import TimeHandler from './TimeHandler'
+const rollup = require('rollup').rollup
 const loadConfigFile = require('rollup/dist/loadConfigFile')
+
+const readFilePromisified = promisify(readFile)
 
 export default class RollupHandler {
     /**
@@ -14,10 +17,16 @@ export default class RollupHandler {
     private configuration: Configuration = new Configuration()
 
     /**
+     * The rollup bundle
+     * @private
+     */
+    private rollupBundle: any
+
+    /**
      * The bundled code
      * @private
      */
-    private bundledCode: any
+    private bundledCode: string
 
     /**
      * Load the external configuration file if it exists. Otherwise, a default config will be used
@@ -44,15 +53,13 @@ export default class RollupHandler {
     public async bundle () {
         const timer = new TimeHandler()
 
-        Log.write('Existiert', existsSync(this.configuration.inputConfiguration.input))
-
         const spinner = ora({
             text: Log.chalk.gray('bundle with rollup in progress\n'),
             color: 'gray'
         }).start()
 
         try {
-            this.bundledCode = await rollup(this.configuration.inputConfiguration)
+            this.rollupBundle = await rollup(this.configuration.inputConfiguration)
         } catch (exception) {
             spinner.stop()
             Log.write(timer.getSecondsPretty(), Log.chalk.red(`failed to bundle code with rollup\n`))
@@ -69,7 +76,7 @@ export default class RollupHandler {
      * It is required to run the `bundle` command before. Otherwise, this wouldn't work
      */
     public async writeToFile () {
-        // TODO add if (bundledCode doesn't exist) 
+        // TODO add if (rollupBundle doesn't exist)
         const timer = new TimeHandler()
 
         const spinner = ora({
@@ -78,7 +85,7 @@ export default class RollupHandler {
         }).start()
 
         try {
-            await this.bundledCode.write(this.configuration.outputConfiguration)
+            await this.rollupBundle.write(this.configuration.outputConfiguration)
         } catch (exception) {
             spinner.stop()
             Log.write(timer.getSecondsPretty(), Log.chalk.red(`failed to write bundle to file\n`))
@@ -88,5 +95,26 @@ export default class RollupHandler {
 
         spinner.stop()
         Log.write(timer.getSecondsPretty(), Log.chalk.green(`writing bundle to file successful`))
+    }
+
+    /**
+     * Get the bundled code out of the written file
+     * It is required to run the `writeToFile` command before. Otherwise, this wouldn't work
+     */
+    public async getBundledCode () {
+        if (this.bundledCode) {
+            return this.bundledCode
+        } else {
+            const path = this.configuration.outputConfiguration.file
+
+            if (existsSync(path)) {
+                const code = await readFilePromisified(path)
+                this.bundledCode = code.toString()
+                return this.bundledCode
+            } else {
+                Log.write(Log.chalk.red(`File with bundled code doesn't exist in path ${path}`))
+                throw new Error()
+            }
+        }
     }
 }
