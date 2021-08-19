@@ -17,7 +17,8 @@ const arg: any = yargs(process.argv.slice(2)).options({
 
 async function initialization () {
   const timer = new TimeHandler()
-  Log.write(Log.chalk.bgBlue(' liferay-npm-bundler-improved - 1.0.0-beta.7 '))
+  Log.write(Log.chalk.bgBlue(' LIFERAY-NPM-BUNDLER-IMPROVED '))
+  Log.write(Log.chalk.bgBlack(' 1.0.0-beta.7 '))
 
   const bundler: Bundler = new Bundler()
 
@@ -31,16 +32,10 @@ async function initialization () {
     Log.write(Log.chalk.bgCyan('\n PROCESS '))
     await bundler.process()
 
-    /*Log.write('\nwrap liferay code into the Liferay.Loader')
-    await bundler.wrap()
-
-    Log.write('\ncheck additional portlet features')
-    await bundler.features()
-
-    Log.write('\ncreate and save jar')
+    Log.write(Log.chalk.bgCyan('\n CREATE '))
     await bundler.create()
 
-    if (!arg.keep) {
+    /*if (!arg.keep) {
       Log.write('\ncleanup')
       await bundler.cleanup()
     }
