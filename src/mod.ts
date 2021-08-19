@@ -28,6 +28,9 @@ async function initialization () {
     Log.write(Log.chalk.bgCyan('\n BUNDLE '))
     await bundler.bundle()
 
+    Log.write(Log.chalk.bgCyan('\n PROCESS '))
+    await bundler.process()
+
     /*Log.write('\nwrap liferay code into the Liferay.Loader')
     await bundler.wrap()
 
