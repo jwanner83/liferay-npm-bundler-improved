@@ -1,3 +1,4 @@
+// TODO add jsdoc
 export default class Configuration {
   public complete: any = {}
 
