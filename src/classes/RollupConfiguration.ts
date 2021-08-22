@@ -1,7 +1,7 @@
 /**
  * Rollup configuration
  */
-export default class Configuration {
+export default class RollupConfiguration {
   /**
    * The complete configuration
    */

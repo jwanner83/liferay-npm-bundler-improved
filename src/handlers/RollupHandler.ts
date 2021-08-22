@@ -1,4 +1,4 @@
-import Configuration from '../classes/Configuration'
+import RollupConfiguration from '../classes/RollupConfiguration'
 import Log from '../classes/Log'
 import { existsSync, readFile } from 'fs'
 import { promisify } from 'util'
@@ -14,7 +14,7 @@ export default class RollupHandler {
      * Bundler configuration
      * @private
      */
-    private configuration: Configuration = new Configuration()
+    private configuration: RollupConfiguration = new RollupConfiguration()
 
     /**
      * The rollup bundle
