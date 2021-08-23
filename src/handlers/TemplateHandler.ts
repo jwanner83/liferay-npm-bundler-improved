@@ -8,13 +8,6 @@ import * as path from 'path'
  */
 export default class TemplateHandler {
     /**
-     * The path to the liferay-npm-bundler-improved folder to be
-     * able to access the templates
-     * @private
-     */
-    private readonly scripPath: string
-
-    /**
      * The location of the templates
      * @private
      */
@@ -63,7 +56,7 @@ export default class TemplateHandler {
      * @param value
      */
     public replace (key: string, value: string) {
-        const expression: RegExp = new RegExp(key, 'g')
-        this.processed.replace(expression, value)
+        const expression: RegExp = new RegExp(`{{${key}}}`, 'g')
+        this.processed = this.processed.replace(expression, value)
     }
 }
