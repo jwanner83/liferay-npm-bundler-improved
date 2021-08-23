@@ -1,5 +1,6 @@
 import Log from '../classes/Log'
 
+/* require is necessary to import local `package.json` */
 const pack = require(process.cwd() + '/package.json')
 
 /**

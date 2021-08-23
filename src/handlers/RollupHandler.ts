@@ -2,7 +2,6 @@ import RollupConfiguration from '../classes/RollupConfiguration'
 import Log from '../classes/Log'
 import { existsSync, readFile } from 'fs'
 import { promisify } from 'util'
-const ora = require('ora')
 import TimeHandler from './TimeHandler'
 const rollup = require('rollup').rollup
 const loadConfigFile = require('rollup/dist/loadConfigFile')
@@ -53,7 +52,7 @@ export default class RollupHandler {
     public async bundle () {
         const timer = new TimeHandler()
 
-        const spinner = ora({
+        const spinner = Log.ora({
             text: Log.chalk.gray('bundle with rollup in progress\n'),
             color: 'gray'
         }).start()
@@ -79,7 +78,7 @@ export default class RollupHandler {
         // TODO add if (rollupBundle doesn't exist)
         const timer = new TimeHandler()
 
-        const spinner = ora({
+        const spinner = Log.ora({
             text: Log.chalk.gray('writing bundle to file in progress\n'),
             color: 'gray'
         }).start()
