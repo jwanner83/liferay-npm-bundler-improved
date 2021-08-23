@@ -3,8 +3,7 @@
 		"output-dir": "dist",
 		"features": {
 			"js-extender": true,
-			"web-context": "/plain",
-			"localization": "features/localization/Language"
+			"web-context": "/plain"
 		}
 	}
 }
