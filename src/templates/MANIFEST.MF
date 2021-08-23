@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: {{description}}
 Bundle-SymbolicName: {{name}}
 Bundle-Version: {{version}}
-Provide-Capability: osgi.webresource;osgi.webresource={{name}};version:Version=\"{{version}}\"
-Require-Capability: osgi.extender;filter:=\"(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))\"
+Provide-Capability: osgi.webresource;osgi.webresource={{name}};version:Version="{{version}}"
+Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"
 Tool: liferay-npm-bundler-2.26.0
 Web-ContextPath: /{{name}}
