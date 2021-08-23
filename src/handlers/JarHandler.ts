@@ -1,4 +1,4 @@
-const JSZip = require('jszip')
+import JSZip from 'jszip/dist/jszip'
 import { promisify } from 'util'
 import { writeFile } from 'fs'
 
