@@ -13,9 +13,9 @@ const arg: any = yargs(process.argv.slice(2)).options({
     alias: 'k',
     type: 'boolean'
   }
-}).argv
+}).argv;
 
-async function initialization () {
+(async () => {
   const timer = new TimeHandler()
   Log.titleBadge(false, 'LIFERAY-NPM-BUNDLER-IMPROVED')
   Log.blackBadge(false, '1.0.0-beta.7')
@@ -51,6 +51,4 @@ async function initialization () {
     Log.errorBadge(true, 'error')
     Log.error(timer, 'bundler finished with an error')
   }
-}
-
-initialization()
+})()
