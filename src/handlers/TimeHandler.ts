@@ -5,7 +5,16 @@ import Log from '../classes/Log'
  * prevent code duplications
  */
 export default class TimeHandler {
+    /**
+     * The start date
+     * @private
+     */
     private startDate: Date
+
+    /**
+     * The end date
+     * @private
+     */
     private endDate: Date
 
     constructor (start: boolean = true) {

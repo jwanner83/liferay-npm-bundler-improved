@@ -35,14 +35,14 @@ export default class RollupHandler {
             try {
                 const { options } = await loadConfigFile(process.cwd() + '/rollup.config.js')
                 this.configuration.setConfigurationFromFile(options)
-                Log.write(Log.chalk.gray(`custom rollup configuration has been found and loaded`))
+                Log.debug('custom rollup configuration has been found and loaded')
             } catch (exception) {
-                Log.write(Log.chalk.red(`configuration file contains errors`))
-                Log.write(Log.chalk.red(exception))
+                Log.trace(false, 'configuration file contains errors')
+                Log.trace(true, exception)
                 throw exception
             }
         } else {
-            Log.write(Log.chalk.gray(`no custom rollup configuration has been found. The default will be used.`))
+            Log.debug('no custom rollup configuration has been found. The default will be used.')
         }
     }
 
@@ -61,13 +61,13 @@ export default class RollupHandler {
             this.rollupBundle = await rollup(this.configuration.inputConfiguration)
         } catch (exception) {
             spinner.stop()
-            Log.write(timer.getSecondsPretty(), Log.chalk.red(`failed to bundle code with rollup\n`))
-            Log.write(Log.chalk.red(exception))
+            Log.error(timer, 'failed to bundle code with rollup')
+            Log.trace(true, exception)
             throw exception
         }
 
         spinner.stop()
-        Log.write(timer.getSecondsPretty(), Log.chalk.green(`bundle with rollup successful`))
+        Log.success(timer, 'bundle with rollup successful')
     }
 
     /**
@@ -87,13 +87,13 @@ export default class RollupHandler {
             await this.rollupBundle.write(this.configuration.outputConfiguration)
         } catch (exception) {
             spinner.stop()
-            Log.write(timer.getSecondsPretty(), Log.chalk.red(`failed to write bundle to file\n`))
-            Log.write(Log.chalk.red(exception))
+            Log.error(timer, 'failed to write bundle to file')
+            Log.trace(true, exception)
             throw exception
         }
 
         spinner.stop()
-        Log.write(timer.getSecondsPretty(), Log.chalk.green(`writing bundle to file successful`))
+        Log.success(timer, 'writing bundle to file successful')
     }
 
     /**
@@ -111,7 +111,7 @@ export default class RollupHandler {
                 this.bundledCode = code.toString()
                 return this.bundledCode
             } else {
-                Log.write(Log.chalk.red(`File with bundled code doesn't exist in path ${path}`))
+                Log.trace(false, `File with bundled code doesn't exist in path ${path}`)
                 throw new Error()
             }
         }

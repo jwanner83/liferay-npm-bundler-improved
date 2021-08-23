@@ -26,12 +26,12 @@ export default class PackageHandler {
         if (pack) {
             for (const necessaryField of this.necessaryFields) {
                 if (!pack[necessaryField]) {
-                    Log.write(Log.chalk.red(`The package.json is missing the required field '${necessaryField}'.`))
+                    Log.trace(false, `The package.json is missing the required field '${necessaryField}'.`)
                     throw new Error()
                 }
             }
         } else {
-            Log.write(Log.chalk.red(`The package.json couldn't be read. Please check if it exists.`))
+            Log.trace(false, `The package.json couldn't be read. Please check if it exists.`)
             throw new Error()
         }
     }

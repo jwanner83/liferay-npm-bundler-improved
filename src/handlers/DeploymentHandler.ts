@@ -31,7 +31,7 @@ export default class DeploymentHandler {
 
         if (this.location) {
             this.destination = this.location
-            Log.write(timer.getSecondsPretty(), Log.chalk.green('destination has been passed by param'))
+            Log.success(timer, 'destination has been passed by param')
         } else {
             if (existsSync('.npmbuildrc')) {
                 const data = await readFilePromisified('.npmbuildrc')
@@ -39,13 +39,13 @@ export default class DeploymentHandler {
 
                 if (file.liferayDir) {
                     this.destination = path.join(file.liferayDir, 'deploy')
-                    Log.write(timer.getSecondsPretty(), Log.chalk.green(`destination was found inside the '.npmbuildrc' file`))
+                    Log.success(timer, `destination was found inside the '.npmbuildrc' file`)
                 }
             }
         }
 
         if (!this.destination) {
-            Log.write(timer.getSecondsPretty(), Log.chalk.red(`failed to resolve deployment destination. destination has to be set either through the '.npmbuildrc' file or the -d param`))
+            Log.error(timer, `failed to resolve deployment destination. destination has to be set either through the '.npmbuildrc' file or the -d param`)
             throw new Error()
         }
     }
@@ -59,10 +59,10 @@ export default class DeploymentHandler {
 
         try {
             await copyFilePromisified(`dist/${jarName}`, path.join(this.destination, jarName))
-            Log.write(timer.getSecondsPretty(), Log.chalk.green(`successfully deployed ${jarName} to ${this.destination}`))
+            Log.success(timer,`successfully deployed ${jarName} to ${this.destination}`)
         } catch (exception) {
-            Log.write(timer.getSecondsPretty(), Log.chalk.red(`failed to deploy ${jarName} to ${this.destination}\n`))
-            Log.write(Log.chalk.red(exception.message))
+            Log.error(timer, `failed to deploy ${jarName} to ${this.destination}`)
+            Log.trace(true, exception.message)
             throw exception
         }
     }

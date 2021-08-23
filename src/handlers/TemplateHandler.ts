@@ -1,4 +1,3 @@
-
 import { existsSync, readFileSync } from 'fs'
 import Log from '../classes/Log'
 import * as path from 'path'
@@ -50,7 +49,7 @@ export default class TemplateHandler {
         this.templatePath = `${scriptPath}/${this.templatesPath}/${this.templateName}`
 
         if (!existsSync(this.templatePath)) {
-            Log.write(Log.chalk.red(`template with name '${templateName}' in path '${this.templatePath}' doesn't exist`))
+            Log.trace(false, `template with name '${templateName}' in path '${this.templatePath}' doesn't exist`)
             throw new Error()
         } else {
             this.raw = readFileSync(this.templatePath)
