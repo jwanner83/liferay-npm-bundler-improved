@@ -10,14 +10,14 @@ export default class RollupConfiguration {
   /**
    * The default input configuration
    */
-  public inputConfiguration: any = {
+  public inputConfiguration: unknown = {
     input: 'src/index.js'
   }
 
   /**
    * The default output configuration
    */
-  public outputConfiguration: any = {
+  public outputConfiguration: unknown = {
     format: 'cjs',
     strict: false,
     file: 'dist/index.js'
@@ -27,7 +27,7 @@ export default class RollupConfiguration {
    * Set the configuration from the local rollup file
    * @param options
    */
-  public setConfigurationFromFile = (options: Array<any>): void => {
+  public setConfigurationFromFile = (options: Array<unknown>): void => {
     if (Array.isArray(options) && options.length > 0) {
       this.complete = options[0]
       this.inputConfiguration = this.complete
