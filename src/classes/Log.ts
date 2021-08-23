@@ -9,6 +9,71 @@ export default class Log {
   public static write = console.log
 
   /**
+   * Badge which shows title titles
+   * @param addLineBreak
+   * @param text
+   */
+  public static titleBadge (addLineBreak: boolean, text: string) {
+    if (addLineBreak) {
+      Log.write('')
+    }
+
+    return Log.write(Log.chalk.bgGreen(` ${text.trim().toUpperCase()} `))
+  }
+
+  /**
+   * Badge which shows black titles
+   * @param addLineBreak
+   * @param text
+   */
+  public static blackBadge (addLineBreak: boolean, text: string) {
+    if (addLineBreak) {
+      Log.write('')
+    }
+
+    return Log.write(Log.chalk.bgBlack(` ${text.trim().toUpperCase()} `))
+  }
+
+  /**
+   * Badge which shows main titles
+   * @param addLineBreak
+   * @param text
+   */
+  public static mainBadge (addLineBreak: boolean, text: string) {
+    if (addLineBreak) {
+      Log.write('')
+    }
+
+    return Log.write(Log.chalk.bgCyan(` ${text.trim().toUpperCase()} `))
+  }
+
+  /**
+   * Badge which shows success titles
+   * @param addLineBreak
+   * @param text
+   */
+  public static successBadge (addLineBreak: boolean, text: string) {
+    if (addLineBreak) {
+      Log.write('')
+    }
+
+    return Log.write(Log.chalk.bgGreen(` ${text.trim().toUpperCase()} `))
+  }
+
+  /**
+   * Badge which shows error titles
+   * @param addLineBreak
+   * @param text
+   */
+  public static errorBadge (addLineBreak: boolean, text: string) {
+    if (addLineBreak) {
+      Log.write('')
+    }
+
+    return Log.write(Log.chalk.bgRed(` ${text.trim().toUpperCase()} `))
+  }
+
+  /**
    * Debug log with gray font color
    * @param text
    */

@@ -17,37 +17,39 @@ const arg: any = yargs(process.argv.slice(2)).options({
 
 async function initialization () {
   const timer = new TimeHandler()
-  Log.write(Log.chalk.bgBlue(' LIFERAY-NPM-BUNDLER-IMPROVED '))
-  Log.write(Log.chalk.bgBlack(' 1.0.0-beta.7 '))
+  Log.titleBadge(false, 'LIFERAY-NPM-BUNDLER-IMPROVED')
+  Log.blackBadge(false, '1.0.0-beta.7')
 
   const bundler: Bundler = new Bundler()
 
   try {
-    Log.write(Log.chalk.bgCyan('\n PREPARE '))
+    Log.mainBadge(true, 'prepare')
     await bundler.prepare()
 
-    Log.write(Log.chalk.bgCyan('\n BUNDLE '))
+    Log.mainBadge(true, 'bundle')
     await bundler.bundle()
 
-    Log.write(Log.chalk.bgCyan('\n PROCESS '))
+    Log.mainBadge(true, 'process')
     await bundler.process()
 
-    Log.write(Log.chalk.bgCyan('\n CREATE '))
+    Log.mainBadge(true, 'create')
     await bundler.create()
 
     if (!arg.keep) {
-      Log.write(Log.chalk.bgCyan('\n CLEANUP '))
+      Log.mainBadge(true, 'cleanup')
       await bundler.cleanup()
     }
 
     if (arg.deploy || arg.deploy === '') {
-      Log.write(Log.chalk.bgCyan('\n DEPLOY '))
+      Log.mainBadge(true, 'deploy')
       await bundler.deploy(arg.deploy)
     }
 
-    Log.write(Log.chalk.bgGreen('\n SUCCESS '), timer.getSecondsPretty(), Log.chalk.green(`bundler finished successfully`))
+    Log.successBadge(true, 'success')
+    Log.success(timer, 'bundler finished successfully')
   } catch (exception) {
-    Log.write(Log.chalk.bgRed('\n ERROR '), timer.getSecondsPretty(), Log.chalk.red(`bundler finished with an error`))
+    Log.errorBadge(true, 'error')
+    Log.error(timer, 'bundler finished with an error')
   }
 }
 
