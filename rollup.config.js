@@ -12,9 +12,7 @@ export default {
     resolve({
       preferBuiltins: true
     }),
-    commonjs({
-      transformMixedEsModules: true
-    }),
+    commonjs(),
     json(),
     typescript(),
     terser()
