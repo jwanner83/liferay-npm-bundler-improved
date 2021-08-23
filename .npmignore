@@ -1,4 +1,5 @@
 examples
-src
+src/classes
+src/handlers
 .idea
 package-lock.json
