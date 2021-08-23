@@ -54,7 +54,7 @@ export default class Bundler {
     Log.success(timer, 'finished basic prepare tasks successfully')
     timer.reset()
 
-    Log.info(true,'rollup')
+    Log.info(true, 'rollup')
     Log.debug('load custom rollup configuration file if exists')
     await this.rollupHandler.loadExternalConfiguration()
     Log.success(timer, 'finished rollup prepare tasks successfully')
