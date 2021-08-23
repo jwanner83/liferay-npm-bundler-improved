@@ -75,7 +75,6 @@ export default class RollupHandler {
      * It is required to run the `bundle` command before. Otherwise, this wouldn't work
      */
     public async writeToFile () {
-        // TODO add if (rollupBundle doesn't exist)
         const timer = new TimeHandler()
 
         const spinner = Log.ora({
