@@ -2,7 +2,6 @@ import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
-import { terser } from 'rollup-plugin-terser'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 
 export default {
@@ -26,7 +25,6 @@ export default {
     typescript({
       sourceMap: false,
       inlineSources: false
-    }),
-    terser()
+    })
   ]
 }
