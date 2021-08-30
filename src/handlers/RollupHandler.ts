@@ -103,6 +103,7 @@ export default class RollupHandler {
         if (this.bundledCode) {
             return this.bundledCode
         } else {
+            // @ts-ignore
             const path = this.configuration.outputConfiguration.file
 
             if (existsSync(path)) {
