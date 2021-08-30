@@ -57,6 +57,10 @@ export default class TemplateHandler {
      */
     public replace (key: string, value: string) {
         const expression: RegExp = new RegExp(`{{${key}}}`, 'g')
-        this.processed = this.processed.replace(expression, value)
+        this.processed = this.processed.replace(expression, () => {
+            // with a callback, the special replacement pattern isn't applied
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+            return value
+        })
     }
 }
