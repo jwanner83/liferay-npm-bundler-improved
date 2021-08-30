@@ -64,8 +64,8 @@ export default class Bundler {
     Log.info(false, 'bundle code')
     await this.rollupHandler.bundle()
 
-    Log.info(true, 'write code to file')
-    await this.rollupHandler.writeToFile()
+    Log.info(true, 'extract bundled code')
+    await this.rollupHandler.getBundledCode()
   }
 
   public async process () {
@@ -77,8 +77,7 @@ export default class Bundler {
     wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
     wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
-    const bundle = await this.rollupHandler.getBundledCode()
-    wrapperJsTemplate.replace('bundle', bundle)
+    wrapperJsTemplate.replace('bundle', this.rollupHandler.bundledCode)
 
     Log.debug('process MANIFEST.MF')
     const manifestMFTemplate = new TemplateHandler('MANIFEST.MF')
