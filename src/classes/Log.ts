@@ -126,6 +126,14 @@ export default class Log {
   }
 
   /**
+   * Warn log with red background color and optional timer
+   * @param text
+   */
+  public static warn (...text: unknown[]) {
+    return Log.write(Log.chalk.yellow(text))
+  }
+
+  /**
    * Wrapper for chalk which allows coloring the log output
    */
   public static chalk = chalk
