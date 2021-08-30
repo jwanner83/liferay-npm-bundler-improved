@@ -75,7 +75,7 @@ export default class RollupHandler {
         const timer = new TimeHandler()
 
         const spinner = Log.ora({
-            text: Log.chalk.gray('writing bundle to file in progress\n'),
+            text: Log.chalk.gray('extracting bundled code in progress\n'),
             color: 'gray'
         }).start()
 
@@ -95,6 +95,6 @@ export default class RollupHandler {
         }
 
         spinner.stop()
-        Log.success(timer, 'writing bundle to file successful')
+        Log.success(timer, 'extracting code successful')
     }
 }
