@@ -6,8 +6,6 @@ import TimeHandler from './TimeHandler'
 const rollup = require('rollup').rollup
 const loadConfigFile = require('rollup/dist/loadConfigFile')
 
-const readFilePromisified = promisify(readFile)
-
 export default class RollupHandler {
     /**
      * Bundler configuration
@@ -23,9 +21,8 @@ export default class RollupHandler {
 
     /**
      * The bundled code
-     * @private
      */
-    private bundledCode: string
+    public bundledCode: string
 
     /**
      * Load the external configuration file if it exists. Otherwise, a default config will be used
@@ -71,10 +68,10 @@ export default class RollupHandler {
     }
 
     /**
-     * Write the bundled code to the specified file.
+     * Get the bundled code out of the bundle object
      * It is required to run the `bundle` command before. Otherwise, this wouldn't work
      */
-    public async writeToFile () {
+    public async getBundledCode () {
         const timer = new TimeHandler()
 
         const spinner = Log.ora({
@@ -83,37 +80,21 @@ export default class RollupHandler {
         }).start()
 
         try {
-            await this.rollupBundle.write(this.configuration.outputConfiguration)
+            const bundle = await this.rollupBundle.generate(this.configuration.outputConfiguration)
+
+            if (bundle.output.length > 1) {
+                Log.warn('multiple outputs found. only the first one is used.')
+            }
+
+            this.bundledCode = bundle.output[0].code
         } catch (exception) {
             spinner.stop()
-            Log.error(timer, 'failed to write bundle to file')
+            Log.error(timer, 'failed to get bundled code')
             Log.trace(true, exception)
             throw exception
         }
 
         spinner.stop()
         Log.success(timer, 'writing bundle to file successful')
-    }
-
-    /**
-     * Get the bundled code out of the written file
-     * It is required to run the `writeToFile` command before. Otherwise, this wouldn't work
-     */
-    public async getBundledCode () {
-        if (this.bundledCode) {
-            return this.bundledCode
-        } else {
-            // @ts-ignore
-            const path = this.configuration.outputConfiguration.file
-
-            if (existsSync(path)) {
-                const code = await readFilePromisified(path)
-                this.bundledCode = code.toString()
-                return this.bundledCode
-            } else {
-                Log.trace(false, `File with bundled code doesn't exist in path ${path}`)
-                throw new Error()
-            }
-        }
     }
 }
