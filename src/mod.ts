@@ -47,8 +47,10 @@ const arg: any = yargs(process.argv.slice(2)).options({
 
     Log.successBadge(true, 'success')
     Log.success(timer, 'bundler finished successfully')
+    process.exit(0)
   } catch (exception) {
     Log.errorBadge(true, 'error')
     Log.error(timer, 'bundler finished with an error')
+    process.exit(1)
   }
 })()
