@@ -1,234 +1,139 @@
-const rollup = require('rollup').rollup
-const loadConfigFile = require('rollup/dist/loadConfigFile')
-const ora = require('ora')
-const JSZip = require('jszip')
-const path = require('path')
-
-// the package json of the portlet
-const pack = require(process.cwd() + '/package.json')
-
+import { existsSync, mkdirSync, unlink } from 'fs'
 import { promisify } from 'util'
-import { readFile, writeFile, copyFile, existsSync, mkdirSync, unlink } from 'fs'
+import Log from './Log'
+import PackageHandler from '../handlers/PackageHandler'
+import TimeHandler from '../handlers/TimeHandler'
+import RollupHandler from '../handlers/RollupHandler'
+import TemplateHandler from '../handlers/TemplateHandler'
+import JarHandler from '../handlers/JarHandler'
+import DeploymentHandler from '../handlers/DeploymentHandler'
 
-const readFilePromisified = promisify(readFile)
-const writeFilePromisified = promisify(writeFile)
-const copyFilePromisified = promisify(copyFile)
 const unlinkPromisified = promisify(unlink)
 
-import Configuration from './Configuration'
-import Log from './Log'
-
 export default class Bundler {
-  private configuration: Configuration = new Configuration()
-  private name: string = `${pack.name}-${pack.version}.jar`
-  private main: string = pack.main || 'index'
-  private wrapped: string = ''
-  private manifestMF: string =
-    `Manifest-Version: 1.0\n` +
-    `Bundle-ManifestVersion: 2\n` +
-    `Bundle-Name: ${pack.description}\n` +
-    `Bundle-SymbolicName: ${pack.name}\n` +
-    `Bundle-Version: ${pack.version}\n` +
-    `Provide-Capability: osgi.webresource;osgi.webresource=${pack.name};version:Version="${pack.version}"\n` +
-    `Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"\n` +
-    `Tool: liferay-npm-bundler-2.26.0\n` +
-    `Web-ContextPath: /${pack.name}`
-  private manifestJSON: string = JSON.stringify({
-    "packages": {
-      "/": {
-        "dest": {
-          "dir": "./build",
-          "id": "/",
-          "name": pack.name,
-          "version": pack.version
-        },
-        "src": {
-          "dir": ".",
-          "id": "/",
-          "name": pack.name,
-          "version": pack.version
-        }
-      }
-    }
-  })
+  /**
+   * The js entry point
+   * @private
+   */
+  private entryPoint: string
 
+  /**
+   * The package handler
+   * @private
+   */
+  private packageHandler: PackageHandler = new PackageHandler()
 
-  private setWrapped = (bundled: Buffer) => {
-    this.wrapped = `Liferay.Loader.define('${pack.name}@${pack.version}/${this.main}', ['module', 'exports', 'require'], function (module, exports, require) { ${bundled} });`
-  }
+  /**
+   * The rollup handler
+   * @private
+   */
+  private rollupHandler: RollupHandler = new RollupHandler()
 
-  public loadRollupConfiguration = async () => {
-    const start: Date = new Date()
-    Log.write(Log.chalk.gray('loading custom rollup configuration'))
+  /**
+   * The jar handler
+   * @private
+   */
+  private jarHandler: JarHandler = new JarHandler()
 
-    if (existsSync('rollup.config.js')) {
-      try {
-        const { options } = await loadConfigFile(process.cwd() + '/rollup.config.js')
-        this.configuration.setConfigurationFromFile(options)
-        Log.write(Log.chalk.green(`custom rollup configuration has been found and loaded in ${(new Date().getTime() - start.getTime()) / 1000}s.`))
-      } catch (exception) {
-        Log.write(Log.chalk.red(`configuration file contains errors in ${(new Date().getTime() - start.getTime()) / 1000}s.`))
-        Log.write(Log.chalk.red(exception))
-        throw exception
-      }
-    } else {
-      Log.write(Log.chalk.gray(`no custom rollup configuration has been found in ${(new Date().getTime() - start.getTime()) / 1000}s. The default will be used.`))
-    }
-  }
+  public async prepare () {
+    const timer = new TimeHandler()
 
-  public createDistDirectory = async () => {
-    const start: Date = new Date()
+    Log.info(false, 'basic')
+    Log.debug('verify external package.json file')
+    this.packageHandler.check()
+
+    Log.debug('set globaly used variables')
+    this.jarHandler.name = `${this.packageHandler.pack.name}-${this.packageHandler.pack.version}.jar`
+    this.entryPoint = this.packageHandler.pack.main || 'index'
 
     if (!existsSync('dist')) {
+      Log.debug('create dist directory')
       mkdirSync('dist')
-      Log.write(Log.chalk.green(`dist directory created successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
     }
+
+    Log.success(timer, 'finished basic prepare tasks successfully')
+    timer.reset()
+
+    Log.info(true, 'rollup')
+    Log.debug('load custom rollup configuration file if exists')
+    await this.rollupHandler.loadExternalConfiguration()
+    Log.success(timer, 'finished rollup prepare tasks successfully')
   }
 
-  public bundle = async () => {
-    let start: Date = new Date()
-    const spinner = ora({
-      text: Log.chalk.gray('bundle with rollup in progress\n'),
-      color: 'gray'
-    }).start()
+  public async bundle () {
+    Log.info(false, 'bundle code')
+    await this.rollupHandler.bundle()
 
-    let bundle
-
-    try {
-      bundle = await rollup(this.configuration.inputConfiguration)
-    } catch (exception) {
-      spinner.stop()
-      Log.write(Log.chalk.red(`failed to bundle code with rollup in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-      Log.write(Log.chalk.red(exception))
-      throw exception
-    }
-
-    spinner.stop()
-    Log.write(Log.chalk.green(`bundle with rollup successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-
-    start = new Date()
-    spinner.start(Log.chalk.gray('writing bundle to file\n'))
-
-    try {
-      await bundle.write(this.configuration.outputConfiguration)
-    } catch (exception) {
-      spinner.stop()
-      Log.write(Log.chalk.red(`failed to write bundle to file in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-      Log.write(Log.chalk.red(exception))
-      throw exception
-    }
-
-    spinner.stop()
-    Log.write(Log.chalk.green(`writing bundle to file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    Log.info(true, 'extract bundled code')
+    await this.rollupHandler.getBundledCode()
   }
 
-  public wrap = async () => {
-    const start: Date = new Date()
+  public async process () {
+    const timer = new TimeHandler()
 
-    const bundled = await readFilePromisified(`dist/${this.main}.js`)
-    this.setWrapped(bundled)
+    Log.info(false, 'process templates and replace variables')
+    Log.debug('process wrapper.js')
+    const wrapperJsTemplate = new TemplateHandler('wrapper.js')
+    wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
+    wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
+    wrapperJsTemplate.replace('main', this.entryPoint)
+    wrapperJsTemplate.replace('bundle', this.rollupHandler.bundledCode)
 
-    Log.write(Log.chalk.green(`wrapping code inside of Liferay.Loader successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-  }
+    Log.debug('process MANIFEST.MF')
+    const manifestMFTemplate = new TemplateHandler('MANIFEST.MF')
+    manifestMFTemplate.replace('name', this.packageHandler.pack.name)
+    manifestMFTemplate.replace('description', this.packageHandler.pack.description)
+    manifestMFTemplate.replace('version', this.packageHandler.pack.version)
 
-  public features = async () => {
-    const start: Date = new Date()
+    Log.debug('process manifest.json')
+    const manifestJSONTemplate = new TemplateHandler('manifest.json')
+    manifestJSONTemplate.replace('name', this.packageHandler.pack.name)
+    manifestJSONTemplate.replace('version', this.packageHandler.pack.version)
 
-    if (!existsSync('.npmbundlerrc')) {
-      Log.write(Log.chalk.gray(`The file .npmbundlerrc doesn't exist. No features will be added to the portlet. Took ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
-    }
+    Log.success(timer, 'finished template processing successful')
+    timer.reset()
 
-    let configuration: string
-    let localization: string
-
-    const data = await readFilePromisified('.npmbundlerrc')
-    const file = JSON.parse(data.toString())
-
-    const createJarKey = 'create-jar'
-    const featuresKey = 'features'
-
-    if (file[createJarKey] && file[createJarKey][featuresKey]) {
-      const features = file[createJarKey][featuresKey]
-
-      if (features.configuration) {
-        Log.write(Log.chalk.gray(`Found the configuration feature.`))
-        configuration = features.configuration
-      }
-      if (features.localization) {
-        Log.write(Log.chalk.gray(`Found the localization feature.`))
-        localization = features.localization
-      }
-    }
-  };
-
-  public create = async () => {
-    const start: Date = new Date()
-    const spinner = ora({
-      text: Log.chalk.gray('create jar structure\n'),
-      color: 'gray'
-    }).start()
-
-    const zip = new JSZip()
-
-    const meta = zip.folder('META-INF')
-    meta.file('MANIFEST.MF', this.manifestMF)
+    Log.info(true, 'process jar file')
+    Log.debug('create file structure')
+    const meta = this.jarHandler.jar.folder('META-INF')
+    meta.file('MANIFEST.MF', manifestMFTemplate.processed)
 
     const resources = meta.folder('resources')
-    resources.file('manifest.json', this.manifestJSON)
-    resources.file('package.json', JSON.stringify(pack))
-    resources.file(`${this.main}.js`, this.wrapped)
+    resources.file('manifest.json', manifestJSONTemplate.processed)
+    resources.file(`${this.entryPoint}.js`, wrapperJsTemplate.processed)
+    resources.file('package.json', JSON.stringify(this.packageHandler.pack))
 
-    spinner.text = Log.chalk.gray('save jar\n')
-
-    const content = await zip.generateAsync({
-      type: 'nodebuffer'
-    })
-    await writeFilePromisified(`dist/${this.name}`, content)
-
-    spinner.stop()
-    Log.write(Log.chalk.green(`created and saved jar file successful in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    Log.success(timer, 'finished jar processing successful')
   }
 
-  public cleanup = async () => {
-    const start: Date = new Date()
-    Log.write(Log.chalk.gray(`remove ${this.main}.js file from dist`))
+  public async create () {
+    const timer = new TimeHandler()
 
-    if (existsSync(`dist/${this.main}.js`)) {
-      await unlinkPromisified(`dist/${this.main}.js`)
-      Log.write(Log.chalk.green(`deleted ${this.main}.js file from dist successfully in ${(new Date().getTime() - start.getTime()) / 1000}s`))
+    Log.info(false, 'create jar file')
+    await this.jarHandler.createJarFile()
+    Log.success(timer, `finished creating 'dist/${this.jarHandler.name}' successful`)
+  }
+
+  public async cleanup () {
+    const timer = new TimeHandler()
+
+    Log.info(false, 'cleanup dist folder')
+    Log.debug(`remove ${this.entryPoint}.js file from dist`)
+    if (existsSync(`dist/${this.entryPoint}.js`)) {
+      await unlinkPromisified(`dist/${this.entryPoint}.js`)
+      Log.success(timer, `deleted ${this.entryPoint}.js file from dist successful`)
     } else {
-      Log.write(Log.chalk.gray(`${this.main}.js file doesn't exist in dist in ${(new Date().getTime() - start.getTime()) / 1000}s. Build will continue.`))
+      Log.success(timer, `${this.entryPoint}.js file doesn't exist in dist. build will continue.`)
     }
   }
 
-  public deploy = async (deploy) => {
-    const start: Date = new Date()
+  public async deploy (location: string = '') {
+    const deploymentHandler = new DeploymentHandler(location)
 
-    let destination = deploy
+    Log.info(false, 'resolve deployment destination')
+    await deploymentHandler.resolveDestination()
 
-    try {
-      const data = await readFilePromisified('.npmbuildrc')
-      const file = JSON.parse(data.toString())
-
-      if (file.liferayDir) {
-        destination = path.join(file.liferayDir, 'deploy')
-        Log.write(Log.chalk.gray(`found .npmbuildrc file with valid destination`))
-      }
-    } catch (exception) {
-      // ignore
-    }
-
-    if (!destination) {
-      Log.write(Log.chalk.red(`failed to deploy ${this.name} in ${(new Date().getTime() - start.getTime()) / 1000}s. destination is not set either through .npmbuildrc or flag`))
-      throw new Error()
-    }
-
-    try {
-      await copyFilePromisified(`dist/${this.name}`, path.join(destination, this.name))
-      Log.write(Log.chalk.green(`successfully deployed ${this.name} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s`))
-    } catch (exception) {
-      Log.write(Log.chalk.red(`failed to deploy ${this.name} to ${destination} in ${(new Date().getTime() - start.getTime()) / 1000}s, ${exception.message}`))
-      throw exception
-    }
+    Log.info(true, `copy ${this.jarHandler.name} to ${deploymentHandler.destination}`)
+    await deploymentHandler.deploy(this.jarHandler.name)
   }
 }

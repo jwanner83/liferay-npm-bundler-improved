@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: {{description}}
+Bundle-SymbolicName: {{name}}
+Bundle-Version: {{version}}
+Provide-Capability: osgi.webresource;osgi.webresource={{name}};version:Version="{{version}}"
+Require-Capability: osgi.extender;filter:="(&(osgi.extender=liferay.frontend.js.portlet)(version>=1.0.0))"
+Tool: liferay-npm-bundler-improved-1.0.0-beta.7
+Web-ContextPath: /{{name}}

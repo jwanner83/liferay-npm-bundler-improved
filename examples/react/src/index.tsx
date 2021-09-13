@@ -1,6 +1,5 @@
 import React  from 'react'
 import ReactDOM from 'react-dom'
-import 'tslib'
 import AppComponent from './components/AppComponent'
 import LiferayParams from './types/LiferayParams'
 
