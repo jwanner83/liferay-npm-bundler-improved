@@ -8,7 +8,7 @@ const AppComponent = (liferayParams: LiferayParams): any => {
     <div>
       <div>
         <span className="tag">
-          {Liferay.Language.get('portlet-namespace')} Deger
+          {Liferay.Language.get('portlet-namespace')}
           :
         </span>
         <span className="value">{liferayParams.portletNamespace}</span>
