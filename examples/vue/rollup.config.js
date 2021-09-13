@@ -1,7 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import vuePlugin from 'rollup-plugin-vue'
-import injectProcessEnv from 'rollup-plugin-inject-process-env'
 
 export default {
   input: 'src/index.js',
@@ -9,7 +8,6 @@ export default {
     resolve(),
     vuePlugin(),
     commonjs(),
-    injectProcessEnv()
   ],
   output: [
     {
