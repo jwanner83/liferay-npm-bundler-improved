@@ -18,7 +18,10 @@
     "liferay-frontend",
     "rollup"
   ],
-  "files": ["/bin"],
+  "files": [
+    "/bin",
+    "/dist"
+  ],
   "bin": {
     "liferay-npm-bundler-improved": "bin/bundler.js"
   },
