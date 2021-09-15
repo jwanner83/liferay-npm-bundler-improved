@@ -11,7 +11,7 @@ export default class TemplateHandler {
      * The location of the templates
      * @private
      */
-    private readonly templatesPath: string = 'src/templates'
+    private readonly templatesPath: string = 'dist/templates'
 
     /**
      * The name of the template
