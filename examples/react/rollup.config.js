@@ -1,12 +1,12 @@
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import esbuild from 'rollup-plugin-esbuild'
+import replace from '@rollup/plugin-replace'
 
 export default {
   input: 'src/index.tsx',
   output: [
     {
-      file: 'dist/index.js',
       format: 'commonjs',
       exports: 'default'
     },
@@ -14,6 +14,9 @@ export default {
   plugins: [
     resolve(),
     commonjs(),
-    esbuild()
+    esbuild(),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    })
   ]
 }

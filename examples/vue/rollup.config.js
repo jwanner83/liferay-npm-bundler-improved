@@ -1,6 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import vuePlugin from 'rollup-plugin-vue'
+import replace from '@rollup/plugin-replace'
 
 export default {
   input: 'src/index.js',
@@ -8,10 +9,12 @@ export default {
     resolve(),
     vuePlugin(),
     commonjs(),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    })
   ],
   output: [
     {
-      file: 'dist/index.js',
       format: 'commonjs',
       exports: 'default'
     }
