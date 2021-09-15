@@ -4,6 +4,7 @@ import typescript from '@rollup/plugin-typescript'
 import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
+import copy from 'rollup-plugin-copy'
 
 export default {
   input: 'src/mod.ts',
@@ -15,7 +16,15 @@ export default {
     commonjs(),
     json(),
     typescript(),
-    terser()
+    terser(),
+    copy({
+      targets: [
+        {
+          src: 'src/templates/*',
+          dest: 'dist/templates/'
+        }
+      ]
+    })
   ],
   output: [
     {
