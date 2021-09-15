@@ -52,17 +52,17 @@ If you use a framework in your portlet, you'll need a custom rollup.config.js fi
 In the following code block you see the minimal required and highly advised configuration which can be extended to fit 
 the custom needs.
 ```js
-import { terser } from 'rollup-plugin-terser'
+import replace from '@rollup/plugin-replace'
 
 export default {
   input: 'src/index.js',
   plugins: [
-    ...
-    terser()
+    replace({ // only required if a framework like react or vue is used
+      'process.env.NODE_ENV': JSON.stringify('production') 
+    })
   ],
   output: [
     {
-      file: 'dist/index.js',
       exports: 'default',
       format: 'cjs'
     }
