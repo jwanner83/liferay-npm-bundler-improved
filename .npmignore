@@ -4,9 +4,6 @@ examples
 # ignore src
 src/**/*
 
-# explicitly include templates
-!src/templates/*
-
 # ignore idea config
 .idea
 
