@@ -72,7 +72,7 @@ export default class Bundler {
   public async process () {
     const timer = new TimeHandler()
 
-    Log.info(true, 'process features')
+    Log.info(false, 'process features')
     const featuresHandler = new FeaturesHandler()
 
     Log.debug('detect features')
@@ -94,7 +94,7 @@ export default class Bundler {
     Log.success(timer, 'finished feature processing successful')
     timer.reset()
 
-    Log.info(false, 'process templates and replace variables')
+    Log.info(true, 'process templates and replace variables')
     Log.debug('process wrapper.js')
     const wrapperJsTemplate = new TemplateHandler('wrapper.js')
     wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
