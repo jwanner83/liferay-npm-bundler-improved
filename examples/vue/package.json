@@ -11,7 +11,7 @@
     "com.liferay.portlet.instanceable": true,
     "javax.portlet.security-role-ref": "power-user,user",
     "javax.portlet.name": "vue",
-    "javax.portlet.display-name": "Vue"
+    "javax.portlet.resource-bundle": "content.Language"
   },
   "main": "index",
   "dependencies": {

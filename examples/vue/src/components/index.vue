@@ -3,7 +3,7 @@
     <div>
       <div>
         <span class="tag">
-          portlet-namespace:
+          {{ label.portletNamespace }}:
         </span>
         <span class="value">
           {{ $root.$data.portletNamespace }}
@@ -11,7 +11,7 @@
       </div>
       <div>
         <span class="tag">
-          context-path:
+          {{ label.contextPath }}:
         </span>
         <span class="value">
           {{ $root.$data.contextPath }}
@@ -19,7 +19,7 @@
       </div>
       <div>
         <span class="tag">
-          portlet-element-id:
+          {{ label.portletElementId }}:
         </span>
         <span class="value">
           {{ $root.$data.portletElementId }}
@@ -27,7 +27,7 @@
       </div>
       <div>
         <span class="tag">
-          configuration:
+          {{ label.configuration }}:
         </span>
         <span class="value pre">
           {{ JSON.stringify($root.$data.configuration, null, 2) }}
@@ -39,8 +39,21 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import LiferayObject from '../types/LiferayObject'
+
+declare const Liferay: LiferayObject
 
 export default Vue.extend({
-  name: 'App'
+  name: 'App',
+  data () {
+    return {
+      label: {
+        portletNamespace: String(Liferay.Language.get('portlet-namespace')),
+        contextPath: String(Liferay.Language.get('context-path')),
+        portletElementId: String(Liferay.Language.get('portlet-element-id')),
+        configuration: String(Liferay.Language.get('configuration')),
+      }
+    }
+  }
 })
 </script>
