@@ -5,8 +5,8 @@
   "scripts": {
     "dev:build": "liferay-npm-bundler-improved",
     "dev:deploy": "liferay-npm-bundler-improved -d",
-    "build": "npm run copy-sources && npm run copy-assets && liferay-npm-bundler",
-    "deploy": "npm run build && lnbs-deploy",
+    "build": "pnpm run copy-sources && pnpm run copy-assets && liferay-npm-bundler",
+    "deploy": "pnpm run build && lnbs-deploy",
     "copy-assets": "lnbs-copy-assets",
     "copy-sources": "lnbs-copy-sources"
   },
@@ -15,16 +15,12 @@
     "com.liferay.portlet.instanceable": true,
     "javax.portlet.name": "plain",
     "javax.portlet.security-role-ref": "power-user,user",
-    "javax.portlet.display-name": "Plain"
+    "javax.portlet.resource-bundle": "content.Language"
   },
   "main": "index",
   "devDependencies": {
-    "copy-webpack-plugin": "4.6.0",
     "liferay-npm-build-support": "^2.25.0",
-    "liferay-npm-bundler": "^2.25.0",
-    "webpack": "4.29.6",
-    "webpack-cli": "3.3.0",
-    "webpack-dev-server": "3.2.1"
+    "liferay-npm-bundler": "^2.25.0"
   },
   "dependencies": {
     "liferay-npm-bundler-improved": "^1.0.0-beta.10"
