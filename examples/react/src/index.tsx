@@ -1,6 +1,6 @@
 import React  from 'react'
 import ReactDOM from 'react-dom'
-import Index from './components'
+import App from './components/index'
 import LiferayParams from './types/LiferayParams'
 
 /**
@@ -15,7 +15,7 @@ import LiferayParams from './types/LiferayParams'
 export default function main(liferayParams: LiferayParams): void {
   ReactDOM.render(
     <React.StrictMode>
-      <Index
+      <App
           portletNamespace={liferayParams.portletNamespace}
           contextPath={liferayParams.contextPath}
           portletElementId={liferayParams.portletElementId}
