@@ -18,7 +18,7 @@ const arg: any = yargs(process.argv.slice(2)).options({
 (async () => {
   const timer = new TimeHandler()
   Log.titleBadge(false, 'LIFERAY-NPM-BUNDLER-IMPROVED')
-  Log.blackBadge(false, '1.0.0-beta.10')
+  Log.blackBadge(false, '1.0.0-beta.11')
 
   const bundler: Bundler = new Bundler()
 

@@ -7,6 +7,8 @@
   },
   "esModuleInterop": true,
   "exclude": [
-    "examples/*"
+    "examples/*",
+    "bin/*",
+    "dist/*"
   ]
 }

@@ -1,6 +1,6 @@
 import Vue, { CreateElement } from 'vue'
 import App from './components/index.vue'
-import PortletEntryParams from '@/types/PortletEntryParams'
+import PortletEntryParams from './types/PortletEntryParams'
 
 /**
  * This ist the main entry point of the portlet

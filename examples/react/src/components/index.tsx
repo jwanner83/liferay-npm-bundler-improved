@@ -1,12 +1,15 @@
 import React from 'react'
-import LiferayParams from '../types/LiferayParams'
+import PortletEntryParams from '../types/PortletEntryParams'
+import LiferayObject from '../types/LiferayObject'
 
-const App = (liferayParams: LiferayParams): any => {
+declare const Liferay: LiferayObject
+
+const App = (liferayParams: PortletEntryParams): any => {
   return (
     <div>
       <div>
         <span className="tag">
-          portlet-namespace:
+          {String(Liferay.Language.get('portlet-namespace'))}:
         </span>
         <span className="value">
             {liferayParams.portletNamespace}
@@ -14,7 +17,7 @@ const App = (liferayParams: LiferayParams): any => {
       </div>
       <div>
         <span className="tag">
-          context-path:
+          {String(Liferay.Language.get('context-path'))}:
         </span>
         <span className="value">
             {liferayParams.contextPath}
@@ -22,7 +25,7 @@ const App = (liferayParams: LiferayParams): any => {
       </div>
       <div>
         <span className="tag">
-          portlet-element-id:
+          {String(Liferay.Language.get('portlet-element-id'))}:
         </span>
         <span className="value">
             {liferayParams.portletElementId}
@@ -30,7 +33,7 @@ const App = (liferayParams: LiferayParams): any => {
       </div>
       <div>
         <span className="tag">
-          configuration:
+          {String(Liferay.Language.get('configuration'))}:
         </span>
         <span className="value pre">
           {JSON.stringify(liferayParams.configuration, null, 2)}

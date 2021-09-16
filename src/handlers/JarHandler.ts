@@ -4,6 +4,9 @@ import { writeFile } from 'fs'
 
 const writeFilePromisified = promisify(writeFile)
 
+/**
+ * The jar file handler which contains the jar and is able to create it
+ */
 export default class JarHandler {
     /**
      * The jar container

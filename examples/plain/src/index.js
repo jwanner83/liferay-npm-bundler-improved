@@ -13,7 +13,7 @@ function main(params) {
     node.innerHTML =
         '<div>' +
             '<span class="tag">' +
-                'portlet-namespace:' +
+                Liferay.Language.get('portlet-namespace') + ': ' +
             '</span>' +
             '<span class="value">' +
                 params.portletNamespace +
@@ -21,7 +21,7 @@ function main(params) {
         '</div>' +
         '<div>' +
             '<span class="tag">' +
-                'context-path:' +
+                Liferay.Language.get('context-path') + ': ' +
             '</span>' +
             '<span class="value">' +
                 params.contextPath +
@@ -29,7 +29,7 @@ function main(params) {
         '</div>' +
         '<div>' +
             '<span class="tag">' +
-                'portlet-element-id:' +
+                Liferay.Language.get('portlet-element-id') + ': ' +
             '</span>' +
             '<span class="value">' +
                 params.portletElementId +
@@ -37,7 +37,7 @@ function main(params) {
         '</div>' +
         '<div>' +
             '<span class="tag">' +
-                'configuration:' +
+                Liferay.Language.get('configuration') + ': ' +
             '</span>' +
             '<span class="value">' +
                 JSON.stringify(params.configuration, null, 2) +
