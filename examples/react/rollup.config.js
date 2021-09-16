@@ -5,12 +5,10 @@ import replace from '@rollup/plugin-replace'
 
 export default {
   input: 'src/index.tsx',
-  output: [
-    {
-      format: 'commonjs',
-      exports: 'default'
-    },
-  ],
+  output: {
+    format: 'commonjs',
+    exports: 'default'
+  },
   plugins: [
     resolve(),
     commonjs(),
