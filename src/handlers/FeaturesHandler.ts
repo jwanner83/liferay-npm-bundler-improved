@@ -7,7 +7,13 @@ import WarningHandler from './WarningHandler'
 const readFilePromisified = promisify(readFile)
 const readDirPromisified = promisify(readdir)
 
+/**
+ * Detect and handle the portlet features
+ */
 export default class FeaturesHandler {
+    /**
+     * The npmbundlerrc file content
+     */
     public npmbundlerrc: unknown = {}
 
     /**
@@ -40,6 +46,10 @@ export default class FeaturesHandler {
         }
     }
 
+    /**
+     * Get the configuration file (.npmbundlerrc)
+     * @private
+     */
     private async getConfigurationFile (): Promise<void> {
         if (existsSync('.npmbundlerrc')) {
             const data = await readFilePromisified('.npmbundlerrc')
