@@ -1,7 +1,7 @@
 import React  from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/index'
-import LiferayParams from './types/LiferayParams'
+import PortletEntryParams from './types/PortletEntryParams'
 
 /**
  * This is the main entry point of the portlet.
@@ -12,16 +12,16 @@ import LiferayParams from './types/LiferayParams'
  * @return {void}
  * @param liferayParams
  */
-export default function main(liferayParams: LiferayParams): void {
+export default function main({ portletNamespace, contextPath, portletElementId, configuration }: PortletEntryParams): void {
   ReactDOM.render(
     <React.StrictMode>
       <App
-          portletNamespace={liferayParams.portletNamespace}
-          contextPath={liferayParams.contextPath}
-          portletElementId={liferayParams.portletElementId}
-          configuration={liferayParams.configuration}
+          portletNamespace={portletNamespace}
+          contextPath={contextPath}
+          portletElementId={portletElementId}
+          configuration={configuration}
       />
     </React.StrictMode>,
-    document.getElementById(liferayParams.portletElementId),
+    document.getElementById(portletElementId),
   )
 }
