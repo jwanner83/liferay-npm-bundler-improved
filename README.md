@@ -4,8 +4,8 @@ through a jar file.
 
 ## Disclaimer
 In this state, the `liferay-npm-bundler-improved` isn't intended to be used as a replacement of the original 
-liferay-npm-bundler. It is currently lacking features like the support for Portlet configurations, localization or 
-package deduplication which are essential.
+liferay-npm-bundler. It is currently lacking features like the support for Portlet configurations or 
+package deduplication.
 
 ### Reason for existence
 Although some essential features are missing, it can be really useful for development because of one thing: speed. In
@@ -20,7 +20,6 @@ to use the official liferay-npm-bundler.
 ### Missing Features:
 - Package Deduplication
 - Portlet Configuration Support
-- Portlet Translation Support
 
 ## Usage
 ### 1. Install via npm
