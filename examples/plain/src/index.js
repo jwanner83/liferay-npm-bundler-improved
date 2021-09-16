@@ -12,29 +12,38 @@ function main(params) {
 
     node.innerHTML =
         '<div>' +
-            '<span class="tag" data-follow>' +
-                'Portlet Namespace' + ':' +
+            '<span class="tag">' +
+                'portlet-namespace:' +
             '</span>' +
-            '<span class="value" data-follow>' +
+            '<span class="value">' +
                 params.portletNamespace +
             '</span>' +
         '</div>' +
         '<div>' +
-            '<span class="tag" data-follow>' +
-                'Context Path' + ':' +
+            '<span class="tag">' +
+                'context-path:' +
             '</span>' +
-            '<span class="value" data-follow>' +
+            '<span class="value">' +
                 params.contextPath +
             '</span>' +
         '</div>' +
         '<div>' +
-            '<span class="tag" data-follow>' +
-                'Portlet Element Id' + ':' +
+            '<span class="tag">' +
+                'portlet-element-id:' +
             '</span>' +
-            '<span class="value" data-follow>' +
+            '<span class="value">' +
                 params.portletElementId +
             '</span>' +
-        '</div>';
+        '</div>' +
+        '<div>' +
+            '<span class="tag">' +
+                'configuration:' +
+            '</span>' +
+            '<span class="value">' +
+                JSON.stringify(params.configuration, null, 2) +
+            '</span>' +
+        '</div>'
+    ;
 }
 
 module.exports = main;

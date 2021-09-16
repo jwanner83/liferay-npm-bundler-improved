@@ -1,19 +1,46 @@
 <template>
   <div>
-    <h1>{{ title }}</h1>
-    <scene />
+    <div>
+      <div>
+        <span class="tag">
+          portlet-namespace:
+        </span>
+        <span class="value">
+          {{ $root.$data.portletNamespace }}
+        </span>
+      </div>
+      <div>
+        <span class="tag">
+          context-path:
+        </span>
+        <span class="value">
+          {{ $root.$data.contextPath }}
+        </span>
+      </div>
+      <div>
+        <span class="tag">
+          portlet-element-id:
+        </span>
+        <span class="value">
+          {{ $root.$data.portletElementId }}
+        </span>
+      </div>
+      <div>
+        <span class="tag">
+          configuration:
+        </span>
+        <span class="value pre">
+          {{ JSON.stringify($root.$data.configuration, null, 2) }}
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
-import scene from './scene.vue'
+<script lang="ts">
+import Vue from 'vue'
 
-export default {
-  components: { scene },
-  data () {
-    return {
-      title: 'Title'
-    }
-  }
-}
+export default Vue.extend({
+  name: 'App'
+})
 </script>

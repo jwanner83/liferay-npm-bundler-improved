@@ -1,7 +1,6 @@
 import RollupConfiguration from '../classes/RollupConfiguration'
 import Log from '../classes/Log'
-import { existsSync, readFile } from 'fs'
-import { promisify } from 'util'
+import { existsSync } from 'fs'
 import TimeHandler from './TimeHandler'
 const rollup = require('rollup').rollup
 const loadConfigFile = require('rollup/dist/loadConfigFile')

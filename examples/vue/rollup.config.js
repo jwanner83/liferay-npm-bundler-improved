@@ -1,19 +1,22 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import vuePlugin from 'rollup-plugin-vue'
+import vue from 'rollup-plugin-vue'
+import replace from '@rollup/plugin-replace'
+import esbuild from 'rollup-plugin-esbuild'
 
 export default {
-  input: 'src/index.js',
+  input: 'src/index.ts',
+  output: {
+    format: 'commonjs',
+    exports: 'default'
+  },
   plugins: [
     resolve(),
-    vuePlugin(),
     commonjs(),
-  ],
-  output: [
-    {
-      file: 'dist/index.js',
-      format: 'commonjs',
-      exports: 'default'
-    }
+    vue(),
+    esbuild(),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    })
   ]
 }
