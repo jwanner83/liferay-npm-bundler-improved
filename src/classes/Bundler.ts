@@ -7,6 +7,7 @@ import RollupHandler from '../handlers/RollupHandler'
 import TemplateHandler from '../handlers/TemplateHandler'
 import JarHandler from '../handlers/JarHandler'
 import DeploymentHandler from '../handlers/DeploymentHandler'
+import FeaturesHandler from '../handlers/FeaturesHandler'
 
 const unlinkPromisified = promisify(unlink)
 
@@ -71,6 +72,28 @@ export default class Bundler {
   public async process () {
     const timer = new TimeHandler()
 
+    Log.info(true, 'process features')
+    const featuresHandler = new FeaturesHandler()
+
+    Log.debug('detect features')
+    await featuresHandler.detectFeatures()
+
+    if (featuresHandler.hasLocalization) {
+      const files: Map<string, string> = await featuresHandler.getLocalizations()
+
+      if (files.size > 0) {
+        Log.debug('create localization file structure')
+        const content = this.jarHandler.jar.folder('content')
+
+        for (const [key, value] of files) {
+          content.file(key, value)
+        }
+      }
+    }
+
+    Log.success(timer, 'finished feature processing successful')
+    timer.reset()
+
     Log.info(false, 'process templates and replace variables')
     Log.debug('process wrapper.js')
     const wrapperJsTemplate = new TemplateHandler('wrapper.js')
@@ -84,6 +107,12 @@ export default class Bundler {
     manifestMFTemplate.replace('name', this.packageHandler.pack.name)
     manifestMFTemplate.replace('description', this.packageHandler.pack.description)
     manifestMFTemplate.replace('version', this.packageHandler.pack.version)
+
+    if (featuresHandler.hasLocalization) {
+      manifestMFTemplate.replace('language-resource', ',liferay.resource.bundle;resource.bundle.base.name="content.Language"')
+    } else {
+      manifestMFTemplate.replace('language-resource', '')
+    }
 
     Log.debug('process manifest.json')
     const manifestJSONTemplate = new TemplateHandler('manifest.json')
