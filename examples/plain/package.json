@@ -23,6 +23,6 @@
     "liferay-npm-bundler": "^2.25.0"
   },
   "dependencies": {
-    "liferay-npm-bundler-improved": "^1.0.0-beta.10"
+    "liferay-npm-bundler-improved": "^1.0.0-beta.11"
   }
 }
