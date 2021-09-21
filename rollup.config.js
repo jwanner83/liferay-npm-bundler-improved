@@ -15,7 +15,7 @@ export default {
     commonjs(),
     json(),
     esbuild({
-      minify: true,
+      minify: true
     }),
     copy({
       targets: [

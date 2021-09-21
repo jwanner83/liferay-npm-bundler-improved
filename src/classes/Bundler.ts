@@ -22,13 +22,13 @@ export default class Bundler {
    * The package handler
    * @private
    */
-  private packageHandler: PackageHandler = new PackageHandler()
+  private readonly packageHandler: PackageHandler = new PackageHandler()
 
   /**
    * The rollup handler
    * @private
    */
-  private rollupHandler: RollupHandler = new RollupHandler()
+  private readonly rollupHandler: RollupHandler = new RollupHandler()
 
   /**
    * The jar handler

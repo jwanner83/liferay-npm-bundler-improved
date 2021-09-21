@@ -27,7 +27,7 @@ export default class RollupConfiguration {
    * Set the configuration from the local rollup file
    * @param options
    */
-  public setConfigurationFromFile = (options: Array<unknown>): void => {
+  public setConfigurationFromFile = (options: unknown[]): void => {
     if (Array.isArray(options) && options.length > 0) {
       this.complete = options[0]
       this.inputConfiguration = this.complete

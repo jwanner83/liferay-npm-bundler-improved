@@ -113,7 +113,7 @@ export default class Log {
    * @param text
    */
   public static success (timer: TimeHandler, ...text: unknown[]) {
-    return Log.write(timer.getSecondsPretty() ,Log.chalk.green(text))
+    return Log.write(timer.getSecondsPretty(), Log.chalk.green(text))
   }
 
   /**
@@ -122,7 +122,7 @@ export default class Log {
    * @param text
    */
   public static error (timer: TimeHandler | undefined, ...text: unknown[]) {
-    return Log.write(timer.getSecondsPretty() ,Log.chalk.red(text))
+    return Log.write(timer.getSecondsPretty(), Log.chalk.red(text))
   }
 
   /**
