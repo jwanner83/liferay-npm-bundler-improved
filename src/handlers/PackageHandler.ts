@@ -1,6 +1,7 @@
 import Log from '../classes/Log'
 
 /* require is necessary to import local `package.json` */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pack = require(process.cwd() + '/package.json')
 
 /**
@@ -22,10 +23,10 @@ export default class PackageHandler {
   /**
      * Check if the package.json contains all the necessary fields
      */
-  public check () {
-    if (pack) {
+  public check (): void {
+    if (pack !== undefined) {
       for (const necessaryField of this.necessaryFields) {
-        if (!pack[necessaryField]) {
+        if (pack[necessaryField] !== undefined) {
           Log.trace(false, `The package.json is missing the required field '${necessaryField}'.`)
           throw new Error()
         }

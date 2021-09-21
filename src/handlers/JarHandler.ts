@@ -21,7 +21,7 @@ export default class JarHandler {
   /**
      * Create the jar file and write it to the disc
      */
-  public async createJarFile () {
+  public async createJarFile (): Promise<void> {
     const content = await this.jar.generateAsync({
       type: 'nodebuffer'
     })

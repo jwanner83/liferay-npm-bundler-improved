@@ -39,7 +39,7 @@ export default class FeaturesHandler {
       return
     }
 
-    if (this.npmbundlerrc && this.npmbundlerrc['create-jar'] && this.npmbundlerrc['create-jar'].features) {
+    if (this?.npmbundlerrc?.['create-jar']?.features) {
       await this.detectLocalization()
     } else {
       Log.debug('no feature has been detected')
@@ -62,9 +62,9 @@ export default class FeaturesHandler {
      * @private
      */
   private async detectLocalization (): Promise<void> {
-    const localization = this.npmbundlerrc['create-jar'].features.localization
+    const localization: string = this.npmbundlerrc['create-jar'].features.localization
 
-    if (localization) {
+    if (localization !== undefined || localization !== '') {
       const localizationPathSplitted: string[] = localization.split('/')
       localizationPathSplitted.pop()
       const localizationPath = localizationPathSplitted.join('/')

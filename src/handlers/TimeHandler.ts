@@ -26,21 +26,21 @@ export default class TimeHandler {
   /**
      * Start the timer
      */
-  public start () {
+  public start (): void {
     this.startDate = new Date()
   }
 
   /**
      * End the timer
      */
-  public end () {
+  public end (): void {
     this.endDate = new Date()
   }
 
   /**
      * Reset the timer
      */
-  public reset (start: boolean = true) {
+  public reset (start: boolean = true): void {
     this.endDate = undefined
 
     if (start) {
@@ -51,7 +51,7 @@ export default class TimeHandler {
   /**
      * Get the difference between start and end in seconds
      */
-  public getSeconds (end: boolean = true) {
+  public getSeconds (end: boolean = true): string {
     if (end) {
       this.end()
     }
@@ -63,7 +63,7 @@ export default class TimeHandler {
      * Get the difference between start and end in seconds as white text on dark background
      * @param end
      */
-  public getSecondsPretty (end: boolean = true) {
+  public getSecondsPretty (end: boolean = true): string {
     return Log.chalk.bgBlack(` ${this.getSeconds(end)} `)
   }
 }

@@ -11,7 +11,7 @@ import FeaturesHandler from '../handlers/FeaturesHandler'
 
 const unlinkPromisified = promisify(unlink)
 
-export default class Bundler {
+export default class Bundler implements Bundler {
   /**
    * The js entry point
    * @private
@@ -36,7 +36,7 @@ export default class Bundler {
    */
   private jarHandler: JarHandler = new JarHandler()
 
-  public async prepare () {
+  public async prepare (): Promise<void> {
     const timer = new TimeHandler()
 
     Log.info(false, 'basic')
@@ -61,7 +61,7 @@ export default class Bundler {
     Log.success(timer, 'finished rollup prepare tasks successfully')
   }
 
-  public async bundle () {
+  public async bundle (): Promise<void> {
     Log.info(false, 'bundle code')
     await this.rollupHandler.bundle()
 
@@ -69,7 +69,7 @@ export default class Bundler {
     await this.rollupHandler.getBundledCode()
   }
 
-  public async process () {
+  public async process (): Promise<void> {
     const timer = new TimeHandler()
 
     Log.info(false, 'process features')
@@ -135,7 +135,7 @@ export default class Bundler {
     Log.success(timer, 'finished jar processing successful')
   }
 
-  public async create () {
+  public async create (): Promise<void> {
     const timer = new TimeHandler()
 
     Log.info(false, 'create jar file')
@@ -143,7 +143,7 @@ export default class Bundler {
     Log.success(timer, `finished creating 'dist/${this.jarHandler.name}' successful`)
   }
 
-  public async cleanup () {
+  public async cleanup (): Promise<void> {
     const timer = new TimeHandler()
 
     Log.info(false, 'cleanup dist folder')
@@ -156,7 +156,7 @@ export default class Bundler {
     }
   }
 
-  public async deploy (location: string = '') {
+  public async deploy (location: string = ''): Promise<void> {
     const deploymentHandler = new DeploymentHandler(location)
 
     Log.info(false, 'resolve deployment destination')

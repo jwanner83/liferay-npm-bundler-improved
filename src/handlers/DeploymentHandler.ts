@@ -17,7 +17,7 @@ export default class DeploymentHandler {
   /**
      * The actual destination, where the jar file will be deployed
      */
-  public destination: string
+  public destination: string = ''
 
   constructor (location: string) {
     this.location = location
@@ -26,10 +26,10 @@ export default class DeploymentHandler {
   /**
      * Resolve the destination folder where the jar will be deployed.
      */
-  public async resolveDestination () {
+  public async resolveDestination (): Promise<void> {
     const timer = new TimeHandler()
 
-    if (this.location) {
+    if (this.location !== '') {
       this.destination = this.location
       Log.success(timer, 'destination has been passed by param')
     } else {
@@ -37,14 +37,14 @@ export default class DeploymentHandler {
         const data = await readFilePromisified('.npmbuildrc')
         const file = JSON.parse(data.toString())
 
-        if (file.liferayDir) {
+        if (file.liferayDir !== '') {
           this.destination = path.join(file.liferayDir, 'deploy')
           Log.success(timer, 'destination was found inside the \'.npmbuildrc\' file')
         }
       }
     }
 
-    if (!this.destination) {
+    if (this.destination === '') {
       Log.error(timer, 'failed to resolve deployment destination. destination has to be set either through the \'.npmbuildrc\' file or the -d param')
       throw new Error()
     }
@@ -54,7 +54,7 @@ export default class DeploymentHandler {
      * Deploy the jar file to the defined destination
      * @param jarName
      */
-  public async deploy (jarName: string) {
+  public async deploy (jarName: string): Promise<void> {
     const timer = new TimeHandler()
 
     try {

@@ -2,7 +2,9 @@ import RollupConfiguration from '../classes/RollupConfiguration'
 import Log from '../classes/Log'
 import { existsSync } from 'fs'
 import TimeHandler from './TimeHandler'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const rollup = require('rollup').rollup
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const loadConfigFile = require('rollup/dist/loadConfigFile')
 
 export default class RollupHandler {
@@ -26,7 +28,7 @@ export default class RollupHandler {
   /**
      * Load the external configuration file if it exists. Otherwise, a default config will be used
      */
-  public async loadExternalConfiguration () {
+  public async loadExternalConfiguration (): Promise<void> {
     if (existsSync('rollup.config.js')) {
       try {
         const { options } = await loadConfigFile(process.cwd() + '/rollup.config.js')
@@ -45,7 +47,7 @@ export default class RollupHandler {
   /**
      * Bundle the files with rollup
      */
-  public async bundle () {
+  public async bundle (): Promise<void> {
     const timer = new TimeHandler()
 
     const spinner = Log.ora({
@@ -70,7 +72,7 @@ export default class RollupHandler {
      * Get the bundled code out of the bundle object
      * It is required to run the `bundle` command before. Otherwise, this wouldn't work
      */
-  public async getBundledCode () {
+  public async getBundledCode (): Promise<void> {
     const timer = new TimeHandler()
 
     const spinner = Log.ora({

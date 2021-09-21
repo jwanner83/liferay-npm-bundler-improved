@@ -6,6 +6,7 @@ module.exports = {
   ignorePatterns: [
     'examples/*',
     'bin/*',
-    'dist/*'
+    'dist/*',
+    'src/templates/*'
   ]
 }

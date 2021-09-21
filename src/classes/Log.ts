@@ -1,7 +1,9 @@
 import chalk from 'chalk'
 import TimeHandler from '../handlers/TimeHandler'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const ora = require('ora')
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export default class Log {
   /**
    * Wrapper for `console.log`
@@ -13,12 +15,12 @@ export default class Log {
    * @param addLineBreak
    * @param text
    */
-  public static titleBadge (addLineBreak: boolean, text: string) {
+  public static titleBadge (addLineBreak: boolean, text: string): void {
     if (addLineBreak) {
       Log.write('')
     }
 
-    return Log.write(Log.chalk.bgGreen(` ${text.trim().toUpperCase()} `))
+    Log.write(Log.chalk.bgGreen(` ${text.trim().toUpperCase()} `))
   }
 
   /**
@@ -26,12 +28,12 @@ export default class Log {
    * @param addLineBreak
    * @param text
    */
-  public static blackBadge (addLineBreak: boolean, text: string) {
+  public static blackBadge (addLineBreak: boolean, text: string): void {
     if (addLineBreak) {
       Log.write('')
     }
 
-    return Log.write(Log.chalk.bgBlack(` ${text.trim().toUpperCase()} `))
+    Log.write(Log.chalk.bgBlack(` ${text.trim().toUpperCase()} `))
   }
 
   /**
@@ -39,12 +41,12 @@ export default class Log {
    * @param addLineBreak
    * @param text
    */
-  public static mainBadge (addLineBreak: boolean, text: string) {
+  public static mainBadge (addLineBreak: boolean, text: string): void {
     if (addLineBreak) {
       Log.write('')
     }
 
-    return Log.write(Log.chalk.bgCyan(` ${text.trim().toUpperCase()} `))
+    Log.write(Log.chalk.bgCyan(` ${text.trim().toUpperCase()} `))
   }
 
   /**
@@ -52,12 +54,12 @@ export default class Log {
    * @param addLineBreak
    * @param text
    */
-  public static successBadge (addLineBreak: boolean, text: string) {
+  public static successBadge (addLineBreak: boolean, text: string): void {
     if (addLineBreak) {
       Log.write('')
     }
 
-    return Log.write(Log.chalk.bgGreen(` ${text.trim().toUpperCase()} `))
+    Log.write(Log.chalk.bgGreen(` ${text.trim().toUpperCase()} `))
   }
 
   /**
@@ -65,20 +67,20 @@ export default class Log {
    * @param addLineBreak
    * @param text
    */
-  public static errorBadge (addLineBreak: boolean, text: string) {
+  public static errorBadge (addLineBreak: boolean, text: string): void {
     if (addLineBreak) {
       Log.write('')
     }
 
-    return Log.write(Log.chalk.bgRed(` ${text.trim().toUpperCase()} `))
+    Log.write(Log.chalk.bgRed(` ${text.trim().toUpperCase()} `))
   }
 
   /**
    * Debug log with gray font color
    * @param text
    */
-  public static debug (...text: unknown[]) {
-    return Log.write(Log.chalk.gray(text))
+  public static debug (...text: unknown[]): void {
+    Log.write(Log.chalk.gray(text))
   }
 
   /**
@@ -86,12 +88,12 @@ export default class Log {
    * @param addLineBreak
    * @param text
    */
-  public static info (addLineBreak: boolean, ...text: unknown[]) {
+  public static info (addLineBreak: boolean, ...text: unknown[]): void {
     if (addLineBreak) {
       Log.write('')
     }
 
-    return Log.write(Log.chalk.white(text))
+    Log.write(Log.chalk.white(text))
   }
 
   /**
@@ -99,12 +101,12 @@ export default class Log {
    * @param addLineBreak
    * @param text
    */
-  public static trace (addLineBreak: boolean, ...text: unknown[]) {
+  public static trace (addLineBreak: boolean, ...text: unknown[]): void {
     if (addLineBreak) {
       Log.write('')
     }
 
-    return Log.write(Log.chalk.red(`\n${text}`))
+    Log.write(Log.chalk.red(`\n${text}`))
   }
 
   /**
@@ -112,8 +114,8 @@ export default class Log {
    * @param timer
    * @param text
    */
-  public static success (timer: TimeHandler, ...text: unknown[]) {
-    return Log.write(timer.getSecondsPretty(), Log.chalk.green(text))
+  public static success (timer: TimeHandler, ...text: unknown[]): void {
+    Log.write(timer.getSecondsPretty(), Log.chalk.green(text))
   }
 
   /**
@@ -121,16 +123,16 @@ export default class Log {
    * @param timer
    * @param text
    */
-  public static error (timer: TimeHandler | undefined, ...text: unknown[]) {
-    return Log.write(timer.getSecondsPretty(), Log.chalk.red(text))
+  public static error (timer: TimeHandler | undefined, ...text: unknown[]): void {
+    Log.write(timer.getSecondsPretty(), Log.chalk.red(text))
   }
 
   /**
    * Warn log with red background color and optional timer
    * @param text
    */
-  public static warn (...text: unknown[]) {
-    return Log.write(Log.chalk.yellow(text))
+  public static warn (...text: unknown[]): void {
+    Log.write(Log.chalk.yellow(text))
   }
 
   /**

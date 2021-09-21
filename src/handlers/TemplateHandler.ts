@@ -55,7 +55,7 @@ export default class TemplateHandler {
      * @param key
      * @param value
      */
-  public replace (key: string, value: string) {
+  public replace (key: string, value: string): void {
     const expression: RegExp = new RegExp(`{{${key}}}`, 'g')
     this.processed = this.processed.replace(expression, () => {
       // with a callback, the special replacement pattern isn't applied
