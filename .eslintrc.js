@@ -1,12 +1,13 @@
 module.exports = {
-  extends: 'standard-with-typescript',
+  extends: [
+    'standard-with-typescript',
+    'prettier'
+  ],
   parserOptions: {
     project: './tsconfig.json'
   },
-  ignorePatterns: [
-    'examples/*',
-    'bin/*',
-    'dist/*',
-    'src/templates/*'
-  ]
+  rules: {
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+
+  }
 }
