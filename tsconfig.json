@@ -3,12 +3,15 @@
     "target": "es2020",
     "lib": ["es2020", "dom"],
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": false,
+    "resolveJsonModule": true
   },
   "esModuleInterop": true,
   "exclude": [
     "examples/*",
     "bin/*",
-    "dist/*"
+    "dist/*",
+    "src/old/*"
   ]
 }
