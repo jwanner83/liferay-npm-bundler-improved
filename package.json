@@ -1,7 +1,7 @@
 {
   "name": "liferay-npm-bundler-improved",
   "description": "A highly experimental and non-official module which uses rollup to bundle javascript and provides it to liferay through a jar file.",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "author": "Jonas Wanner",
   "license": "ISC",
   "repository": {
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
@@ -40,10 +41,12 @@
     "chalk": "^4.1.1",
     "esbuild": "^0.12.28",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard-with-typescript": "^21.0.1",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
+    "prettier": "^2.4.1",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-esbuild": "^4.5.0",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
@@ -53,8 +56,8 @@
     "yargs": "^17.0.2"
   },
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -c -w",
+    "build": "rollup -c --configPlugin rollup-plugin-esbuild",
+    "watch": "rollup -c -w --configPlugin rollup-plugin-esbuild",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   }
