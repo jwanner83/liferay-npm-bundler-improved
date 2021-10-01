@@ -4,11 +4,13 @@ import json from '@rollup/plugin-json'
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
 import copy from 'rollup-plugin-copy'
 import esbuild from 'rollup-plugin-esbuild'
+import eslint from '@rollup/plugin-eslint'
 
 export default {
   input: 'src/mod.ts',
   plugins: [
     preserveShebangs(),
+    eslint(),
     resolve({
       preferBuiltins: true
     }),
