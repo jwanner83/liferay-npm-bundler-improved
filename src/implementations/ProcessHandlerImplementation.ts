@@ -20,7 +20,7 @@ export default class ProcessHandlerImplementation implements ProcessHandler {
    */
   private readonly jarHandler: JarHandler = new JarHandlerImplementation()
 
-  constructor(version) {
+  constructor(version: string) {
     this.version = version
   }
 
