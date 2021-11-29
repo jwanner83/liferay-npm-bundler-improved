@@ -1,0 +1,18 @@
+{
+  "packages": {
+    "/": {
+      "dest": {
+        "dir": "./build",
+        "id": "/",
+        "name": "{{name}}",
+        "version": "{{version}}"
+      },
+      "src": {
+        "dir": ".",
+        "id": "/",
+        "name": "{{name}}",
+        "version": "{{version}}"
+      }
+    }
+  }
+}
