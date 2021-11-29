@@ -3,7 +3,7 @@
   "description": "React",
   "version": "1.0.0",
   "scripts": {
-    "dev:build": "liferay-npm-bundler-improved",
+    "dev:build": "rollup -c",
     "dev:deploy": "liferay-npm-bundler-improved -d /opt/liferay/deploy"
   },
   "portlet": {
@@ -15,7 +15,7 @@
   },
   "main": "index",
   "dependencies": {
-    "liferay-npm-bundler-improved": "^1.0.0-beta.11",
+    "liferay-npm-bundler-improved": "^1.0.0-beta.12",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "tslib": "^2.3.1"
@@ -28,6 +28,7 @@
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
     "esbuild": "^0.12.27",
+    "rollup": "^2.60.1",
     "rollup-plugin-esbuild": "^4.5.0",
     "typescript": "^4.4.2"
   }
