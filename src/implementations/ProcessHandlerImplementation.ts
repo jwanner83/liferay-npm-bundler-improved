@@ -3,6 +3,7 @@ import PackageHandler from '../interfaces/PackageHandler'
 import PackageHandlerImplementation from './PackageHandlerImplementation'
 import JarHandler from '../interfaces/JarHandler'
 import JarHandlerImplementation from './JarHandlerImplementation'
+import TemplateHandlerImplementation from './TemplateHandlerImplementation'
 
 export default class ProcessHandlerImplementation implements ProcessHandler {
   /**
@@ -31,5 +32,11 @@ export default class ProcessHandlerImplementation implements ProcessHandler {
     this.jarHandler.name = `${this.packageHandler.pack.name}-${this.packageHandler.pack.version}.jar`
   }
 
-  async bundle(): Promise<void> {}
+  async bundle(): Promise<void> {
+    const wrapper = new TemplateHandlerImplementation('wrapper.js')
+
+    wrapper.replace('name', this.packageHandler.pack.name)
+    wrapper.replace('version', this.packageHandler.pack.version)
+    wrapper.replace('main', this.packageHandler.pack.main)
+  }
 }
