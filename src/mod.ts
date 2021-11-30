@@ -11,7 +11,7 @@ void (async () => {
     await process.process()
     await process.create()
 
-    console.info('bundler done.')
+    console.info('bundler done')
   } catch (exception) {
     console.error('bundler failed:', exception)
   }
