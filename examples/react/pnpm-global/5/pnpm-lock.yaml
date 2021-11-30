@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  liferay-npm-bundler-improved: ^1.0.0-beta.12
+
+dependencies:
+  liferay-npm-bundler-improved: link:../../../../../../../../../usr/local/pnpm-global/5/node_modules/liferay-npm-bundler-improved
