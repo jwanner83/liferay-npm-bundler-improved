@@ -1,4 +1,3 @@
-import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
@@ -11,9 +10,6 @@ export default {
   plugins: [
     preserveShebangs(),
     eslint(),
-    resolve({
-      preferBuiltins: true
-    }),
     commonjs(),
     json(),
     esbuild({
@@ -34,5 +30,6 @@ export default {
       format: 'cjs',
       compact: true
     }
-  ]
+  ],
+  external: ['fs', 'path', 'jszip']
 }

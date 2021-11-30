@@ -34,7 +34,6 @@
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/yargs": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "chalk": "^4.1.1",
@@ -49,7 +48,7 @@
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-esbuild": "^4.5.0",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
-    "typescript": "^4.5.2",
+    "typescript": "4.4.3",
     "yargs": "^17.0.2"
   },
   "scripts": {
