@@ -22,6 +22,6 @@ export default function main({ portletNamespace, contextPath, portletElementId, 
           configuration={configuration}
       />
     </React.StrictMode>,
-    document.getElementById(portletElementId),
+    document.getElementById(portletElementId)
   )
 }
