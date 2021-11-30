@@ -1,8 +1,8 @@
-import { name, version } from '../package.json'
-import ProcessHandlerImplementation from './implementations/ProcessHandlerImplementation'
+import { name, version } from '../../package.json'
+import ProcessHandlerImplementation from './handlers/ProcessHandlerImplementation'
 import ProcessHandler from './interfaces/ProcessHandler'
 import ExceptionHandler from './interfaces/ExceptionHandler'
-import ExceptionHandlerImplementation from './implementations/ExceptionHandlerImplementation'
+import ExceptionHandlerImplementation from './handlers/ExceptionHandlerImplementation'
 
 void (async () => {
   const process: ProcessHandler = new ProcessHandlerImplementation(version)
