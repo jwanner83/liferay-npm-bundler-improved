@@ -1,8 +1,8 @@
-import commonjs from '@rollup/plugin-commonjs'
-import json from '@rollup/plugin-json'
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
 import copy from 'rollup-plugin-copy'
 import esbuild from 'rollup-plugin-esbuild'
+import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 import eslint from '@rollup/plugin-eslint'
 
 export default {
@@ -31,5 +31,5 @@ export default {
       compact: true
     }
   ],
-  external: ['fs', 'path', 'jszip']
+  external: ['fs/promises', 'path', 'jszip']
 }
