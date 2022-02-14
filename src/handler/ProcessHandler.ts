@@ -35,6 +35,9 @@ export default class ProcessHandler {
     } catch {
       // silent
     }
+
+    // initialize jar handler
+    this.jarHandler.initialize()
   }
 
   async process(): Promise<void> {

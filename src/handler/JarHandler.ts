@@ -15,15 +15,6 @@ export default class JarHandler {
   initialize(): void {
     this.output = createWriteStream(`dist${sep}${this.name}`)
 
-    this.output.on('close', function () {
-      console.log(`${String(this.archive.pointer())} total bytes'`)
-      console.log('archiver has been finalized and the output file descriptor has closed.')
-    })
-
-    this.output.on('end', function () {
-      console.log('Data has been drained')
-    })
-
     this.archive.on('warning', function (err) {
       if (err.code === 'ENOENT') {
         console.log('warning', err)
