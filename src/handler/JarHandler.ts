@@ -13,7 +13,7 @@ export default class JarHandler {
   }
 
   initialize(): void {
-    this.output = createWriteStream(`dist${sep}${this.name}`)
+    this.output = createWriteStream(`dist${sep}${this.name}.jar`)
 
     this.archive.on('warning', function (err) {
       if (err.code === 'ENOENT') {
@@ -31,7 +31,7 @@ export default class JarHandler {
   }
 
   setName(pack: Pack): void {
-    this.name = `${pack.name}-${pack.version}.jar`
+    this.name = `${pack.name}-${pack.version}`
   }
 
   async create(): Promise<void> {
