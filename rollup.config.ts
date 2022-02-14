@@ -31,5 +31,5 @@ export default {
       compact: true
     }
   ],
-  external: ['fs/promises', 'path', 'jszip']
+  external: ['fs', 'fs/promises', 'path', 'archiver']
 }
