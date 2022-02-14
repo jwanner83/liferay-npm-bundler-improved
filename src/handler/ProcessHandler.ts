@@ -61,12 +61,10 @@ export default class ProcessHandler {
     manifestJSONTemplate.replace('version', this.packageHandler.pack.version)
 
     // process jar file
-    const meta = this.jarHandler.jar.folder('META-INF')
-    meta.file(manifestMFTemplate.name, manifestMFTemplate.processed)
-    const resource = meta.folder('resource')
-    resource.file(manifestJSONTemplate.name, manifestJSONTemplate.processed)
-    resource.file(`${this.entryPoint}.js`, wrapperJsTemplate.processed)
-    resource.file('package.json', JSON.stringify(this.packageHandler.pack))
+    this.jarHandler.archive.append(manifestMFTemplate.processed, { name: '/META-INF/' + manifestMFTemplate.name })
+    this.jarHandler.archive.append(manifestJSONTemplate.processed, { name: '/META-INF/resource/' + manifestJSONTemplate.name })
+    this.jarHandler.archive.append(wrapperJsTemplate.processed, { name: '/META-INF/resource/' + `${this.entryPoint}.js` })
+    this.jarHandler.archive.append(JSON.stringify(this.packageHandler.pack), { name: '/META-INF/resource/package.json' })
   }
 
   async create(): Promise<void> {
