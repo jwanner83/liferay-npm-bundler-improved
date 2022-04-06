@@ -67,9 +67,9 @@ export default class ProcessHandler {
 
     // process jar file
     this.jarHandler.archive.append(manifestMFTemplate.processed, { name: `/META-INF/${manifestMFTemplate.name}` })
-    this.jarHandler.archive.append(manifestJSONTemplate.processed, { name: `/META-INF/resource/${manifestJSONTemplate.name}` })
-    this.jarHandler.archive.append(wrapperJsTemplate.processed, { name: `/META-INF/resource/${this.entryPoint}.js` })
-    this.jarHandler.archive.append(JSON.stringify(this.packageHandler.pack), { name: `/META-INF/resource/package.json` })
+    this.jarHandler.archive.append(manifestJSONTemplate.processed, { name: `/META-INF/resources/${manifestJSONTemplate.name}` })
+    this.jarHandler.archive.append(wrapperJsTemplate.processed, { name: `/META-INF/resources/${this.entryPoint}.js` })
+    this.jarHandler.archive.append(JSON.stringify(this.packageHandler.pack), { name: `/META-INF/resources/package.json` })
   }
 
   async create(): Promise<void> {
