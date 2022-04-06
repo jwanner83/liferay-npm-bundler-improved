@@ -4,12 +4,14 @@ import TemplateHandler from './TemplateHandler'
 import { version } from '../../package.json'
 
 import { sep } from 'path'
-import { access, mkdir, readFile, copyFile } from 'fs/promises'
+import { access, mkdir, readFile, copyFile, readdir, rm } from 'fs/promises'
 import FeaturesHandler from './FeaturesHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
+
+  private cleanup: boolean = false
 
   private readonly packageHandler: PackageHandler
   private readonly jarHandler: JarHandler
@@ -25,6 +27,9 @@ export default class ProcessHandler {
     // validate package.json
     await this.packageHandler.resolve()
     this.packageHandler.validate()
+
+    // resolve npmbundlerrc
+    await this.featuresHandler.resolve()
 
     // set variables
     this.jarHandler.setName(this.packageHandler.pack)
@@ -46,6 +51,8 @@ export default class ProcessHandler {
         await access(sourcePath)
         await mkdir('./build')
         await copyFile(sourcePath, this.entryPath)
+
+        this.cleanup = true
         console.info(`sources from "${sourcePath}" where successfully copied.`)
       } catch {
         console.error(`sources could not be copied from "${sourcePath}". build will fail`)
@@ -92,8 +99,10 @@ export default class ProcessHandler {
 
     // process localization
     if (this.featuresHandler.hasLocalization) {
-      // TODO: read directory with all language.property files in it and write them to /META-INF/content.
-      this.jarHandler.archive.append('', { name: `/META-INF/content/`})
+      const files = await readdir(this.featuresHandler.localizationPath)
+      for (const file of files) {
+        this.jarHandler.archive.append((await readFile(`${this.featuresHandler.localizationPath}${sep}${file}`)).toString(), { name: `/content/${file}`})
+      }
     }
 
     // process jar file
@@ -106,5 +115,11 @@ export default class ProcessHandler {
   async create(): Promise<void> {
     // create jar file
     await this.jarHandler.create()
+
+    // cleanup
+    if (this.cleanup) {
+      await rm('build', { recursive: true, force: true })
+      console.log('cleaned build folder')
+    }
   }
 }
