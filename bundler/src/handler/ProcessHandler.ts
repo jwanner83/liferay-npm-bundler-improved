@@ -4,7 +4,7 @@ import TemplateHandler from './TemplateHandler'
 import { version } from '../../package.json'
 
 import { sep } from 'path'
-import { access, mkdir, readFile } from 'fs/promises'
+import { access, mkdir, readFile, copyFile } from 'fs/promises'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -28,7 +28,23 @@ export default class ProcessHandler {
     this.entryPath = `build${sep}${this.entryPoint}.js`
 
     // validate if entry file exists
-    await access(this.entryPath)
+    try {
+      await access(this.entryPath)
+    } catch {
+      // copy sources if entry file doesn't exist
+      console.info(`entry file doesn't exist in "${this.entryPath}". sources will be copied.`)
+      const sourcePath = `src${sep}${this.entryPoint}.js`
+
+      try {
+        await access(sourcePath)
+        await mkdir('./build')
+        await copyFile(sourcePath, this.entryPath)
+        console.info(`sources from "${sourcePath}" where successfully copied.`)
+      } catch {
+        console.error(`sources could not be copied from "${sourcePath}". build will fail`)
+        throw new Error()
+      }
+    }
 
     // prepare working folders
     try {
