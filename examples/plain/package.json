@@ -3,10 +3,10 @@
   "description": "plain",
   "version": "1.0.0",
   "scripts": {
-    "dev:build": "liferay-npm-bundler-improved",
-    "dev:deploy": "liferay-npm-bundler-improved -d",
-    "build": "pnpm run copy-sources && pnpm run copy-assets && liferay-npm-bundler",
-    "deploy": "pnpm run build && lnbs-deploy",
+    "build": "liferay-npm-bundler-improved",
+    "deploy": "liferay-npm-bundler-improved -d",
+    "old:build": "pnpm run copy-sources && pnpm run copy-assets && liferay-npm-bundler",
+    "old:deploy": "pnpm run build && lnbs-deploy",
     "copy-assets": "lnbs-copy-assets",
     "copy-sources": "lnbs-copy-sources"
   },
@@ -19,10 +19,8 @@
   },
   "main": "index",
   "devDependencies": {
+    "liferay-npm-bundler-improved": "workspace:^",
     "liferay-npm-build-support": "^2.25.0",
     "liferay-npm-bundler": "^2.25.0"
-  },
-  "dependencies": {
-    "liferay-npm-bundler-improved": "^1.0.0-beta.11"
   }
 }
