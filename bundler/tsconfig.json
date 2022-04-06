@@ -12,6 +12,6 @@
     "examples/*",
     "bin/*",
     "dist/*",
-    "src/old/*"
+    "bundler/src/old/*"
   ]
 }
