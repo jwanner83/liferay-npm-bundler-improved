@@ -1,6 +1,9 @@
-import npmbundlerrc from '../types/npmbundlerrc.types'
-
 export default class FeaturesHandler {
-  npmbundlerrc: npmbundlerrc
-  hasLocalization = false
+  public hasLocalization = false
+
+  determine(pack: any): void {
+    if (pack.portlet['javax.portlet.resource-bundle']) {
+      this.hasLocalization = true
+    }
+  }
 }
