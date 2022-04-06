@@ -5,16 +5,20 @@ import { version } from '../../package.json'
 
 import { sep } from 'path'
 import { access, mkdir, readFile, copyFile } from 'fs/promises'
+import FeaturesHandler from './FeaturesHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
+
   private readonly packageHandler: PackageHandler
   private readonly jarHandler: JarHandler
+  private readonly featuresHandler: FeaturesHandler
 
   constructor() {
     this.packageHandler = new PackageHandler()
     this.jarHandler = new JarHandler()
+    this.featuresHandler = new FeaturesHandler()
   }
 
   async prepare(): Promise<void> {
@@ -26,6 +30,9 @@ export default class ProcessHandler {
     this.jarHandler.setName(this.packageHandler.pack)
     this.entryPoint = this.packageHandler.pack.main
     this.entryPath = `build${sep}${this.entryPoint}.js`
+
+    // determine features
+    this.featuresHandler.determine(this.packageHandler.pack)
 
     // validate if entry file exists
     try {
@@ -73,13 +80,21 @@ export default class ProcessHandler {
     manifestMFTemplate.replace('description', this.packageHandler.pack.description)
     manifestMFTemplate.replace('version', this.packageHandler.pack.version)
     manifestMFTemplate.replace('tool-version', version)
-    manifestMFTemplate.replace('language-resource', '') // TODO: handle different if language properties exist
+    if (this.featuresHandler.hasLocalization) {
+      manifestMFTemplate.replace('language-resource', ',liferay.resource.bundle;resource.bundle.base.name="content.Language"') // TODO: handle different if language properties exist
+    }
 
     // process manifest.json
     const manifestJSONTemplate = new TemplateHandler('manifest.json')
     await manifestJSONTemplate.resolve()
     manifestJSONTemplate.replace('name', this.packageHandler.pack.name)
     manifestJSONTemplate.replace('version', this.packageHandler.pack.version)
+
+    // process localization
+    if (this.featuresHandler.hasLocalization) {
+      // TODO: read directory with all language.property files in it and write them to /META-INF/content.
+      this.jarHandler.archive.append('', { name: `/META-INF/content/`})
+    }
 
     // process jar file
     this.jarHandler.archive.append(manifestMFTemplate.processed, { name: `/META-INF/${manifestMFTemplate.name}` })
