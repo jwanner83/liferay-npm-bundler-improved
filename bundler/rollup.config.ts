@@ -4,8 +4,9 @@ import json from '@rollup/plugin-json'
 import copy from 'rollup-plugin-copy'
 import esbuild from 'rollup-plugin-esbuild'
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
+import { RollupOptions } from 'rollup'
 
-export default {
+const config: RollupOptions = {
   input: 'src/mod.ts',
   plugins: [
     preserveShebangs(),
@@ -28,8 +29,11 @@ export default {
     {
       file: 'bin/bundler.js',
       format: 'cjs',
-      compact: true
+      compact: true,
+      banner: '#!/usr/bin/env node'
     }
   ],
   external: ['fs', 'fs/promises', 'path', 'archiver', 'chalk']
 }
+
+export default config
