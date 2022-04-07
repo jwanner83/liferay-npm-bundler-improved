@@ -1,4 +1,5 @@
-import { readFile } from 'fs/promises'
+import { readFile } from 'fs'
+import { promisify } from 'util'
 import InvalidPackageException from '../exceptions/InvalidPackageException'
 import Pack from '../types/Pack.types'
 
@@ -6,7 +7,7 @@ export default class PackageHandler {
   public pack: Pack
 
   async resolve(): Promise<void> {
-    const file = await readFile('./package.json')
+    const file = await promisify(readFile)('./package.json')
     this.pack = await JSON.parse(file.toString())
   }
 

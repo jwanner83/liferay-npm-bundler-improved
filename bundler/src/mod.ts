@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'
 import { name, version } from '../package.json'
 import ProcessHandler from './handler/ProcessHandler'
 import { log } from './log'

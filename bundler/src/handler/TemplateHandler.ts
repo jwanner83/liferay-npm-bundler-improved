@@ -1,4 +1,5 @@
-import { access, readFile } from 'fs/promises'
+import { access, readFile } from 'fs'
+import { promisify } from 'util'
 import { sep } from 'path'
 import TemplatesNotFoundException from '../exceptions/TemplatesNotFoundException'
 
@@ -22,14 +23,14 @@ export default class TemplateHandler {
     this.path = `${scriptPath}${sep}${this.base}${sep}${this.name}`
 
     try {
-      await access(this.path)
+      await promisify(access)(this.path)
     } catch {
       throw new TemplatesNotFoundException(
         `no template with name '${this.name}' has been found in path ${this.path}`
       )
     }
 
-    this.raw = await readFile(this.path)
+    this.raw = await promisify(readFile)(this.path)
     this.processed = this.raw.toString()
   }
 

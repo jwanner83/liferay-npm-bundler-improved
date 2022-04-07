@@ -1,4 +1,5 @@
-import { access, copyFile, mkdir, readdir, readFile, rm } from 'fs/promises'
+import { access, copyFile, mkdir, readdir, readFile, rm } from 'fs'
+import { promisify } from 'util'
 import { sep } from 'path'
 import { version } from '../../package.json'
 import { log } from '../log'
@@ -41,7 +42,7 @@ export default class ProcessHandler {
 
     // validate if entry file exists
     try {
-      await access(this.entryPath)
+      await promisify(access)(this.entryPath)
     } catch {
       // copy sources if entry file doesn't exist
       log.progress(`entry file doesn't exist in "${this.entryPath}". sources will be copied.`)
@@ -49,9 +50,9 @@ export default class ProcessHandler {
 
       try {
         log.progress('')
-        await access(sourcePath)
-        await mkdir('./build')
-        await copyFile(sourcePath, this.entryPath)
+        await promisify(access)(sourcePath)
+        await promisify(mkdir)('./build')
+        await promisify(copyFile)(sourcePath, this.entryPath)
 
         this.cleanup = true
         log.progress(`sources from "${sourcePath}" where successfully copied.`)
@@ -63,7 +64,7 @@ export default class ProcessHandler {
 
     // prepare working folders
     try {
-      await mkdir('dist')
+      await promisify(mkdir)('dist')
     } catch {
       // silent
     }
@@ -81,7 +82,7 @@ export default class ProcessHandler {
     wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
     wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
-    wrapperJsTemplate.replace('bundle', (await readFile(this.entryPath)).toString())
+    wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
 
     // process MANIFEST.MF
     const manifestMFTemplate = new TemplateHandler('MANIFEST.MF')
@@ -105,10 +106,10 @@ export default class ProcessHandler {
 
     // process localization
     if (this.featuresHandler.hasLocalization) {
-      const files = await readdir(this.featuresHandler.localizationPath)
+      const files = await promisify(readdir)(this.featuresHandler.localizationPath)
       for (const file of files) {
         this.jarHandler.archive.append(
-          (await readFile(`${this.featuresHandler.localizationPath}${sep}${file}`)).toString(),
+          (await promisify(readFile)(`${this.featuresHandler.localizationPath}${sep}${file}`)).toString(),
           { name: `/content/${file}` }
         )
       }
@@ -138,7 +139,7 @@ export default class ProcessHandler {
     // cleanup
     if (this.cleanup) {
       log.progress('cleaning build folder')
-      await rm('build', { recursive: true, force: true })
+      await promisify(rm)('build', { recursive: true, force: true })
       log.progress('cleaned build folder')
     }
   }
