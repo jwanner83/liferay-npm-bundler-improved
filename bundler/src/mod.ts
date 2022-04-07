@@ -1,5 +1,6 @@
 import { name, version } from '../package.json'
 import ProcessHandler from './handler/ProcessHandler'
+import { log } from './log'
 
 void (async () => {
   const process = new ProcessHandler()
@@ -11,8 +12,10 @@ void (async () => {
     await process.process()
     await process.create()
 
-    console.info('bundler done')
+    log.success('bundler done')
   } catch (exception) {
-    console.error('bundler failed:', exception)
+    log.error(`bundler failed: ${exception as string}`)
   }
+
+  log.close()
 })()

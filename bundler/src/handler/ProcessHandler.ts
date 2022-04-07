@@ -6,6 +6,7 @@ import { version } from '../../package.json'
 import { sep } from 'path'
 import { access, mkdir, readFile, copyFile, readdir, rm } from 'fs/promises'
 import FeaturesHandler from './FeaturesHandler'
+import { log } from '../log'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -44,18 +45,19 @@ export default class ProcessHandler {
       await access(this.entryPath)
     } catch {
       // copy sources if entry file doesn't exist
-      console.info(`entry file doesn't exist in "${this.entryPath}". sources will be copied.`)
+      log.progress(`entry file doesn't exist in "${this.entryPath}". sources will be copied.`)
       const sourcePath = `src${sep}${this.entryPoint}.js`
 
       try {
+        log.progress('')
         await access(sourcePath)
         await mkdir('./build')
         await copyFile(sourcePath, this.entryPath)
 
         this.cleanup = true
-        console.info(`sources from "${sourcePath}" where successfully copied.`)
+        log.progress(`sources from "${sourcePath}" where successfully copied.`)
       } catch {
-        console.error(`sources could not be copied from "${sourcePath}". build will fail`)
+        log.error(`sources could not be copied from "${sourcePath}". build will fail`)
         throw new Error()
       }
     }
@@ -72,6 +74,8 @@ export default class ProcessHandler {
   }
 
   async process(): Promise<void> {
+    log.progress('processing jar file')
+
     // process wrapper.js
     const wrapperJsTemplate = new TemplateHandler('wrapper.js')
     await wrapperJsTemplate.resolve()
@@ -114,12 +118,15 @@ export default class ProcessHandler {
 
   async create(): Promise<void> {
     // create jar file
+    log.progress('create jar')
     await this.jarHandler.create()
+    log.progress('jar file created')
 
     // cleanup
     if (this.cleanup) {
+      log.progress('cleaning build folder')
       await rm('build', { recursive: true, force: true })
-      console.log('cleaned build folder')
+      log.progress('cleaned build folder')
     }
   }
 }
