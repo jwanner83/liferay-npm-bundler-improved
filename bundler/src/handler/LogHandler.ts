@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import readline from 'readline'
 
 enum LogType {
   progress = 'Progress',
@@ -23,8 +24,8 @@ export default class LogHandler {
   }
 
   private log(): void {
-    process.stdout.clearLine(0)
-    process.stdout.cursorTo(0)
+    readline.clearLine(process.stdout, 0)
+    readline.cursorTo(process.stdout, 0)
     process.stdout.write(this.getMessage())
   }
 
