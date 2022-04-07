@@ -2,12 +2,12 @@
 A highly experimental, __ultra__ fast and non-official drop-in replacement for 
 [`liferay-npm-bundler`](https://www.npmjs.com/package/liferay-npm-bundler)
 
-### Reason for existence
+## Reason for existence
 There is one reason for its existence: speed. In comparison to the official `liferay-npm-bundler` it is up to 
 **14 times faster** while bundling vue / react / vanilla js portlets. As a bonus, the `liferay-npm-bundler-improved` also 
 works with `pnpm`, which is because of the usage of symlinks not supported by the official `liferay-npm-bundler`.
 
-### Missing Features:
+## Missing Features:
 - Package Deduplication (not planned)
 - Portlet Configuration Support (backlog)
 
