@@ -1,7 +1,7 @@
-import Pack from '../types/Pack.types'
 import archiver, { Archiver } from 'archiver'
 import { createWriteStream, WriteStream } from 'fs'
 import { sep } from 'path'
+import Pack from '../types/Pack.types'
 
 export default class JarHandler {
   public name: string

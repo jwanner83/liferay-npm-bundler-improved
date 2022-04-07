@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises'
-import Pack from '../types/Pack.types'
 import { sep } from 'path'
 import npmbundlerrc from '../types/npmbundlerrc.types'
+import Pack from '../types/Pack.types'
 
 export default class FeaturesHandler {
   public npmbundlerrc: npmbundlerrc

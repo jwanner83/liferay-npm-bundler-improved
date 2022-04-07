@@ -1,12 +1,11 @@
+import { access, copyFile, mkdir, readdir, readFile, rm } from 'fs/promises'
+import { sep } from 'path'
+import { version } from '../../package.json'
+import { log } from '../log'
+import FeaturesHandler from './FeaturesHandler'
 import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
 import TemplateHandler from './TemplateHandler'
-import FeaturesHandler from './FeaturesHandler'
-
-import { version } from '../../package.json'
-import { sep } from 'path'
-import { access, mkdir, readFile, copyFile, readdir, rm } from 'fs/promises'
-import { log } from '../log'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -92,7 +91,10 @@ export default class ProcessHandler {
     manifestMFTemplate.replace('version', this.packageHandler.pack.version)
     manifestMFTemplate.replace('tool-version', version)
     if (this.featuresHandler.hasLocalization) {
-      manifestMFTemplate.replace('language-resource', ',liferay.resource.bundle;resource.bundle.base.name="content.Language"') // TODO: handle different if language properties exist
+      manifestMFTemplate.replace(
+        'language-resource',
+        ',liferay.resource.bundle;resource.bundle.base.name="content.Language"'
+      ) // TODO: handle different if language properties exist
     }
 
     // process manifest.json
@@ -105,15 +107,26 @@ export default class ProcessHandler {
     if (this.featuresHandler.hasLocalization) {
       const files = await readdir(this.featuresHandler.localizationPath)
       for (const file of files) {
-        this.jarHandler.archive.append((await readFile(`${this.featuresHandler.localizationPath}${sep}${file}`)).toString(), { name: `/content/${file}`})
+        this.jarHandler.archive.append(
+          (await readFile(`${this.featuresHandler.localizationPath}${sep}${file}`)).toString(),
+          { name: `/content/${file}` }
+        )
       }
     }
 
     // process jar file
-    this.jarHandler.archive.append(manifestMFTemplate.processed, { name: `/META-INF/${manifestMFTemplate.name}` })
-    this.jarHandler.archive.append(manifestJSONTemplate.processed, { name: `/META-INF/resources/${manifestJSONTemplate.name}` })
-    this.jarHandler.archive.append(wrapperJsTemplate.processed, { name: `/META-INF/resources/${this.entryPoint}.js` })
-    this.jarHandler.archive.append(JSON.stringify(this.packageHandler.pack), { name: `/META-INF/resources/package.json` })
+    this.jarHandler.archive.append(manifestMFTemplate.processed, {
+      name: `/META-INF/${manifestMFTemplate.name}`
+    })
+    this.jarHandler.archive.append(manifestJSONTemplate.processed, {
+      name: `/META-INF/resources/${manifestJSONTemplate.name}`
+    })
+    this.jarHandler.archive.append(wrapperJsTemplate.processed, {
+      name: `/META-INF/resources/${this.entryPoint}.js`
+    })
+    this.jarHandler.archive.append(JSON.stringify(this.packageHandler.pack), {
+      name: `/META-INF/resources/package.json`
+    })
   }
 
   async create(): Promise<void> {

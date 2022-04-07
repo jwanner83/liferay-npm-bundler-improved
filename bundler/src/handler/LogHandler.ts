@@ -22,17 +22,17 @@ export default class LogHandler {
     }, this.step)
   }
 
-  private log (): void {
+  private log(): void {
     process.stdout.clearLine(0)
     process.stdout.cursorTo(0)
     process.stdout.write(this.getMessage())
   }
 
-  private getMessage (): string {
+  private getMessage(): string {
     return `${this.getPrefix()}: ${this.message}`
   }
 
-  private getPrefix (): string {
+  private getPrefix(): string {
     if (this.type === LogType.progress || this.type === LogType.warn) {
       return `${this.getType()} going on ${this.getTime()}`
     } else {
@@ -40,7 +40,7 @@ export default class LogHandler {
     }
   }
 
-  private getType (): string {
+  private getType(): string {
     switch (this.type) {
       case LogType.progress:
         return chalk.blue(this.type)
@@ -55,35 +55,35 @@ export default class LogHandler {
     }
   }
 
-  private getTime (): string {
+  private getTime(): string {
     return `${this.time / 1000}s`
   }
 
-  close (): void {
+  close(): void {
     clearInterval(this.interval)
     this.log()
     console.log('') // removes zsh highlighted % sign
   }
 
-  progress (message): void {
+  progress(message): void {
     this.type = LogType.progress
     this.message = message
     this.log()
   }
 
-  success (message): void {
+  success(message): void {
     this.type = LogType.success
     this.message = message
     this.log()
   }
 
-  warn (message): void {
+  warn(message): void {
     this.type = LogType.warn
     this.message = message
     this.log()
   }
 
-  error (message): void {
+  error(message): void {
     this.type = LogType.error
     this.message = message
     this.log()

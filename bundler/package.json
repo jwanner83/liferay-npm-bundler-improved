@@ -43,6 +43,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "prettier": "^2.4.1",
+    "prettier-plugin-organize-imports": "^2.3.4",
     "rollup": "^2.60.2",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-esbuild": "^4.5.0",
@@ -52,6 +53,7 @@
   "scripts": {
     "build": "rollup -c --configPlugin rollup-plugin-esbuild",
     "watch": "rollup -c -w --configPlugin rollup-plugin-esbuild",
+    "format": "prettier -w .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   }

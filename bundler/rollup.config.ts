@@ -1,9 +1,9 @@
-import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
+import commonjs from '@rollup/plugin-commonjs'
+import eslint from '@rollup/plugin-eslint'
+import json from '@rollup/plugin-json'
 import copy from 'rollup-plugin-copy'
 import esbuild from 'rollup-plugin-esbuild'
-import commonjs from '@rollup/plugin-commonjs'
-import json from '@rollup/plugin-json'
-import eslint from '@rollup/plugin-eslint'
+import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
 
 export default {
   input: 'src/mod.ts',

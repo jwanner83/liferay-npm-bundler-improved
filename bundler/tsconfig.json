@@ -8,10 +8,5 @@
     "resolveJsonModule": true
   },
   "esModuleInterop": true,
-  "exclude": [
-    "examples/*",
-    "bin/*",
-    "dist/*",
-    "bundler/src/old/*"
-  ]
+  "exclude": ["examples/*", "bin/*", "dist/*", "bundler/src/old/*"]
 }
