@@ -1,11 +1,11 @@
 import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
 import TemplateHandler from './TemplateHandler'
-import { version } from '../../package.json'
+import FeaturesHandler from './FeaturesHandler'
 
+import { version } from '../../package.json'
 import { sep } from 'path'
 import { access, mkdir, readFile, copyFile, readdir, rm } from 'fs/promises'
-import FeaturesHandler from './FeaturesHandler'
 import { log } from '../log'
 
 export default class ProcessHandler {
