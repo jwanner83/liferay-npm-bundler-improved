@@ -1,4 +1,12 @@
-# liferay-npm-bundler-improved
+<h1 align="center">liferay-npm-bundler-improved</h1>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/liferay-npm-bundler-improved">
+    <img src="https://img.shields.io/npm/v/liferay-npm-bundler-improved?style=for-the-badge" />
+  </a>
+  <img src="https://img.shields.io/npm/l/liferay-npm-bundler-improved?style=for-the-badge" />
+</p>
+
 A highly experimental, __ultra__ fast and non-official drop-in replacement for 
 [`liferay-npm-bundler`](https://www.npmjs.com/package/liferay-npm-bundler)
 
