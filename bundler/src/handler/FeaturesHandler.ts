@@ -1,4 +1,5 @@
-import { readFile } from 'fs/promises'
+import { readFile } from 'fs'
+import { promisify } from 'util'
 import { sep } from 'path'
 import npmbundlerrc from '../types/npmbundlerrc.types'
 import Pack from '../types/Pack.types'
@@ -10,7 +11,7 @@ export default class FeaturesHandler {
 
   async resolve(): Promise<void> {
     try {
-      const file = await readFile('./.npmbundlerrc')
+      const file = await promisify(readFile)('./.npmbundlerrc')
       this.npmbundlerrc = await JSON.parse(file.toString())
     } catch {
       // npmbundlerrc could not be found. is not required
