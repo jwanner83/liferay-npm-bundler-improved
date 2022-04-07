@@ -6,6 +6,7 @@ import replace from '@rollup/plugin-replace'
 export default {
   input: 'src/index.tsx',
   output: {
+    file: 'build/index.js',
     format: 'commonjs',
     exports: 'default'
   },
@@ -14,6 +15,7 @@ export default {
     commonjs(),
     esbuild(),
     replace({
+      preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify('production')
     })
   ]

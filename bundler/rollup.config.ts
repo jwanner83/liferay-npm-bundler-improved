@@ -1,21 +1,19 @@
-import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
+import eslint from '@rollup/plugin-eslint'
 import json from '@rollup/plugin-json'
-import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
 import copy from 'rollup-plugin-copy'
 import esbuild from 'rollup-plugin-esbuild'
+import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
 
 export default {
   input: 'src/mod.ts',
   plugins: [
     preserveShebangs(),
-    resolve({
-      preferBuiltins: true
-    }),
+    eslint(),
     commonjs(),
     json(),
     esbuild({
-      minify: true,
+      minify: true
     }),
     copy({
       targets: [
@@ -32,5 +30,6 @@ export default {
       format: 'cjs',
       compact: true
     }
-  ]
+  ],
+  external: ['fs', 'fs/promises', 'path', 'archiver', 'chalk']
 }

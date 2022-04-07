@@ -7,6 +7,7 @@ import esbuild from 'rollup-plugin-esbuild'
 export default {
   input: 'src/index.ts',
   output: {
+    file: 'build/index.js',
     format: 'commonjs',
     exports: 'default'
   },
@@ -16,6 +17,7 @@ export default {
     vue(),
     esbuild(),
     replace({
+      preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify('production')
     })
   ]

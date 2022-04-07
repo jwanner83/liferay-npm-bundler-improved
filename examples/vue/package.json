@@ -3,22 +3,22 @@
   "description": "Vue",
   "version": "1.0.0",
   "scripts": {
-    "dev:build": "liferay-npm-bundler-improved",
-    "dev:deploy": "liferay-npm-bundler-improved -d /opt/liferay/deploy"
+    "build": "rollup -c && liferay-npm-bundler-improved"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",
     "com.liferay.portlet.instanceable": true,
     "javax.portlet.security-role-ref": "power-user,user",
     "javax.portlet.name": "vue",
+    "javax.portlet.display-name": "Vue",
     "javax.portlet.resource-bundle": "content.Language"
   },
   "main": "index",
   "dependencies": {
-    "liferay-npm-bundler-improved": "^1.0.0-beta.11",
     "vue": "^2.6.14"
   },
   "devDependencies": {
+    "liferay-npm-bundler-improved": "workspace:^",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^3.0.0",
@@ -26,6 +26,7 @@
     "rollup": "^2.51.1",
     "rollup-plugin-esbuild": "^4.5.0",
     "rollup-plugin-vue": "^4.7.2",
-    "vue-template-compiler": "^2.6.14"
+    "vue-template-compiler": "^2.6.14",
+    "postcss": "^8.4.12"
   }
 }
