@@ -14,6 +14,8 @@ importers:
       '@typescript-eslint/eslint-plugin': ^4.31.2
       '@typescript-eslint/parser': 4.0.0
       archiver: ^5.3.0
+      bole: ^4.0.0
+      chalk: ^4.1.2
       esbuild: ^0.12.28
       eslint: ^7.32.0
       eslint-config-prettier: ^8.3.0
@@ -36,6 +38,8 @@ importers:
       '@rollup/plugin-json': 4.1.0_rollup@2.60.2
       '@typescript-eslint/eslint-plugin': 4.33.0_4c993576e6b922da56fd69e292b3693f
       '@typescript-eslint/parser': 4.0.0_eslint@7.32.0+typescript@4.4.4
+      bole: 4.0.0
+      chalk: 4.1.2
       esbuild: 0.12.29
       eslint: 7.32.0
       eslint-config-prettier: 8.3.0_eslint@7.32.0
@@ -1184,6 +1188,13 @@ packages:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
     dev: true
 
+  /bole/4.0.0:
+    resolution: {integrity: sha512-Bk/2qoyOSlwU1dnDFk/oPM2FCNKAlYlBHfpAgwGX+K9HUtxSvmIAQCmMWMOvE6BlHHRCwsH1MxJe/r1ieodxqQ==}
+    dependencies:
+      fast-safe-stringify: 2.1.1
+      individual: 3.0.0
+    dev: true
+
   /brace-expansion/1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
     dependencies:
@@ -1935,6 +1946,10 @@ packages:
     resolution: {integrity: sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=}
     dev: true
 
+  /fast-safe-stringify/2.1.1:
+    resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+    dev: true
+
   /fastparse/1.1.2:
     resolution: {integrity: sha512-483XLLxTVIwWK3QTrMGRqUfUpoOs/0hbQrl2oz4J0pAcm3A3bu84wxTFqGqkJzewCLdME38xJLJAxBABfQT8sQ==}
     dev: true
@@ -2253,6 +2268,10 @@ packages:
 
   /indexes-of/1.0.1:
     resolution: {integrity: sha1-8w9xbI4r00bHtn0985FVZqfAVgc=}
+    dev: true
+
+  /individual/3.0.0:
+    resolution: {integrity: sha1-58pPhfiVewGHNPKFdQ3CLsL5hi0=}
     dev: true
 
   /inflight/1.0.6:
