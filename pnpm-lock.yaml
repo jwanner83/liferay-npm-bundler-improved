@@ -27,6 +27,7 @@ importers:
       eslint-plugin-promise: ^5.1.0
       prettier: ^2.4.1
       prettier-plugin-organize-imports: ^2.3.4
+      readline: ^1.3.0
       regenerator-runtime: ^0.13.9
       rollup: ^2.60.2
       rollup-plugin-copy: ^3.4.0
@@ -55,6 +56,7 @@ importers:
       eslint-plugin-promise: 5.1.1_eslint@7.32.0
       prettier: 2.5.0
       prettier-plugin-organize-imports: 2.3.4_prettier@2.5.0+typescript@4.4.4
+      readline: 1.3.0
       regenerator-runtime: 0.13.9
       rollup: 2.60.2
       rollup-plugin-copy: 3.4.0
@@ -4297,6 +4299,10 @@ packages:
     dependencies:
       minimatch: 3.0.4
     dev: false
+
+  /readline/1.3.0:
+    resolution: {integrity: sha1-xYDXfvLPyHUrEySYBg3JeTp6wBw=}
+    dev: true
 
   /regenerate-unicode-properties/10.0.1:
     resolution: {integrity: sha512-vn5DU6yg6h8hP/2OkQo3K7uVILvY4iu0oI4t3HFa81UPkhGJwkRwM10JEc3upjdhHjs/k8GJY1sRBhk5sr69Bw==}
