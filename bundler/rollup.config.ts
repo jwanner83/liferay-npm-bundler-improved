@@ -31,5 +31,5 @@ export default {
       compact: true
     }
   ],
-  external: ['fs', 'fs/promises', 'path', 'archiver']
+  external: ['fs', 'fs/promises', 'path', 'archiver', 'chalk']
 }
