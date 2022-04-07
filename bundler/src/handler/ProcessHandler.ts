@@ -94,7 +94,7 @@ export default class ProcessHandler {
       manifestMFTemplate.replace(
         'language-resource',
         ',liferay.resource.bundle;resource.bundle.base.name="content.Language"'
-      ) // TODO: handle different if language properties exist
+      )
     }
 
     // process manifest.json
