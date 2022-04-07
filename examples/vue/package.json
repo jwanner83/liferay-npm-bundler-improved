@@ -3,8 +3,7 @@
   "description": "Vue",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c && liferay-npm-bundler-improved",
-    "deploy": "rollup -c && liferay-npm-bundler-improved -d /opt/liferay/deploy"
+    "build": "rollup -c && liferay-npm-bundler-improved"
   },
   "portlet": {
     "com.liferay.portlet.display-category": "category.sample",

@@ -4,9 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "liferay-npm-bundler-improved",
-    "deploy": "liferay-npm-bundler-improved -d",
     "old:build": "pnpm run copy-sources && pnpm run copy-assets && liferay-npm-bundler",
-    "old:deploy": "pnpm run build && lnbs-deploy",
     "copy-assets": "lnbs-copy-assets",
     "copy-sources": "lnbs-copy-sources"
   },

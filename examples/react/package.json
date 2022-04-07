@@ -3,10 +3,7 @@
   "description": "React",
   "version": "1.0.0",
   "scripts": {
-    "dev:build": "rollup -c && node ../../bin/bundler.js",
-    "dev:deploy": "rollup -c && node ../../bin/bundler.js -d /opt/liferay/deploy",
-    "build": "rollup -c && liferay-npm-bundler-improved",
-    "deploy": "rollup -c &&liferay-npm-bundler-improved -d /opt/liferay/deploy"
+    "build": "rollup -c && liferay-npm-bundler-improved"
   },
   "dependencies": {
     "react": "17.0.2",
