@@ -13,8 +13,7 @@
     "com.liferay.portlet.instanceable": true,
     "javax.portlet.name": "plain",
     "javax.portlet.display-name": "Plain",
-    "javax.portlet.security-role-ref": "power-user,user",
-    "javax.portlet.resource-bundle": "content.Language"
+    "javax.portlet.security-role-ref": "power-user,user"
   },
   "main": "index",
   "devDependencies": {

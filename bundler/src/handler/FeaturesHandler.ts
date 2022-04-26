@@ -1,6 +1,6 @@
 import { readFile } from 'fs'
-import { promisify } from 'util'
 import { sep } from 'path'
+import { promisify } from 'util'
 import npmbundlerrc from '../types/npmbundlerrc.types'
 import Pack from '../types/Pack.types'
 
