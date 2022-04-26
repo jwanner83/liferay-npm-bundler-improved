@@ -96,6 +96,11 @@ export default class ProcessHandler {
         'language-resource',
         ',liferay.resource.bundle;resource.bundle.base.name="content.Language"'
       )
+    } else {
+      manifestMFTemplate.replace(
+        'language-resource',
+        ''
+      )
     }
 
     // process manifest.json
@@ -103,17 +108,6 @@ export default class ProcessHandler {
     await manifestJSONTemplate.resolve()
     manifestJSONTemplate.replace('name', this.packageHandler.pack.name)
     manifestJSONTemplate.replace('version', this.packageHandler.pack.version)
-
-    // process localization
-    if (this.featuresHandler.hasLocalization) {
-      const files = await promisify(readdir)(this.featuresHandler.localizationPath)
-      for (const file of files) {
-        this.jarHandler.archive.append(
-          (await promisify(readFile)(`${this.featuresHandler.localizationPath}${sep}${file}`)).toString(),
-          { name: `/content/${file}` }
-        )
-      }
-    }
 
     // process jar file
     this.jarHandler.archive.append(manifestMFTemplate.processed, {
@@ -128,6 +122,19 @@ export default class ProcessHandler {
     this.jarHandler.archive.append(JSON.stringify(this.packageHandler.pack), {
       name: `/META-INF/resources/package.json`
     })
+
+    // process localization
+    if (this.featuresHandler.hasLocalization) {
+      const files = await promisify(readdir)(this.featuresHandler.localizationPath)
+      for (const file of files) {
+        this.jarHandler.archive.append(
+          (
+            await promisify(readFile)(`${this.featuresHandler.localizationPath}${sep}${file}`)
+          ).toString(),
+          { name: `/content/${file}` }
+        )
+      }
+    }
   }
 
   async create(): Promise<void> {
