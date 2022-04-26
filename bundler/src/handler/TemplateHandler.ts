@@ -1,6 +1,6 @@
 import { access, readFile } from 'fs'
-import { promisify } from 'util'
 import { sep } from 'path'
+import { promisify } from 'util'
 import TemplatesNotFoundException from '../exceptions/TemplatesNotFoundException'
 
 export default class TemplateHandler {
