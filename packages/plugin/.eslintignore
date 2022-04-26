@@ -1,0 +1,6 @@
+examples/*
+bin/*
+dist/*
+src/templates/*
+src/old/*
+package.json
