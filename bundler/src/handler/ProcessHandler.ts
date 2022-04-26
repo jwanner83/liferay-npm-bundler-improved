@@ -1,6 +1,6 @@
 import { access, copyFile, mkdir, readdir, readFile, rm } from 'fs'
-import { promisify } from 'util'
 import { sep } from 'path'
+import { promisify } from 'util'
 import { version } from '../../package.json'
 import { log } from '../log'
 import FeaturesHandler from './FeaturesHandler'
