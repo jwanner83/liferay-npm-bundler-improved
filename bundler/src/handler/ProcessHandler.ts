@@ -1,5 +1,5 @@
-import { access, copyFile, mkdir, readdir, readFile, rm } from 'fs'
-import { sep } from 'path'
+import { access, copyFile, mkdir, readdir, readFile, rm, stat } from 'fs'
+import { sep, resolve } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
 import { log } from '../log'
@@ -7,6 +7,10 @@ import FeaturesHandler from './FeaturesHandler'
 import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
 import TemplateHandler from './TemplateHandler'
+import SettingsHandler from './SettingsHandler'
+import MissingEntryFileException from '../exceptions/MissingEntryFileException'
+import CopySourcesException from '../exceptions/CopySourcesException'
+import CopyAssetsException from '../exceptions/CopyAssetsException'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -14,11 +18,13 @@ export default class ProcessHandler {
 
   private cleanup: boolean = false
 
+  private readonly settingsHandler: SettingsHandler
   private readonly packageHandler: PackageHandler
   private readonly jarHandler: JarHandler
   private readonly featuresHandler: FeaturesHandler
 
-  constructor() {
+  constructor(settingsHandler: SettingsHandler) {
+    this.settingsHandler = settingsHandler
     this.packageHandler = new PackageHandler()
     this.jarHandler = new JarHandler()
     this.featuresHandler = new FeaturesHandler()
@@ -32,6 +38,9 @@ export default class ProcessHandler {
     // resolve npmbundlerrc
     await this.featuresHandler.resolve()
 
+    // resolve settings according to the .npmbundlerrc
+    this.settingsHandler.resolve(this.featuresHandler.npmbundlerrc)
+
     // set variables
     this.jarHandler.setName(this.packageHandler.pack)
     this.entryPoint = this.packageHandler.pack.main
@@ -40,25 +49,35 @@ export default class ProcessHandler {
     // determine features
     this.featuresHandler.determine(this.packageHandler.pack)
 
-    // validate if entry file exists
-    try {
-      await promisify(access)(this.entryPath)
-    } catch {
+    if (this.settingsHandler.copySources) {
       // copy sources if entry file doesn't exist
-      log.progress(`entry file doesn't exist in "${this.entryPath}". sources will be copied.`)
+      log.progress(`copy sources`)
       const sourcePath = `src${sep}${this.entryPoint}.js`
 
       try {
-        log.progress('')
+        await promisify(mkdir)(`.${sep}build`)
+      } catch {
+        // silent
+      }
+
+      try {
         await promisify(access)(sourcePath)
-        await promisify(mkdir)('./build')
         await promisify(copyFile)(sourcePath, this.entryPath)
 
-        this.cleanup = true
+        this.cleanup = this.settingsHandler.createJar
         log.progress(`sources from "${sourcePath}" where successfully copied.`)
       } catch {
-        log.error(`sources could not be copied from "${sourcePath}". build will fail`)
-        throw new Error()
+        throw new CopySourcesException(`sources could not be copied from "${sourcePath}"`)
+      }
+    } else {
+      // validate if entry file exists
+      try {
+        await promisify(access)(this.entryPath)
+      } catch {
+        // copy sources if entry file doesn't exist
+        throw new MissingEntryFileException(
+          `entry file doesn't exist in "${this.entryPath}". if there is no build step and you need the source entry file, you may want to enable the copy sources option: '--copy-sources'`
+        )
       }
     }
 
@@ -83,6 +102,7 @@ export default class ProcessHandler {
     wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
     wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
+    await wrapperJsTemplate.seal(this.settingsHandler, this.entryPath)
 
     // process MANIFEST.MF
     const manifestMFTemplate = new TemplateHandler('MANIFEST.MF')
@@ -135,6 +155,38 @@ export default class ProcessHandler {
         )
       }
     }
+
+    // process copy sources
+    if (this.settingsHandler.copyAssets) {
+      // validate if assets folder exists
+      try {
+        await promisify(access)(`.${sep}assets`)
+      } catch {
+        // copy sources if entry file doesn't exist
+        throw new CopyAssetsException(
+          `no assets folder exists. remove the '--copy-assets' flag to prevent this error.`
+        )
+      }
+
+      const files = await this.getFiles(`.${sep}assets`)
+
+      for (const file of files) {
+        const relative = file.split("assets").pop()
+
+        this.jarHandler.archive.append(await promisify(readFile)(file), {
+          name: `/META-INF/resources/${relative}`
+        })
+      }
+    }
+  }
+
+  async getFiles(directory): Promise<string[]> {
+    const subs = await promisify(readdir)(directory)
+    const files = await Promise.all(subs.map(async (sub) => {
+      const res = resolve(directory, sub)
+      return (await promisify(stat)(res)).isDirectory() ? await this.getFiles(res) : res
+    }))
+    return Array.from(files.reduce((a, f) => a.concat(f as string), []))
   }
 
   async create(): Promise<void> {
