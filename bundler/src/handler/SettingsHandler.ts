@@ -6,13 +6,13 @@ export default class SettingsHandler {
   public copyAssets = false
   public copySources = false
 
-  constructor () {
+  constructor() {
     const args = arg({
       '--copy-sources': Boolean,
       '-cs': '--copy-sources',
       '--copy-assets': Boolean,
       '-ca': '--copy-assets'
-    });
+    })
 
     if (args['--copy-sources']) {
       this.copySources = true
@@ -22,7 +22,7 @@ export default class SettingsHandler {
     }
   }
 
-  public resolve (npmbundlerrc: npmbundlerrc): void {
+  public resolve(npmbundlerrc: npmbundlerrc): void {
     if (npmbundlerrc['create-jar']) {
       this.createJar = true
     }

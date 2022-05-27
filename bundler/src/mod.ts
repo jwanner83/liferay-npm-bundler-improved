@@ -1,8 +1,8 @@
 import 'regenerator-runtime/runtime'
 import { name, version } from '../package.json'
 import ProcessHandler from './handler/ProcessHandler'
-import { log } from './log'
 import SettingsHandler from './handler/SettingsHandler'
+import { log } from './log'
 
 void (async () => {
   const settingsHandler = new SettingsHandler()
@@ -17,7 +17,10 @@ void (async () => {
 
     log.success('bundler done')
   } catch (exception) {
-    const kebab: string = exception.toString().replace(/((?<=[a-z\d])[A-Z]|(?<=[A-Z\d])[A-Z](?=[a-z]))/g, '-$1').toLowerCase()
+    const kebab: string = exception
+      .toString()
+      .replace(/((?<=[a-z\d])[A-Z]|(?<=[A-Z\d])[A-Z](?=[a-z]))/g, '-$1')
+      .toLowerCase()
     log.error(`bundler failed. ${kebab}`)
   }
 

@@ -1,16 +1,16 @@
 import { access, copyFile, mkdir, readdir, readFile, rm, stat } from 'fs'
-import { sep, resolve } from 'path'
+import { resolve, sep } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
+import CopyAssetsException from '../exceptions/CopyAssetsException'
+import CopySourcesException from '../exceptions/CopySourcesException'
+import MissingEntryFileException from '../exceptions/MissingEntryFileException'
 import { log } from '../log'
 import FeaturesHandler from './FeaturesHandler'
 import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
-import TemplateHandler from './TemplateHandler'
 import SettingsHandler from './SettingsHandler'
-import MissingEntryFileException from '../exceptions/MissingEntryFileException'
-import CopySourcesException from '../exceptions/CopySourcesException'
-import CopyAssetsException from '../exceptions/CopyAssetsException'
+import TemplateHandler from './TemplateHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -117,10 +117,7 @@ export default class ProcessHandler {
         ',liferay.resource.bundle;resource.bundle.base.name="content.Language"'
       )
     } else {
-      manifestMFTemplate.replace(
-        'language-resource',
-        ''
-      )
+      manifestMFTemplate.replace('language-resource', '')
     }
 
     // process manifest.json
@@ -171,7 +168,7 @@ export default class ProcessHandler {
       const files = await this.getFiles(`.${sep}assets`)
 
       for (const file of files) {
-        const relative = file.split("assets").pop()
+        const relative = file.split('assets').pop()
 
         this.jarHandler.archive.append(await promisify(readFile)(file), {
           name: `/META-INF/resources/${relative}`
@@ -182,10 +179,12 @@ export default class ProcessHandler {
 
   async getFiles(directory): Promise<string[]> {
     const subs = await promisify(readdir)(directory)
-    const files = await Promise.all(subs.map(async (sub) => {
-      const res = resolve(directory, sub)
-      return (await promisify(stat)(res)).isDirectory() ? await this.getFiles(res) : res
-    }))
+    const files = await Promise.all(
+      subs.map(async (sub) => {
+        const res = resolve(directory, sub)
+        return (await promisify(stat)(res)).isDirectory() ? await this.getFiles(res) : res
+      })
+    )
     return Array.from(files.reduce((a, f) => a.concat(f as string), []))
   }
 
