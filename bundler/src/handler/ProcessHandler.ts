@@ -16,8 +16,6 @@ export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
 
-  private cleanup: boolean = false
-
   private readonly settingsHandler: SettingsHandler
   private readonly packageHandler: PackageHandler
   private readonly jarHandler: JarHandler
@@ -63,8 +61,6 @@ export default class ProcessHandler {
       try {
         await promisify(access)(sourcePath)
         await promisify(copyFile)(sourcePath, this.entryPath)
-
-        this.cleanup = this.settingsHandler.createJar
         log.progress(`sources from "${sourcePath}" where successfully copied.`)
       } catch {
         throw new CopySourcesException(`sources could not be copied from "${sourcePath}"`)
@@ -81,15 +77,10 @@ export default class ProcessHandler {
       }
     }
 
-    // prepare working folders
-    try {
-      await promisify(mkdir)('dist')
-    } catch {
-      // silent
+    if (this.settingsHandler.createJar) {
+      // initialize jar handler
+      await this.jarHandler.initialize(this.featuresHandler.npmbundlerrc)
     }
-
-    // initialize jar handler
-    this.jarHandler.initialize()
   }
 
   async process(): Promise<void> {
@@ -197,12 +188,5 @@ export default class ProcessHandler {
     log.progress('create jar')
     await this.jarHandler.create()
     log.progress('jar file created')
-
-    // cleanup
-    if (this.cleanup) {
-      log.progress('cleaning build folder')
-      await promisify(rm)('build', { recursive: true, force: true })
-      log.progress('cleaned build folder')
-    }
   }
 }
