@@ -4,6 +4,7 @@ import { sep } from 'path'
 import { promisify } from 'util'
 import Pack from '../types/Pack.types'
 import npmbundlerrc from '../types/npmbundlerrc.types'
+import { FileHandler } from './FileHandler'
 
 export default class JarHandler {
   public name: string
@@ -21,11 +22,7 @@ export default class JarHandler {
       outputDir = dir
     }
 
-    try {
-      await promisify(mkdir)(`.${sep}${outputDir}`, { recursive: true })
-    } catch {
-      // silent
-    }
+    await FileHandler.createFolderStructure(`.${sep}${outputDir}`)
 
     this.output = createWriteStream(`${outputDir}${sep}${this.name}.jar`)
 

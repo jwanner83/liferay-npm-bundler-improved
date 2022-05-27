@@ -1,5 +1,5 @@
-import { access, copyFile, mkdir, readdir, readFile, rm, stat } from 'fs'
-import { resolve, sep } from 'path'
+import { access, copyFile, readdir, readFile } from 'fs'
+import { sep } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
 import CopyAssetsException from '../exceptions/CopyAssetsException'
@@ -11,6 +11,7 @@ import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
+import { FileHandler } from './FileHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -52,11 +53,7 @@ export default class ProcessHandler {
       log.progress(`copy sources`)
       const sourcePath = `src${sep}${this.entryPoint}.js`
 
-      try {
-        await promisify(mkdir)(`.${sep}build`)
-      } catch {
-        // silent
-      }
+      await FileHandler.createFolderStructure(`.${sep}build`)
 
       try {
         await promisify(access)(sourcePath)
@@ -160,7 +157,7 @@ export default class ProcessHandler {
         )
       }
 
-      const files = await this.getFiles(`.${sep}assets`)
+      const files = await FileHandler.getFiles(`.${sep}assets`)
 
       for (const file of files) {
         const relative = file.split('assets').pop()
@@ -170,17 +167,6 @@ export default class ProcessHandler {
         })
       }
     }
-  }
-
-  async getFiles(directory): Promise<string[]> {
-    const subs = await promisify(readdir)(directory)
-    const files = await Promise.all(
-      subs.map(async (sub) => {
-        const res = resolve(directory, sub)
-        return (await promisify(stat)(res)).isDirectory() ? await this.getFiles(res) : res
-      })
-    )
-    return Array.from(files.reduce((a, f) => a.concat(f as string), []))
   }
 
   async create(): Promise<void> {
