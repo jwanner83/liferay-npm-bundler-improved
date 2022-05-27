@@ -13,7 +13,10 @@ void (async () => {
   try {
     await process.prepare()
     await process.process()
-    await process.create()
+
+    if (settingsHandler.createJar) {
+      await process.create()
+    }
 
     log.success('bundler done')
   } catch (exception) {
