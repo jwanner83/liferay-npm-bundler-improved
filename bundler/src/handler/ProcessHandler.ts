@@ -104,6 +104,10 @@ export default class ProcessHandler {
     wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
     await wrapperJsTemplate.seal(this.settingsHandler, this.entryPath)
 
+    if (!this.settingsHandler.createJar) {
+      return
+    }
+
     // process MANIFEST.MF
     const manifestMFTemplate = new TemplateHandler('MANIFEST.MF')
     await manifestMFTemplate.resolve()
