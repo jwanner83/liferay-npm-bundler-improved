@@ -11,7 +11,7 @@ export default class FeaturesHandler {
 
   async resolve(): Promise<void> {
     try {
-      const file = await promisify(readFile)('./.npmbundlerrc')
+      const file = await promisify(readFile)(`.${sep}.npmbundlerrc`)
       this.npmbundlerrc = await JSON.parse(file.toString())
     } catch {
       // npmbundlerrc could not be found. is not required
@@ -26,9 +26,9 @@ export default class FeaturesHandler {
         const path = this.npmbundlerrc?.['create-jar']?.features?.localization
 
         if (path) {
-          const split = path.split('/')
+          const split = path.split(sep)
           split.pop()
-          this.localizationPath = split.join('/')
+          this.localizationPath = split.join(sep)
         }
       }
     }
