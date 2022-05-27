@@ -1,7 +1,10 @@
 import archiver, { Archiver } from 'archiver'
-import { createWriteStream, WriteStream } from 'fs'
+import { createWriteStream, WriteStream, mkdir } from 'fs'
 import { sep } from 'path'
+import { promisify } from 'util'
 import Pack from '../types/Pack.types'
+import npmbundlerrc from '../types/npmbundlerrc.types'
+import { FileHandler } from './FileHandler'
 
 export default class JarHandler {
   public name: string
@@ -12,10 +15,18 @@ export default class JarHandler {
     this.archive = archiver('zip')
   }
 
-  initialize(): void {
-    this.output = createWriteStream(`dist${sep}${this.name}.jar`)
+  async initialize(npmbundlerrc: npmbundlerrc): Promise<void> {
+    let outputDir = 'dist'
+    const dir = npmbundlerrc['create-jar']?.['output-dir']
+    if (dir) {
+      outputDir = dir
+    }
 
-    this.archive.on('warning', function (err) {
+    await FileHandler.createFolderStructure(`.${sep}${outputDir}`)
+
+    this.output = createWriteStream(`${outputDir}${sep}${this.name}.jar`)
+
+    this.archive.on('warning', function(err) {
       if (err.code === 'ENOENT') {
         console.log('warning', err)
       } else {
@@ -23,7 +34,7 @@ export default class JarHandler {
       }
     })
 
-    this.archive.on('error', function (err) {
+    this.archive.on('error', function(err) {
       throw err
     })
 

@@ -19,11 +19,11 @@ existing build command to use `liferay-npm-bundler-improved` instead of `liferay
 > See `examples/plain` for an example
 #### Old
 ```
-"build": "pnpm run copy-sources && liferay-npm-bundler"
+"build": "lnbs-copy-sources && liferay-npm-bundler"
 ```
 #### New
 ```
-"build": "liferay-npm-bundler-improved"
+"build": "liferay-npm-bundler-improved --copy-sources"
 ```
 
 ### With bundle process
@@ -36,6 +36,19 @@ existing build command to use `liferay-npm-bundler-improved` instead of `liferay
 ```
 "build": "rollup -c && liferay-npm-bundler-improved"
 ```
+
+### Assets
+If you'd like to have the content of the `assets` folder available through the web-context url, you can add the
+`--copy-assets` param to your `liferay-npm-bundler-improved` call
+> See `examples/plain` for an example
+#### Old
+```
+"build": "lnbs-copy-assets && liferay-npm-bundler"
+```
+#### New
+```
+"build": "liferay-npm-bundler-improved --copy-assets"
+``` 
 
 ## Additional Information
 > Where is the official bundler?

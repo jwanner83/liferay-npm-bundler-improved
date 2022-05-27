@@ -37,7 +37,16 @@ const config: RollupOptions = {
       banner: '#!/usr/bin/env node'
     }
   ],
-  external: ['fs', 'util', 'regenerator-runtime/runtime', 'path', 'archiver', 'chalk', 'readline']
+  external: [
+    'fs',
+    'util',
+    'regenerator-runtime/runtime',
+    'path',
+    'archiver',
+    'chalk',
+    'readline',
+    'arg'
+  ]
 }
 
 export default config
