@@ -2,9 +2,11 @@ import 'regenerator-runtime/runtime'
 import { name, version } from '../package.json'
 import ProcessHandler from './handler/ProcessHandler'
 import { log } from './log'
+import SettingsHandler from './handler/SettingsHandler'
 
 void (async () => {
-  const process = new ProcessHandler()
+  const settingsHandler = new SettingsHandler()
+  const process = new ProcessHandler(settingsHandler)
 
   console.log(`${name} - ${version}`)
 
