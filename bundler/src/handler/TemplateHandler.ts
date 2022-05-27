@@ -1,7 +1,8 @@
-import { access, readFile } from 'fs'
+import { access, readFile, writeFile, mkdir } from 'fs'
 import { sep } from 'path'
 import { promisify } from 'util'
 import TemplatesNotFoundException from '../exceptions/TemplatesNotFoundException'
+import SettingsHandler from './SettingsHandler'
 
 export default class TemplateHandler {
   private readonly base = `${sep}dist${sep}templates`
@@ -32,6 +33,22 @@ export default class TemplateHandler {
 
     this.raw = await promisify(readFile)(this.path)
     this.processed = this.raw.toString()
+  }
+
+  async seal (settingsHandler: SettingsHandler, name?: string): Promise<void> {
+    if (!settingsHandler.createJar) {
+      try {
+        await promisify(mkdir)(`.${sep}build`)
+      } catch {
+        // silent
+      }
+
+      try {
+        await promisify(writeFile)(name ?? this.name, this.processed)
+      } catch (e) {
+        throw new TemplatesNotFoundException(`failed to save '${name ?? this.name}' in 'build'`);
+      }
+    }
   }
 
   replace(key: string, value: string): void {
