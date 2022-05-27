@@ -5,12 +5,12 @@ import SettingsHandler from './handler/SettingsHandler'
 import { log } from './log'
 
 void (async () => {
-  const settingsHandler = new SettingsHandler()
-  const process = new ProcessHandler(settingsHandler)
-
   console.log(`${name} - ${version}`)
 
   try {
+    const settingsHandler = new SettingsHandler()
+    const process = new ProcessHandler(settingsHandler)
+
     await process.prepare()
     await process.process()
 
