@@ -4,6 +4,7 @@ interface npmbundlerrc {
 
 interface createJar {
   features?: features
+  'output-dir'?: string
 }
 
 interface features {
