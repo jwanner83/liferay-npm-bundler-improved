@@ -7,11 +7,11 @@ import CopySourcesException from '../exceptions/CopySourcesException'
 import MissingEntryFileException from '../exceptions/MissingEntryFileException'
 import { log } from '../log'
 import FeaturesHandler from './FeaturesHandler'
+import { FileHandler } from './FileHandler'
 import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
-import { FileHandler } from './FileHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
