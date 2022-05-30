@@ -26,7 +26,8 @@ export default class FeaturesHandler {
         const path = this.npmbundlerrc?.['create-jar']?.features?.localization
 
         if (path) {
-          const split = path.split(sep)
+          const processed = path.replace(/\//g, sep)
+          const split = processed.split(sep)
           split.pop()
           this.localizationPath = split.join(sep)
         }
