@@ -23,7 +23,7 @@ export default class SettingsHandler {
   }
 
   public resolve(npmbundlerrc: npmbundlerrc): void {
-    if (npmbundlerrc['create-jar']) {
+    if (npmbundlerrc?.['create-jar']) {
       this.createJar = true
     }
   }
