@@ -1,5 +1,8 @@
 {
   "private": true,
   "author": "Jonas Wanner",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build:examples": "pnpm --filter './examples/**' build"
+  }
 }
