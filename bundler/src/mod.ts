@@ -25,7 +25,7 @@ void (async () => {
       .replace(/((?<=[a-z\d])[A-Z]|(?<=[A-Z\d])[A-Z](?=[a-z]))/g, '-$1')
       .toLowerCase()
     log.error(`bundler failed. ${kebab}`)
-    process.exitCode = 1;
+    process.exitCode = 1
   }
 
   log.close()
