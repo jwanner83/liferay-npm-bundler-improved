@@ -1,0 +1,54 @@
+{
+  "system": {
+    "category": "third-party",
+    "name": "My project",
+    "fields": {
+      "a-number": {
+        "type": "number",
+        "name": "A number",
+        "description": "An integer number",
+        "default": "42"
+      },
+      "a-string": {
+        "type": "string",
+        "name": "A string",
+        "description": "An arbitrary length string",
+        "default": "this is a string"
+      },
+      "a-password": {
+        "type": "password",
+        "name": "A password",
+        "description": "A secret string",
+        "default": "s3.cr3t"
+      },
+      "a-boolean": {
+        "type": "boolean",
+        "name": "A boolean",
+        "description": "A true|false value",
+        "default": true
+      },
+      "an-option": {
+        "type": "string",
+        "name": "An option",
+        "description": "A restricted values option",
+        "required": true,
+        "default": "A",
+        "options": {
+          "A": "Option a",
+          "B": "Option b"
+        }
+      }
+    }
+  },
+  "portletInstance": {
+    "name": "Widget configuration",
+    "fields": {
+      "a-float": {
+        "type": "float",
+        "name": "A float",
+        "description": "A floating point number",
+        "default": "1.1"
+      }
+    }
+  }
+}
