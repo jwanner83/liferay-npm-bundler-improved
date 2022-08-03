@@ -6,8 +6,12 @@ import Pack from '../types/Pack.types'
 
 export default class FeaturesHandler {
   public npmbundlerrc: npmbundlerrc
+
   public localizationPath = `features${sep}localization`
   public hasLocalization = false
+
+  public headerCSSPath = ''
+  public hasHeaderCSS = false
 
   async resolve(): Promise<void> {
     try {
@@ -32,6 +36,11 @@ export default class FeaturesHandler {
           this.localizationPath = split.join(sep)
         }
       }
+    }
+
+    if (pack.portlet['com.liferay.portlet.header-portlet-css']) {
+      this.hasHeaderCSS = true
+      this.headerCSSPath = pack.portlet['com.liferay.portlet.header-portlet-css']
     }
   }
 }

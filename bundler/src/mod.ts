@@ -19,14 +19,19 @@ void (async () => {
     }
 
     log.success('bundler done')
+    log.close()
+
+    if (log.hasWarnings()) {
+      log.printWarnings()
+    }
   } catch (exception) {
     const kebab: string = exception
       .toString()
       .replace(/((?<=[a-z\d])[A-Z]|(?<=[A-Z\d])[A-Z](?=[a-z]))/g, '-$1')
       .toLowerCase()
     log.error(`bundler failed. ${kebab}`)
+    log.close()
+
     process.exitCode = 1
   }
-
-  log.close()
 })()

@@ -4,11 +4,10 @@
   "version": "1.0.0",
   "scripts": {
     "build": "liferay-npm-bundler-improved --copy-sources --copy-assets",
-    "old:build": "pnpm run copy-sources && pnpm run copy-assets && liferay-npm-bundler",
-    "copy-assets": "lnbs-copy-assets",
-    "copy-sources": "lnbs-copy-sources"
+    "old:build": "lnbs-copy-sources && lnbs-copy-assets && liferay-npm-bundler"
   },
   "portlet": {
+    "com.liferay.portlet.header-portlet-css": "/index.css",
     "com.liferay.portlet.display-category": "category.sample",
     "com.liferay.portlet.instanceable": true,
     "javax.portlet.name": "plain",

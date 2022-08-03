@@ -16,6 +16,8 @@ export default class LogHandler {
   private time = this.step
   private readonly interval: NodeJS.Timer
 
+  private readonly warnings: string[] = []
+
   constructor() {
     this.interval = setInterval(() => {
       this.log()
@@ -74,11 +76,27 @@ export default class LogHandler {
 
   success(message): void {
     this.type = LogType.success
-    this.message = message
+
+    if (this.hasWarnings()) {
+      let additional = ' with '
+
+      if (this.warnings.length === 1) {
+        additional += 'one warning'
+      } else {
+        additional += `${this.warnings.length} warnings`
+      }
+
+      this.message = message as unknown as string + chalk.yellow(additional)
+    } else {
+      this.message = message
+    }
+
     this.log()
   }
 
   warn(message): void {
+    this.warnings.push(message)
+
     this.type = LogType.warn
     this.message = message
     this.log()
@@ -88,5 +106,20 @@ export default class LogHandler {
     this.type = LogType.error
     this.message = message
     this.log()
+  }
+
+  hasWarnings (): boolean {
+    return this.warnings.length !== 0
+  }
+
+  printWarnings (): void {
+    this.warnings.forEach((value, index) => {
+      let prefix = '↳'
+      if (this.warnings.length !== 1) {
+        prefix += ` ${index + 1}.`
+      }
+
+      console.log(chalk.yellow(prefix), value)
+    })
   }
 }
