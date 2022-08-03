@@ -35,12 +35,14 @@ importers:
       rollup-plugin-esbuild: ^4.5.0
       rollup-plugin-preserve-shebangs: ^0.2.0
       typescript: 4.4.4
+      xml-js: ^1.6.11
     dependencies:
       '@types/archiver': 5.1.1
       archiver: 5.3.0
       arg: 5.0.1
       chalk: 4.1.2
       regenerator-runtime: 0.13.9
+      xml-js: 1.6.11
     devDependencies:
       '@babel/core': 7.17.9
       '@babel/preset-env': 7.16.11_@babel+core@7.17.9
@@ -75,6 +77,16 @@ importers:
       liferay-npm-build-support: 2.28.3
       liferay-npm-bundler: 2.28.3
       liferay-npm-bundler-improved: link:../../bundler
+
+  examples/plain/build:
+    specifiers:
+      liferay-npm-build-support: ^2.25.0
+      liferay-npm-bundler: ^2.25.0
+      liferay-npm-bundler-improved: workspace:^
+    devDependencies:
+      liferay-npm-build-support: 2.28.3
+      liferay-npm-bundler: 2.28.3
+      liferay-npm-bundler-improved: link:../../../bundler
 
   examples/react:
     specifiers:
@@ -4857,7 +4869,6 @@ packages:
 
   /sax/1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
-    dev: true
 
   /scheduler/0.20.2:
     resolution: {integrity: sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==}
@@ -5350,7 +5361,6 @@ packages:
     hasBin: true
     dependencies:
       sax: 1.2.4
-    dev: true
 
   /y18n/4.0.3:
     resolution: {integrity: sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==}
