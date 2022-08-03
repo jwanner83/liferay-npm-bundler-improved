@@ -1,5 +1,5 @@
 import { access, copyFile, readdir, readFile } from 'fs'
-import { sep } from 'path'
+import { sep, join } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
 import CopyAssetsException from '../exceptions/CopyAssetsException'
@@ -146,7 +146,40 @@ export default class ProcessHandler {
       }
     }
 
-    // process copy sources
+    // process header css
+    if (this.featuresHandler.hasHeaderCSS) {
+      const buildPath = join('build', this.featuresHandler.headerCSSPath)
+      const srcPath = join('src', this.featuresHandler.headerCSSPath)
+
+      let path: string
+
+      try {
+        await promisify(access)(buildPath)
+        path = buildPath
+      } catch {
+        try {
+          await promisify(access)(srcPath)
+          path = srcPath
+        } catch {
+          log.warn(
+            `the 'com.liferay.portlet.header-portlet-css' property is set but the according css file can't either be found in '${srcPath}' or in '${buildPath}'. please make sure, the css file is present in one of the directories or remove the property.`
+          )
+        }
+      }
+
+      if (path) {
+        let filename = this.featuresHandler.headerCSSPath.replace(sep, '/')
+        if (filename.startsWith('/')) {
+          filename = filename.substring(1)
+        }
+
+        this.jarHandler.archive.append(await promisify(readFile)(path), {
+          name: `/META-INF/resources/${filename}`
+        })
+      }
+    }
+
+    // copy assets
     if (this.settingsHandler.copyAssets) {
       // validate if assets folder exists
       try {
