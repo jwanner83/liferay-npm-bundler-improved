@@ -48,6 +48,7 @@ export default class ProcessHandler {
     // determine features
     this.featuresHandler.determine(this.packageHandler.pack)
 
+    // copy sources
     if (this.settingsHandler.copySources) {
       // copy sources if entry file doesn't exist
       log.progress(`copy sources`)
