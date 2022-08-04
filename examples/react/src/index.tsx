@@ -4,13 +4,12 @@ import App from './components/index'
 import PortletEntryParams from './types/PortletEntryParams'
 
 /**
- * This is the main entry point of the portlet.
+ * Main portlet entrypoint for Liferay.
  *
- * See https://tinyurl.com/js-ext-portlet-entry-point for the most recent
- * information on the signature of this function.
- *
- * @return {void}
- * @param liferayParams
+ * @param portletNamespace
+ * @param contextPath
+ * @param portletElementId
+ * @param configuration
  */
 export default function main({ portletNamespace, contextPath, portletElementId, configuration }: PortletEntryParams): void {
   ReactDOM.render(

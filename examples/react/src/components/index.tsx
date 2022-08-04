@@ -6,7 +6,7 @@ declare const Liferay: LiferayObject
 
 const App = (liferayParams: PortletEntryParams): any => {
   return (
-    <div>
+    <div className="react">
       <div>
         <span className="tag">
           {String(Liferay.Language.get('portlet-namespace'))}:
