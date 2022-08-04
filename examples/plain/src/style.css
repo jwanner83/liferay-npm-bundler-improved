@@ -1,8 +1,8 @@
-.tag {
+.plain .tag {
     font-weight: bold;
     font-family: monospace;
 }
 
-.value {
+.plain .value {
     font-family: monospace;
 }
