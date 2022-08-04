@@ -5,16 +5,6 @@
   "scripts": {
     "build": "vite build && liferay-npm-bundler-improved"
   },
-  "portlet": {
-    "com.liferay.portlet.header-portlet-css": "/style.css",
-    "com.liferay.portlet.display-category": "category.sample",
-    "com.liferay.portlet.instanceable": true,
-    "javax.portlet.security-role-ref": "power-user,user",
-    "javax.portlet.name": "vue",
-    "javax.portlet.display-name": "Vue",
-    "javax.portlet.resource-bundle": "content.Language"
-  },
-  "main": "index",
   "dependencies": {
     "vue": "^2.7.8"
   },
@@ -29,5 +19,15 @@
     "rollup-plugin-esbuild": "^4.5.0",
     "sass": "^1.54.2",
     "vite": "^3.0.4"
-  }
+  },
+  "portlet": {
+    "com.liferay.portlet.header-portlet-css": "/style.css",
+    "com.liferay.portlet.display-category": "category.sample",
+    "com.liferay.portlet.instanceable": true,
+    "javax.portlet.security-role-ref": "power-user,user",
+    "javax.portlet.name": "vue",
+    "javax.portlet.display-name": "Vue",
+    "javax.portlet.resource-bundle": "content.Language"
+  },
+  "main": "index"
 }

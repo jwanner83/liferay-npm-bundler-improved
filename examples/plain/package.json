@@ -6,6 +6,11 @@
     "build": "liferay-npm-bundler-improved --copy-sources --copy-assets",
     "legacy": "lnbs-copy-sources && lnbs-copy-assets && liferay-npm-bundler"
   },
+  "devDependencies": {
+    "liferay-npm-build-support": "^2.25.0",
+    "liferay-npm-bundler": "^2.25.0",
+    "liferay-npm-bundler-improved": "workspace:^"
+  },
   "portlet": {
     "com.liferay.portlet.header-portlet-css": "/style.css",
     "com.liferay.portlet.display-category": "category.sample",
@@ -15,10 +20,5 @@
     "javax.portlet.security-role-ref": "power-user,user",
     "javax.portlet.resource-bundle": "content.Language"
   },
-  "main": "index",
-  "devDependencies": {
-    "liferay-npm-build-support": "^2.25.0",
-    "liferay-npm-bundler": "^2.25.0",
-    "liferay-npm-bundler-improved": "workspace:^"
-  }
+  "main": "index"
 }
