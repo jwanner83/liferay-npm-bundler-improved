@@ -3,7 +3,7 @@ A non-official but __ultrafast__ drop-in replacement for the
 [`liferay-npm-bundler` *](https://www.npmjs.com/package/liferay-npm-bundler)
 
 ## advantages
-the two main reasons are _**speed**_ and _**traceability**_.
+the two main advantages are _**speed**_ and _**traceability**_.
 
 ### speed
 a build of an average portlet with the `liferay-npm-bundler-improved` takes about **_0.1s_** **, no matter how big the 
