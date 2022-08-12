@@ -3,27 +3,28 @@
   "description": "React",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c && liferay-npm-bundler-improved"
+    "build": "vite build && liferay-npm-bundler-improved"
   },
   "dependencies": {
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "tslib": "^2.3.1"
+    "react": "17.0.2"
   },
   "devDependencies": {
-    "liferay-npm-bundler-improved": "workspace:^",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^3.0.0",
-    "@rollup/plugin-typescript": "^8.2.1",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
+    "@vitejs/plugin-react": "^2.0.0",
     "esbuild": "^0.12.27",
+    "liferay-npm-bundler-improved": "workspace:^",
+    "react-dom": "17.0.2",
     "rollup": "^2.60.1",
     "rollup-plugin-esbuild": "^4.5.0",
-    "typescript": "^4.4.2"
+    "tslib": "^2.3.1",
+    "vite": "^3.0.4"
   },
   "portlet": {
+    "com.liferay.portlet.header-portlet-css": "/style.css",
     "javax.portlet.resource-bundle": "content.Language",
     "javax.portlet.security-role-ref": "power-user,user",
     "com.liferay.portlet.instanceable": true,

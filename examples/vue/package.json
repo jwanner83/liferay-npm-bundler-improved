@@ -3,9 +3,25 @@
   "description": "Vue",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c && liferay-npm-bundler-improved"
+    "build": "vite build && liferay-npm-bundler-improved"
+  },
+  "dependencies": {
+    "vue": "^2.7.8"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-replace": "^3.0.0",
+    "@vitejs/plugin-vue2": "^1.1.2",
+    "esbuild": "^0.12.28",
+    "liferay-npm-bundler-improved": "workspace:^",
+    "rollup": "^2.77.2",
+    "rollup-plugin-esbuild": "^4.5.0",
+    "sass": "^1.54.2",
+    "vite": "^3.0.4"
   },
   "portlet": {
+    "com.liferay.portlet.header-portlet-css": "/style.css",
     "com.liferay.portlet.display-category": "category.sample",
     "com.liferay.portlet.instanceable": true,
     "javax.portlet.security-role-ref": "power-user,user",
@@ -13,20 +29,5 @@
     "javax.portlet.display-name": "Vue",
     "javax.portlet.resource-bundle": "content.Language"
   },
-  "main": "index",
-  "dependencies": {
-    "vue": "^2.6.14"
-  },
-  "devDependencies": {
-    "liferay-npm-bundler-improved": "workspace:^",
-    "@rollup/plugin-commonjs": "^19.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@rollup/plugin-replace": "^3.0.0",
-    "esbuild": "^0.12.28",
-    "rollup": "^2.51.1",
-    "rollup-plugin-esbuild": "^4.5.0",
-    "rollup-plugin-vue": "^4.7.2",
-    "vue-template-compiler": "^2.6.14",
-    "postcss": "^8.4.12"
-  }
+  "main": "index"
 }

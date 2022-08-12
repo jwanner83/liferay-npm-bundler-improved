@@ -1,8 +1,8 @@
-.tag {
+.react .tag {
     font-weight: bold;
     font-family: monospace;
 }
 
-.value {
+.react .value {
     font-family: monospace;
 }

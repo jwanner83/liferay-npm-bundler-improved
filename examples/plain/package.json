@@ -1,23 +1,24 @@
 {
   "name": "plain",
-  "description": "plain",
+  "description": "Plain",
   "version": "1.0.0",
   "scripts": {
     "build": "liferay-npm-bundler-improved --copy-sources --copy-assets",
-    "old:build": "lnbs-copy-sources && lnbs-copy-assets && liferay-npm-bundler"
+    "legacy": "lnbs-copy-sources && lnbs-copy-assets && liferay-npm-bundler"
   },
-  "portlet": {
-    "com.liferay.portlet.header-portlet-css": "/index.css",
-    "com.liferay.portlet.display-category": "category.sample",
-    "com.liferay.portlet.instanceable": true,
-    "javax.portlet.name": "plain",
-    "javax.portlet.display-name": "Plain",
-    "javax.portlet.security-role-ref": "power-user,user"
-  },
-  "main": "index",
   "devDependencies": {
     "liferay-npm-build-support": "^2.25.0",
     "liferay-npm-bundler": "^2.25.0",
     "liferay-npm-bundler-improved": "workspace:^"
-  }
+  },
+  "portlet": {
+    "com.liferay.portlet.header-portlet-css": "/style.css",
+    "com.liferay.portlet.display-category": "category.sample",
+    "com.liferay.portlet.instanceable": true,
+    "javax.portlet.name": "plain",
+    "javax.portlet.display-name": "Plain",
+    "javax.portlet.security-role-ref": "power-user,user",
+    "javax.portlet.resource-bundle": "content.Language"
+  },
+  "main": "index"
 }
