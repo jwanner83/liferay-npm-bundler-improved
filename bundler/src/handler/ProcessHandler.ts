@@ -2,7 +2,6 @@ import { access, copyFile, readdir, readFile } from 'fs'
 import { join, sep } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
-import CopyAssetsException from '../exceptions/CopyAssetsException'
 import CopySourcesException from '../exceptions/CopySourcesException'
 import MissingEntryFileException from '../exceptions/MissingEntryFileException'
 import { log } from '../log'
@@ -30,6 +29,8 @@ export default class ProcessHandler {
   }
 
   async prepare(): Promise<void> {
+    log.progress(`preparations`)
+
     // validate package.json
     await this.packageHandler.resolve()
     this.packageHandler.validate()
@@ -50,28 +51,40 @@ export default class ProcessHandler {
 
     // copy sources
     if (this.settingsHandler.copySources) {
-      // copy sources if entry file doesn't exist
       log.progress(`copy sources`)
-      const sourcePath = `src${sep}${this.entryPoint}.js`
 
+      const sourcePath = `src${sep}${this.entryPoint}.js`
       await FileHandler.createFolderStructure(`.${sep}build`)
 
       try {
+        // validate if entry file exists in source
         await promisify(access)(sourcePath)
         await promisify(copyFile)(sourcePath, this.entryPath)
-        log.progress(`sources from "${sourcePath}" where successfully copied.`)
       } catch {
-        throw new CopySourcesException(`sources could not be copied from "${sourcePath}"`)
+        throw new CopySourcesException(`sources could not be copied from '${sourcePath}'`)
       }
     } else {
       // validate if entry file exists
       try {
         await promisify(access)(this.entryPath)
       } catch {
-        // copy sources if entry file doesn't exist
-        throw new MissingEntryFileException(
-          `entry file doesn't exist in "${this.entryPath}". if there is no build step and you need the source entry file, you may want to enable the copy sources option: '--copy-sources'`
-        )
+        // copy sources as a fallback
+        const sourcePath = `src${sep}${this.entryPoint}.js`
+        await FileHandler.createFolderStructure(`.${sep}build`)
+
+        try {
+          // validate if entry file exists in source
+          await promisify(access)(sourcePath)
+          await promisify(copyFile)(sourcePath, this.entryPath)
+
+          log.warn(
+            `the entry file couldn't be found at the '${this.entryPath}'. to prevent a failing build, the sources where copied automatically (this is what the '--copy-sources' flag would do) from '${sourcePath}'. make sure to either place a file in the correct directory through a build step or add the '--copy-sources' flag to your bundler call.`
+          )
+        } catch {
+          throw new MissingEntryFileException(
+            `entry file doesn't exist either in '${this.entryPath}' or '${sourcePath}'.`
+          )
+        }
       }
     }
 
@@ -82,7 +95,7 @@ export default class ProcessHandler {
   }
 
   async process(): Promise<void> {
-    log.progress('processing jar file')
+    log.progress('processing')
 
     // process wrapper.js
     const wrapperJsTemplate = new TemplateHandler('wrapper.js')
@@ -181,32 +194,30 @@ export default class ProcessHandler {
 
     // copy assets
     if (this.settingsHandler.copyAssets) {
-      // validate if assets folder exists
+      log.progress('copy assets')
+
       try {
+        // validate if assets folder exists
         await promisify(access)(`.${sep}assets`)
+        const files = await FileHandler.getFiles(`.${sep}assets`)
+
+        for (const file of files) {
+          const relative = file.split('assets').pop()
+
+          this.jarHandler.archive.append(await promisify(readFile)(file), {
+            name: `/META-INF/resources/${relative}`
+          })
+        }
       } catch {
-        // copy sources if entry file doesn't exist
-        throw new CopyAssetsException(
-          `no assets folder exists. remove the '--copy-assets' flag to prevent this error.`
+        log.warn(
+          `no 'assets' folder exists. remove the '--copy-assets' flag or add an 'assets' folder to prevent this warning`
         )
-      }
-
-      const files = await FileHandler.getFiles(`.${sep}assets`)
-
-      for (const file of files) {
-        const relative = file.split('assets').pop()
-
-        this.jarHandler.archive.append(await promisify(readFile)(file), {
-          name: `/META-INF/resources/${relative}`
-        })
       }
     }
   }
 
   async create(): Promise<void> {
-    // create jar file
     log.progress('create jar')
     await this.jarHandler.create()
-    log.progress('jar file created')
   }
 }
