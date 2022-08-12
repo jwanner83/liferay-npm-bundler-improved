@@ -14,15 +14,15 @@ export default class PackageHandler {
   public validate(): void {
     if (!this.pack.name) {
       throw new InvalidPackageException(
-        `property name is invalid in the package.json file: ${this.pack.name}`
+        `required property "name" doesn't exist in the package.json file.`
       )
     } else if (!this.pack.version) {
       throw new InvalidPackageException(
-        `property version is invalid in the package.json file: ${this.pack.version}`
+        `required property "version" doesn't exist in the package.json file.`
       )
     } else if (!this.pack.main) {
       throw new InvalidPackageException(
-        `property main is invalid in the package.json file: ${this.pack.main}`
+        `required property "main" doesn't exist in the package.json file.`
       )
     }
   }

@@ -1,60 +1,80 @@
 # liferay-npm-bundler-improved
-A highly experimental, __ultra__ fast and non-official drop-in replacement for 
-[`liferay-npm-bundler`](https://www.npmjs.com/package/liferay-npm-bundler)
+A non-official but __ultrafast__ drop-in replacement for the
+[`liferay-npm-bundler` *](https://www.npmjs.com/package/liferay-npm-bundler)
 
-## Reason for existence
-There is one reason for its existence: speed. In comparison to the official `liferay-npm-bundler` it is up to 
-**14 times faster** while bundling vue / react / vanilla js portlets. As a bonus, the `liferay-npm-bundler-improved` also 
-works with `pnpm`, which is because of the usage of symlinks not supported by the official `liferay-npm-bundler`.
+## advantages
+the two main reasons are _**speed**_ and _**traceability**_.
 
-## Missing Features:
-- Package Deduplication (not planned)
-- Portlet Configuration Support (backlog)
+### speed
+a build of an average portlet with the `liferay-npm-bundler-improved` takes about **_0.1s_** **, no matter how big the 
+module is. if you worked with the official `liferay-npm-bundler` before, you know how much of an improvement this is.
 
-## Usage
-To use the bundler, you have to install it via pnpm, yarn or npm `pnpm i --D liferay-npm-bundler-improved` and edit your 
-existing build command to use `liferay-npm-bundler-improved` instead of `liferay-npm-bundler`.
+### traceability
+the `liferay-npm-bundler-improved` tries its best to tell you, if you do something wrong. this helps the developer a 
+lot if he is trying to figure out why something isn't working as expected. some examples.
 
-### Without bundle process
-> See `examples/plain` for an example
-#### Old
+#### missing key in `package.json`
+if you forgot a required key in the `package.json`, it tells you which key you're missing and lets the build fail. 
+for example, if you forgot the `name` key, the console output would look something like this:
+
 ```
-"build": "lnbs-copy-sources && liferay-npm-bundler"
-```
-#### New
-```
-"build": "liferay-npm-bundler-improved --copy-sources"
+Error in 0.01s: bundler failed. invalid-package-exception: required property "name" doesn't exist in the package.json file.
 ```
 
-### With bundle process
-> See `examples/react` or `examples/vue` for an example
-#### Old
+#### missing entry file
+if, for some reason, the in the `main` property defined entry js file is missing, the bundler will show the following 
+output. _(the original bundler wouldn't even fail if the entry file was not found. it would just tell you that its 
+finished.)_
+
+with the `--copy-sources` option activated:
 ```
-"build": "rollup -c && liferay-npm-bundler"
-```
-#### New
-```
-"build": "rollup -c && liferay-npm-bundler-improved"
+Error in 0.01s: bundler failed. copy-sources-exception: sources could not be copied from "src/entry.js"
 ```
 
-### Assets
-If you'd like to have the content of the `assets` folder available through the web-context url, you can add the
-`--copy-assets` param to your `liferay-npm-bundler-improved` call
-> See `examples/plain` for an example
-#### Old
+without:
 ```
-"build": "lnbs-copy-assets && liferay-npm-bundler"
+Error in 0.01s: bundler failed. missing-entry-file-exception: entry file doesn't exist in "build/entry.js". if there is no build step and you need the source entry file, you may want to enable the copy sources option: '--copy-sources'
 ```
-#### New
-```
-"build": "liferay-npm-bundler-improved --copy-assets"
-``` 
 
-## Additional Information
-> Where is the official bundler?
-> - [github](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/js-toolkit/packages/npm-bundler)
-> - [npm - liferay-npm-bundler - v2](https://www.npmjs.com/package/liferay-npm-bundler)
-> - [npm - @liferay/npm-bundler - v3](https://www.npmjs.com/package/@liferay/npm-bundler)
->
-> Version 3 of the official liferay npm bundler uses webpack to bundle the code which would be very good but unfortunately
-> it [isn't officially released yet](https://github.com/liferay/liferay-frontend-projects/issues/570).
+#### missing css file if `header-portlet-css` is enabled
+if the `header-portlet-css` option is active and the defined css file can't be found, the bundler doesn't fail but shows 
+a warning after the build is done.
+
+```
+Success in 0.04s: bundler done with one warning
+↳ the 'com.liferay.portlet.header-portlet-css' property is set but the according css file can't either be found in 'src/index.css' or in 'build/index.css'. please make sure, the css file is present in one of the directories or remove the property.
+```
+
+## missing features
+the current implementation works for most use cases. but there are a few things which aren't currently working as the 
+original implementation.
+
+- package deduplication - _not planned ***_
+- portlet configuration support - _[backlog](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/8)_
+
+## usage
+To use the bundler, you have to install it from the `npmjs.org` registry  `pnpm i --D liferay-npm-bundler-improved` 
+and edit your existing build command to use `liferay-npm-bundler-improved` instead of `liferay-npm-bundler`. most of the 
+features should work out of the box. 
+
+### copy sources
+if you have `lnbs-copy-sources` inside of your build command, remove it and add `--copy-sources` to the 
+`liferay-npm-bundler-improved` command.
+
+### copy assets
+if you have assets inside the `assets` folder which should be available through the web context url, remove the 
+`lnbs-copy-assets` command from your existing build command and add `--copy-assets` to the 
+`liferay-npm-bundler-improved` call
+
+### examples
+see the examples folder for an example on how to use the `liferay-npm-bundler-improved` in a `react`, `vue` and plain `js` 
+portlet.
+
+
+_* the official bundler is 
+[available on github](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/js-toolkit/packages/npm-bundler)_
+<br>
+_** on a apple m1 macbook pro. on windows it takes about 0.3s._<br>
+_*** the package deduplication feature is currently not planned because of the cost/income ratio. if this feature would be 
+implemented, the speed of the bundler would decrease a lot and because we didn't use this feature anyway in the company 
+i worked, i left it out._
