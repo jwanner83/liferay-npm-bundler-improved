@@ -1,6 +1,6 @@
 {
   "name": "plain",
-  "description": "plain",
+  "description": "Plain",
   "version": "1.0.0",
   "scripts": {
     "build": "liferay-npm-bundler-improved --copy-sources --copy-assets",
