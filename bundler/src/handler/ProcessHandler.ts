@@ -1,5 +1,5 @@
 import { access, copyFile, readdir, readFile } from 'fs'
-import { sep, join } from 'path'
+import { join, sep } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
 import CopyAssetsException from '../exceptions/CopyAssetsException'

@@ -86,7 +86,7 @@ export default class LogHandler {
         additional += `${this.warnings.length} warnings`
       }
 
-      this.message = message as unknown as string + chalk.yellow(additional)
+      this.message = (message as unknown as string) + chalk.yellow(additional)
     } else {
       this.message = message
     }
@@ -108,11 +108,11 @@ export default class LogHandler {
     this.log()
   }
 
-  hasWarnings (): boolean {
+  hasWarnings(): boolean {
     return this.warnings.length !== 0
   }
 
-  printWarnings (): void {
+  printWarnings(): void {
     this.warnings.forEach((value, index) => {
       let prefix = '↳'
       if (this.warnings.length !== 1) {

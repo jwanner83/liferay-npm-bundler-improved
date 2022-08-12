@@ -1,6 +1,6 @@
 {
   "name": "liferay-npm-bundler-improved",
-  "description": "A highly experimental and non-official module which bundles the javascript into the liferay loader and creates a jar file.",
+  "description": "A non-official but ultrafast drop-in replacement for the liferay-npm-bundler",
   "version": "1.2.0",
   "author": "Jonas Wanner",
   "license": "ISC",
