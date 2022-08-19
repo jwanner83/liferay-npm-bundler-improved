@@ -2,3 +2,4 @@ build/*
 bin/*
 dist/*
 bundler/src/templates/*
+pnpm-lock.yaml

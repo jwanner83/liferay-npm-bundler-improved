@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 import App from './components/index'
 import PortletEntryParams from './types/PortletEntryParams'
 
@@ -17,15 +17,17 @@ export default function main({
   portletElementId,
   configuration
 }: PortletEntryParams): void {
-  ReactDOM.render(
-    <React.StrictMode>
+  const container = document.getElementById(portletElementId)
+  const root = createRoot(container)
+
+  root.render(
+    <StrictMode>
       <App
         portletNamespace={portletNamespace}
         contextPath={contextPath}
         portletElementId={portletElementId}
         configuration={configuration}
       />
-    </React.StrictMode>,
-    document.getElementById(portletElementId)
+    </StrictMode>
   )
 }
