@@ -1,19 +1,6 @@
 {
   "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
-    "inlineSources": true,
-    "lib": ["es2015", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noStrictGenericChecks": true,
-    "outDir": "build",
-    "sourceMap": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": ["./node_modules/@types/"],
     "jsx": "react-jsx"
-  },
-  "include": ["./src/**/*.js", "./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.jsx"]
+  }
 }
