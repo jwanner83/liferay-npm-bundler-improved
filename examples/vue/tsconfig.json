@@ -12,33 +12,18 @@
     "sourceMap": true,
     "baseUrl": ".",
     "strictNullChecks": false,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "shared/*": [
-        "../parl-dw-notifications-portlet-shared/src/*"
-      ]
+      "@/*": ["src/*"],
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
-    "../parl-dw-notifications-portlet-shared/src/**/*.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
