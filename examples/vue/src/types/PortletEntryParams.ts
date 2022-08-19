@@ -9,7 +9,7 @@ export default interface PortletEntryParams {
   contextPath: string
   portletNamespace: string
   configuration: {
-    system: Record<string, never>,
+    system: Record<string, never>
     portletInstance: Record<string, never>
   }
 }

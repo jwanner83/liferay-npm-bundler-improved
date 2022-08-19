@@ -1,43 +1,23 @@
-import React from 'react'
 import PortletEntryParams from '../types/PortletEntryParams'
-import LiferayObject from '../types/LiferayObject'
 
-declare const Liferay: LiferayObject
-
-const App = (liferayParams: PortletEntryParams): any => {
+const App = (params: PortletEntryParams): any => {
   return (
     <div className="react">
       <div>
-        <span className="tag">
-          {String(Liferay.Language.get('portlet-namespace'))}:
-        </span>
-        <span className="value">
-          {' '}{liferayParams.portletNamespace}
-        </span>
+        <span className="tag">{String(Liferay.Language.get('portlet-namespace'))}:</span>
+        <span className="value"> {params.portletNamespace}</span>
       </div>
       <div>
-        <span className="tag">
-          {String(Liferay.Language.get('context-path'))}:
-        </span>
-        <span className="value">
-          {' '}{liferayParams.contextPath}
-        </span>
+        <span className="tag">{String(Liferay.Language.get('context-path'))}:</span>
+        <span className="value"> {params.contextPath}</span>
       </div>
       <div>
-        <span className="tag">
-          {String(Liferay.Language.get('portlet-element-id'))}:
-        </span>
-        <span className="value">
-          {' '}{liferayParams.portletElementId}
-        </span>
+        <span className="tag">{String(Liferay.Language.get('portlet-element-id'))}:</span>
+        <span className="value"> {params.portletElementId}</span>
       </div>
       <div>
-        <span className="tag">
-          {String(Liferay.Language.get('configuration'))}:
-        </span>
-        <span className="value pre">
-          {' '}{JSON.stringify(liferayParams.configuration, null, 2)}
-        </span>
+        <span className="tag">{String(Liferay.Language.get('configuration'))}:</span>
+        <span className="value pre"> {JSON.stringify(params.configuration, null, 2)}</span>
       </div>
     </div>
   )
