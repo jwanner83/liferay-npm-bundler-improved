@@ -60,13 +60,14 @@ the current implementation works for most use cases. but there are a few things 
 original implementation.
 
 - package deduplication - _not planned \*\*\*_
-- portlet configuration support - _[backlog](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/8)_
+- system configuration - [gathering interest](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/55) \
+  ↳ portlet instance configuration works since 1.4.0 [#8](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/8)
 
 ## usage
 
 To use the bundler, you have to install it from the `npmjs.org` registry `pnpm i --D liferay-npm-bundler-improved`
 and edit your existing build command to use `liferay-npm-bundler-improved` instead of `liferay-npm-bundler`. most of the
-features should work out of the box.
+features will work out of the box.
 
 ### copy sources
 
@@ -79,11 +80,17 @@ if you have assets inside the `assets` folder which should be available through 
 `lnbs-copy-assets` command from your existing build command and add `--copy-assets` to the
 `liferay-npm-bundler-improved` call
 
+### configuration
+portlet instance configuration will work the same way as in the official bundler. see the `examples/plain/features/configuration.json` 
+file for all available options. it is also possible to add translated labels, descriptions and default values with 
+language keys. the keys have to be defined inside the portlets own localization files. 
+
 ### examples
 
 see the examples folder for an example on how to use the `liferay-npm-bundler-improved` in a `react`, `vue` and plain `js`
 portlet.
 
+\
 _\* the official bundler is
 [available on github](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/js-toolkit/packages/npm-bundler)_
 <br>

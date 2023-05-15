@@ -11,21 +11,26 @@ import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
+import ConfigurationHandler from './ConfigurationHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
 
+  private readonly languageFiles: Map<string, string> = new Map()
+
   private readonly settingsHandler: SettingsHandler
   private readonly packageHandler: PackageHandler
   private readonly jarHandler: JarHandler
   private readonly featuresHandler: FeaturesHandler
+  private readonly configurationHandler: ConfigurationHandler
 
   constructor(settingsHandler: SettingsHandler) {
     this.settingsHandler = settingsHandler
     this.packageHandler = new PackageHandler()
     this.jarHandler = new JarHandler()
     this.featuresHandler = new FeaturesHandler()
+    this.configurationHandler = new ConfigurationHandler()
   }
 
   async prepare(): Promise<void> {
@@ -150,12 +155,11 @@ export default class ProcessHandler {
     if (this.featuresHandler.hasLocalization) {
       const files = await promisify(readdir)(this.featuresHandler.localizationPath)
       for (const file of files) {
-        this.jarHandler.archive.append(
-          (
-            await promisify(readFile)(`${this.featuresHandler.localizationPath}${sep}${file}`)
-          ).toString(),
-          { name: `/content/${file}` }
-        )
+        const content = (
+          await promisify(readFile)(`${this.featuresHandler.localizationPath}${sep}${file}`)
+        ).toString()
+        this.languageFiles.set(file, content)
+        this.jarHandler.archive.append(content, { name: `/content/${file}` })
       }
     }
 
@@ -188,6 +192,18 @@ export default class ProcessHandler {
 
         this.jarHandler.archive.append(await promisify(readFile)(path), {
           name: `/META-INF/resources/${filename}`
+        })
+      }
+    }
+
+    // process configuration
+    if (this.featuresHandler.hasConfiguration) {
+      await this.configurationHandler.resolve(this.featuresHandler.configurationPath, this.languageFiles)
+
+      if (this.configurationHandler.configuration.portletInstance?.fields !== undefined) {
+        await this.configurationHandler.process(this.languageFiles)
+        this.jarHandler.archive.append(JSON.stringify(this.configurationHandler.processed, null, 2), {
+          name: `/features/portlet_preferences.json`
         })
       }
     }

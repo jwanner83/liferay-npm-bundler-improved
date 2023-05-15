@@ -3,7 +3,8 @@
 		"output-dir": "dist",
 		"features": {
 			"js-extender": true,
-			"web-context": "/plain"
+			"web-context": "/plain",
+			"configuration": "features/configuration.json"
 		}
 	}
 }

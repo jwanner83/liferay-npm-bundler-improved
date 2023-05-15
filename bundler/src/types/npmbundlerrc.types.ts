@@ -9,6 +9,7 @@ interface createJar {
 
 interface features {
   localization?: string
+  configuration?: string
 }
 
 export default npmbundlerrc
