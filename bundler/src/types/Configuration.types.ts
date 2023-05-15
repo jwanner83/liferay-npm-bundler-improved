@@ -9,22 +9,16 @@ export interface PortletSystemConfiguration {
 
 export interface PortletInstanceConfiguration {
   name: string
-  fields: PortletConfigurationField[]
+  fields: Record<string, PortletConfigurationField>
 }
 
 export interface PortletConfigurationField {
-  [key: string]: {
-    type: 'float' | 'number' | 'string' | 'boolean'
-    name: string
-    description: string
-    default: string | boolean
-    required?: boolean
-    options?: PortletConfigurationFieldOption[]
-  }
-}
-
-export interface PortletConfigurationFieldOption {
-  [key: string]: string
+  type: 'float' | 'number' | 'string' | 'boolean' | string
+  name: string
+  description: string
+  default: string | boolean
+  required?: boolean
+  options?: Record<string, string>
 }
 
 export interface ProcessedPortletConfiguration {
@@ -42,7 +36,7 @@ export interface ProcessedPortletConfigurationField {
   tip: {
     "": string
   }
-  predefinedValue: {
+  predefinedValue?: {
     "": string | boolean
   }
   required?: boolean

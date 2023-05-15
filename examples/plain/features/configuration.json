@@ -1,0 +1,43 @@
+{
+  "system": {
+  },
+  "portletInstance": {
+    "fields": {
+      "a-float": {
+        "type": "float",
+        "name": "configuration.float",
+        "description": "A floating point number",
+        "default": "1.1"
+      },
+      "a-number": {
+        "type": "number",
+        "name": "A number",
+        "description": "An integer number",
+        "default": "48"
+      },
+      "a-string": {
+        "type": "string",
+        "name": "A string",
+        "description": "An arbitrary length string",
+        "default": "this is a string"
+      },
+      "a-boolean": {
+        "type": "boolean",
+        "name": "A boolean",
+        "description": "A true|false value",
+        "default": true
+      },
+      "an-option": {
+        "type": "string",
+        "name": "An option",
+        "description": "A restricted values option",
+        "required": true,
+        "default": "A",
+        "options": {
+          "A": "Option a",
+          "B": "Option b"
+        }
+      }
+    }
+  }
+}

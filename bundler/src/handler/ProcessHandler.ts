@@ -11,6 +11,7 @@ import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
+import ConfigurationHandler from './ConfigurationHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -20,12 +21,14 @@ export default class ProcessHandler {
   private readonly packageHandler: PackageHandler
   private readonly jarHandler: JarHandler
   private readonly featuresHandler: FeaturesHandler
+  private readonly configurationHandler: ConfigurationHandler
 
   constructor(settingsHandler: SettingsHandler) {
     this.settingsHandler = settingsHandler
     this.packageHandler = new PackageHandler()
     this.jarHandler = new JarHandler()
     this.featuresHandler = new FeaturesHandler()
+    this.configurationHandler = new ConfigurationHandler()
   }
 
   async prepare(): Promise<void> {
@@ -188,6 +191,19 @@ export default class ProcessHandler {
 
         this.jarHandler.archive.append(await promisify(readFile)(path), {
           name: `/META-INF/resources/${filename}`
+        })
+      }
+    }
+
+    // process configuration
+    if (this.featuresHandler.hasConfiguration) {
+      log.warn('the configuration feature is experimental and might not work as expected')
+      await this.configurationHandler.resolve(this.featuresHandler.configurationPath)
+
+      if (this.configurationHandler.configuration.portletInstance?.fields !== undefined) {
+        await this.configurationHandler.process()
+        this.jarHandler.archive.append(JSON.stringify(this.configurationHandler.processed, null, 2), {
+          name: `/features/portlet_preferences.json`
         })
       }
     }
