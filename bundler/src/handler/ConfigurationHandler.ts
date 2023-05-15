@@ -38,7 +38,7 @@ export default class ConfigurationHandler {
     }
 
     if (this.configuration.system?.name) {
-      log.warn(`the configuration file in configured path "${configurationPath}" contains a system configuration. the system configuration is currently not supported and will be ignored.`)
+      log.warn(`the configuration file in configured path "${configurationPath}" contains a system configuration. the system configuration is currently not supported and will be ignored. if you need this feature, add a thumbs up to this ticket: https://github.com/jwanner83/liferay-npm-bundler-improved/issues/55`)
     }
 
     for (const file of languageFiles.keys()) {
