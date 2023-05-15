@@ -17,6 +17,8 @@ export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
 
+  private readonly languageFiles: Map<string, string> = new Map()
+
   private readonly settingsHandler: SettingsHandler
   private readonly packageHandler: PackageHandler
   private readonly jarHandler: JarHandler
@@ -153,12 +155,11 @@ export default class ProcessHandler {
     if (this.featuresHandler.hasLocalization) {
       const files = await promisify(readdir)(this.featuresHandler.localizationPath)
       for (const file of files) {
-        this.jarHandler.archive.append(
-          (
-            await promisify(readFile)(`${this.featuresHandler.localizationPath}${sep}${file}`)
-          ).toString(),
-          { name: `/content/${file}` }
-        )
+        const content = (
+          await promisify(readFile)(`${this.featuresHandler.localizationPath}${sep}${file}`)
+        ).toString()
+        this.languageFiles.set(file, content)
+        this.jarHandler.archive.append(content, { name: `/content/${file}` })
       }
     }
 
@@ -198,10 +199,10 @@ export default class ProcessHandler {
     // process configuration
     if (this.featuresHandler.hasConfiguration) {
       log.warn('the configuration feature is experimental and might not work as expected')
-      await this.configurationHandler.resolve(this.featuresHandler.configurationPath)
+      await this.configurationHandler.resolve(this.featuresHandler.configurationPath, this.languageFiles)
 
       if (this.configurationHandler.configuration.portletInstance?.fields !== undefined) {
-        await this.configurationHandler.process()
+        await this.configurationHandler.process(this.languageFiles)
         this.jarHandler.archive.append(JSON.stringify(this.configurationHandler.processed, null, 2), {
           name: `/features/portlet_preferences.json`
         })

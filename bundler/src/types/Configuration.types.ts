@@ -22,30 +22,22 @@ export interface PortletConfigurationField {
 }
 
 export interface ProcessedPortletConfiguration {
-  availableLanguageIds: []
+  availableLanguageIds: string[]
   fields: ProcessedPortletConfigurationField[]
 }
 
 export interface ProcessedPortletConfigurationField {
   name: string
-  label: {
-    "": string
-  }
+  label: Record<string, string>
   dataType: 'double' | 'integer' | 'string' | 'boolean'
   type: 'numeric' | 'text' | 'checkbox' | 'select'
-  tip: {
-    "": string
-  }
-  predefinedValue?: {
-    "": string | boolean
-  }
+  tip: Record<string, string>
+  predefinedValue?: Record<string, string | boolean>
   required?: boolean
   options?: ProcessedPortletConfigurationFieldOption[]
 }
 
 export interface ProcessedPortletConfigurationFieldOption {
   value: string
-  label: {
-    "": string
-  }
+  label: Record<string, string>
 }
