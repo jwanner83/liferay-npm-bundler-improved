@@ -5,8 +5,8 @@
     "fields": {
       "a-float": {
         "type": "float",
-        "name": "configuration.float",
-        "description": "A floating point number",
+        "name": "configuration.float.name",
+        "description": "configuration.float.description",
         "default": "1.1"
       },
       "a-number": {
@@ -24,7 +24,7 @@
       "a-boolean": {
         "type": "boolean",
         "name": "A boolean",
-        "description": "A true|false value",
+        "description": "A true / false value",
         "default": true
       },
       "an-option": {
