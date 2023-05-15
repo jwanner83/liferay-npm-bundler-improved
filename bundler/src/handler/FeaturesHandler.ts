@@ -10,6 +10,9 @@ export default class FeaturesHandler {
   public localizationPath = `features${sep}localization`
   public hasLocalization = false
 
+  public configurationPath = ''
+  public hasConfiguration = false
+
   public headerCSSPath = ''
   public hasHeaderCSS = false
 
@@ -36,6 +39,12 @@ export default class FeaturesHandler {
           this.localizationPath = split.join(sep)
         }
       }
+    }
+
+    const configuration = this.npmbundlerrc?.['create-jar']?.features?.configuration
+    if (configuration) {
+      this.hasConfiguration = true
+      this.configurationPath = configuration.replace(/\//g, sep)
     }
 
     if (pack.portlet['com.liferay.portlet.header-portlet-css']) {
