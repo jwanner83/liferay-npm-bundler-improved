@@ -198,7 +198,6 @@ export default class ProcessHandler {
 
     // process configuration
     if (this.featuresHandler.hasConfiguration) {
-      log.warn('the configuration feature is experimental and might not work as expected')
       await this.configurationHandler.resolve(this.featuresHandler.configurationPath, this.languageFiles)
 
       if (this.configurationHandler.configuration.portletInstance?.fields !== undefined) {
