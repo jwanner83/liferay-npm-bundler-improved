@@ -30,4 +30,14 @@ export default function main({
       />
     </StrictMode>
   )
+
+  const socket = new WebSocket('ws://localhost:3012')
+
+  socket.addEventListener('open', () => {
+    console.log('open')
+  })
+
+  socket.addEventListener('message', (event ) => {
+    console.log('message', event)
+  })
 }

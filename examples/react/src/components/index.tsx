@@ -3,6 +3,7 @@ import PortletEntryParams from '../types/PortletEntryParams'
 const App = (params: PortletEntryParams): any => {
   return (
     <div className="react">
+      Jonas
       <div>
         <span className="tag">{String(Liferay.Language.get('portlet-namespace'))}:</span>
         <span className="value"> {params.portletNamespace}</span>

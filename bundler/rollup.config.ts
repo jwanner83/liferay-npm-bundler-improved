@@ -12,7 +12,9 @@ const config: RollupOptions = {
   plugins: [
     preserveShebangs(),
     eslint(),
-    commonjs(),
+    commonjs({
+      transformMixedEsModules: true
+    }),
     json(),
     esbuild({
       minify: true
@@ -45,7 +47,14 @@ const config: RollupOptions = {
     'archiver',
     'chalk',
     'readline',
-    'arg'
+    'arg',
+    'vite',
+    'connect',
+    'http-proxy',
+    'http',
+    'harmon',
+    '@tinyhttp/app',
+    'tinyws'
   ]
 }
 

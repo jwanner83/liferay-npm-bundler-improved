@@ -1,5 +1,4 @@
 bin
-build
 dist
 ../node_modules
 .pnpm-debug.log
