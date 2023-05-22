@@ -12,11 +12,15 @@ import PackageHandler from './PackageHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
 import ConfigurationHandler from './ConfigurationHandler'
+import { build } from 'vite'
+import { WebSocketServer, WebSocket } from 'ws'
+import { watch } from 'chokidar'
 
 export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
 
+  private readonly sockets: WebSocket[] = []
   private readonly languageFiles: Map<string, string> = new Map()
 
   private readonly settingsHandler: SettingsHandler
@@ -108,6 +112,8 @@ export default class ProcessHandler {
     wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
     wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
+
+    // TODO implement watch mode
     wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
     await wrapperJsTemplate.seal(this.settingsHandler, this.entryPath)
 
@@ -228,6 +234,70 @@ export default class ProcessHandler {
         log.warn(
           `no 'assets' folder exists. remove the '--copy-assets' flag or add an 'assets' folder to prevent this warning`
         )
+      }
+    }
+  }
+
+  async serve(): Promise<void> {
+    await build({
+      logLevel: 'silent',
+      build: {
+        watch: {
+          include: ['src/**/*']
+        },
+        rollupOptions: {
+          plugins: [
+            {
+              name: 'replace',
+              closeBundle() {
+                console.log('close bundle')
+                void send()
+              }
+            }
+          ]
+        }
+      },
+    })
+
+    const bundle = await promisify(readFile)(this.entryPath)
+
+    const wss = new WebSocketServer({ port: 3002 });
+
+    wss.on('connection', async (ws) => {
+      console.log('connection ++')
+
+      this.sockets.push(ws)
+
+      ws.send(JSON.stringify({
+        script: bundle.toString(),
+        style: ''
+      }))
+
+      ws.on('close', () => {
+        console.log('connection --')
+
+        this.sockets.splice(this.sockets.indexOf(ws), 1)
+      })
+    });
+
+    const watcher = watch(this.entryPath, {
+      persistent: true
+    })
+
+    watcher
+      .on('change',  (file) => {
+        console.log('file changed', file)
+        void send()
+      })
+
+    const send = async (): Promise<void> => {
+      const bundle = await promisify(readFile)(this.entryPath)
+
+      for (const socket of this.sockets) {
+        socket.send(JSON.stringify({
+          script: bundle.toString(),
+          style: ''
+        }))
       }
     }
   }

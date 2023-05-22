@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "vite build && liferay-npm-bundler-improved",
-    "dev": "liferay-npm-bundler-improved -w"
+    "dev": "vite build && liferay-npm-bundler-improved -w"
   },
   "dependencies": {
     "react": "18.2.0"

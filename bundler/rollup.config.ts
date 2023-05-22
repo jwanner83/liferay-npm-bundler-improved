@@ -53,8 +53,8 @@ const config: RollupOptions = {
     'http-proxy',
     'http',
     'harmon',
-    '@tinyhttp/app',
-    'tinyws'
+    'ws',
+    'chokidar',
   ]
 }
 

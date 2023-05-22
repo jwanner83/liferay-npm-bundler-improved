@@ -1,0 +1,8 @@
+{
+  "name": "test-server",
+  "type": "module",
+  "dependencies": {
+    "@tinyhttp/app": "^2.0.33",
+    "tinyws": "^0.1.0"
+  }
+}
