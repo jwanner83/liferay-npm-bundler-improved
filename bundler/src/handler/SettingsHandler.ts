@@ -4,6 +4,7 @@ import npmbundlerrc from '../types/npmbundlerrc.types'
 export default class SettingsHandler {
   public watch = false
   public port = 3002
+  public deployment = false
   public deploymentPath: string = undefined
   public createJar = false
   public copyAssets = false
@@ -15,6 +16,8 @@ export default class SettingsHandler {
       '-w': '--watch',
       '--port': Number,
       '-p': '--port',
+      '--deploy': Boolean,
+      '-d': '--deploy',
       '--copy-sources': Boolean,
       '-cs': '--copy-sources',
       '--copy-assets': Boolean,
@@ -32,11 +35,16 @@ export default class SettingsHandler {
     if (args['--copy-sources']) {
       this.copySources = true
     }
+
     if (args['--copy-assets']) {
       this.copyAssets = true
     }
 
-    if (process.env.LIFERAY_DEPLOYMENT_PATH) {
+    if (args['--deploy']) {
+      this.deployment = true
+    }
+
+    if (this.deployment && process.env.LIFERAY_DEPLOYMENT_PATH) {
       this.deploymentPath = process.env.LIFERAY_DEPLOYMENT_PATH
     }
   }
