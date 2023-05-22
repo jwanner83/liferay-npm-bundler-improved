@@ -39,15 +39,14 @@ void (async () => {
       await process.serve()
     } else {
       if (settings.deploymentPath) {
-        log.success('bundler done', `file is deployed to ${settings.deploymentPath}`)
+        log.success('bundler done', `file is deployed to ${settings.deploymentPath}`, true)
       } else {
-        log.success('bundler done')
+        log.success('bundler done', '', true)
       }
 
       if (log.hasWarnings()) {
         log.printWarnings()
       }
-      log.close()
     }
   } catch (exception) {
     const kebab: string = exception
@@ -55,7 +54,6 @@ void (async () => {
       .replace(/((?<=[a-z\d])[A-Z]|(?<=[A-Z\d])[A-Z](?=[a-z]))/g, '-$1')
       .toLowerCase()
     log.error(`bundler failed. ${kebab}`)
-    log.close()
 
     process.exitCode = 1
   }

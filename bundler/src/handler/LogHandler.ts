@@ -27,7 +27,7 @@ export default class LogHandler {
 
   private getMessage(message: string, type: LogType): string {
     if (type === LogType.live) {
-      return chalk.gray(`${this.getPrefix(type)}: ${message}`)
+      return `${this.getPrefix(type)}: ${chalk.gray(message)}`
     } else {
       return `${this.getPrefix(type)}: ${message}`
     }
@@ -46,6 +46,7 @@ export default class LogHandler {
   private getType(type: LogType): string {
     switch (type) {
       case LogType.progress:
+      case LogType.live:
         return chalk.blue(type)
       case LogType.success:
         return chalk.green(type)
@@ -53,8 +54,6 @@ export default class LogHandler {
         return chalk.yellow(type)
       case LogType.error:
         return chalk.red(type)
-      case LogType.live:
-        return type
       default:
         return 'Information:'
     }
@@ -62,10 +61,6 @@ export default class LogHandler {
 
   private getTime(): string {
     return `${Math.floor(performance.now() - this.start)}ms`
-  }
-
-  close(): void {
-    console.log('') // removes zsh highlighted % sign
   }
 
   live(message: string, persist: boolean = false): void {

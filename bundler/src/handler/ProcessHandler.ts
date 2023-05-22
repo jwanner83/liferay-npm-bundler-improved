@@ -19,6 +19,8 @@ export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
 
+  private entryPathCSS: string = ''
+
   private readonly languageFiles: Map<string, string> = new Map()
 
   private readonly settingsHandler: SettingsHandler
@@ -185,15 +187,13 @@ export default class ProcessHandler {
       const buildPath = join('build', this.featuresHandler.headerCSSPath)
       const srcPath = join('src', this.featuresHandler.headerCSSPath)
 
-      let path: string
-
       try {
         await promisify(access)(buildPath)
-        path = buildPath
+        this.entryPathCSS = buildPath
       } catch {
         try {
           await promisify(access)(srcPath)
-          path = srcPath
+          this.entryPathCSS = srcPath
         } catch {
           log.warn(
             `the 'com.liferay.portlet.header-portlet-css' property is set but the according css file can't either be found in '${srcPath}' or in '${buildPath}'. please make sure, the css file is present in one of the directories or remove the property.`
@@ -201,13 +201,13 @@ export default class ProcessHandler {
         }
       }
 
-      if (path) {
+      if (this.entryPathCSS) {
         let filename = this.featuresHandler.headerCSSPath.replace(sep, '/')
         if (filename.startsWith('/')) {
           filename = filename.substring(1)
         }
 
-        this.jarHandler.archive.append(await promisify(readFile)(path), {
+        this.jarHandler.archive.append(await promisify(readFile)(this.entryPathCSS), {
           name: `/META-INF/resources/${filename}`
         })
       }
@@ -261,7 +261,7 @@ export default class ProcessHandler {
   }
 
   async serve(): Promise<void> {
-    await this.serveHandler.prepare(this.entryPath)
+    await this.serveHandler.prepare(this.entryPath, this.entryPathCSS)
     await this.serveHandler.serve()
   }
 }

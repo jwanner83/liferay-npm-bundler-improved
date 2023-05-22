@@ -7,7 +7,8 @@ import chalk from 'chalk'
 
 export class ServeHandler {
   private readonly port: number
-  private entryPath: string = ''
+  private entryPathJs: string = ''
+  private entryPathCss: string = ''
   private readonly sockets: WebSocket[] = []
   private rebuildAmount: number = 0
 
@@ -17,8 +18,9 @@ export class ServeHandler {
     this.port = port
   }
 
-  async prepare(entryPath: string): Promise<void> {
-    this.entryPath = entryPath
+  async prepare(entryPathJs: string, entryPathCss?: string): Promise<void> {
+    this.entryPathJs = entryPathJs
+    this.entryPathCss = entryPathCss
   }
 
   async serve(): Promise<void> {
@@ -33,6 +35,7 @@ export class ServeHandler {
             {
               name: 'replace',
               closeBundle: () => {
+                this.rebuildAmount++
                 void this.send()
               }
             }
@@ -46,29 +49,36 @@ export class ServeHandler {
     log.live(`serving websocket server on port ${chalk.blue(this.port)}`, true)
 
     this.server.on('connection', async (ws) => {
-      log.live('client connected', true)
       this.sockets.push(ws)
-      void this.send()
+      void this.send(ws)
 
       ws.on('close', () => {
-        log.live('client disconnected', true)
         this.sockets.splice(this.sockets.indexOf(ws), 1)
       })
     })
   }
 
-  private async send(): Promise<void> {
-    const bundle = (await promisify(readFile)(this.entryPath)).toString()
+  private async send(ws?: WebSocket): Promise<void> {
+    const bundle = (await promisify(readFile)(this.entryPathJs)).toString()
+    let css = ''
 
-    for (const socket of this.sockets) {
-      socket.send(
-        JSON.stringify({
-          script: bundle,
-          style: ''
-        })
-      )
+    if (this.entryPathCss) {
+      css = (await promisify(readFile)(this.entryPathCss)).toString()
     }
 
-    log.live(`bundle rebuilt ${chalk.blue((++this.rebuildAmount).toString() + (this.rebuildAmount > 1 ? ' times' : ' time'))} and sent to ${chalk.blue(this.sockets.length.toString() + (this.sockets.length === 1 ? ' client' : ' clients'))}`)
+    const payload = JSON.stringify({
+      script: bundle,
+      style: css
+    })
+
+    if (ws) {
+      ws.send(payload)
+    } else {
+      for (const socket of this.sockets) {
+        socket.send(payload)
+      }
+    }
+
+    log.live(`bundle rebuilt ${chalk.blue((this.rebuildAmount).toString() + (this.rebuildAmount > 1 ? ' times' : ' time'))} and sent to ${chalk.blue(this.sockets.length.toString() + (this.sockets.length === 1 ? ' client' : ' clients'))}`)
   }
 }
