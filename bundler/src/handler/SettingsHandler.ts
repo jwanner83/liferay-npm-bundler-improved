@@ -3,6 +3,7 @@ import npmbundlerrc from '../types/npmbundlerrc.types'
 
 export default class SettingsHandler {
   public watch = false
+  public port = 3002
   public createJar = false
   public copyAssets = false
   public copySources = false
@@ -11,6 +12,8 @@ export default class SettingsHandler {
     const args = arg({
       '--watch': Boolean,
       '-w': '--watch',
+      '--port': Number,
+      '-p': '--port',
       '--copy-sources': Boolean,
       '-cs': '--copy-sources',
       '--copy-assets': Boolean,
@@ -20,6 +23,11 @@ export default class SettingsHandler {
     if (args['--watch']) {
       this.watch = true
     }
+
+    if (args['--port']) {
+      this.port = args['--port']
+    }
+
     if (args['--copy-sources']) {
       this.copySources = true
     }

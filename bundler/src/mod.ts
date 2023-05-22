@@ -1,13 +1,8 @@
 import 'regenerator-runtime/runtime'
-import { build } from 'vite'
 import { name,version } from '../package.json'
 import ProcessHandler from './handler/ProcessHandler'
 import SettingsHandler from './handler/SettingsHandler'
-import WebSocketServer from 'ws'
 import { log } from './log'
-import { promisify } from 'util'
-import { readFile } from 'fs'
-import { sep } from 'path'
 
 void (async () => {
   console.log(`${name} - ${version}`)

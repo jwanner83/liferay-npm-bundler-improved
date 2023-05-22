@@ -12,15 +12,12 @@ import PackageHandler from './PackageHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
 import ConfigurationHandler from './ConfigurationHandler'
-import { build } from 'vite'
-import { WebSocketServer, WebSocket } from 'ws'
-import { watch } from 'chokidar'
+import { ServeHandler } from './ServeHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
 
-  private readonly sockets: WebSocket[] = []
   private readonly languageFiles: Map<string, string> = new Map()
 
   private readonly settingsHandler: SettingsHandler
@@ -28,6 +25,7 @@ export default class ProcessHandler {
   private readonly jarHandler: JarHandler
   private readonly featuresHandler: FeaturesHandler
   private readonly configurationHandler: ConfigurationHandler
+  private readonly serveHandler: ServeHandler
 
   constructor(settingsHandler: SettingsHandler) {
     this.settingsHandler = settingsHandler
@@ -35,6 +33,7 @@ export default class ProcessHandler {
     this.jarHandler = new JarHandler()
     this.featuresHandler = new FeaturesHandler()
     this.configurationHandler = new ConfigurationHandler()
+    this.serveHandler = new ServeHandler(this.settingsHandler.port)
   }
 
   async prepare(): Promise<void> {
@@ -106,16 +105,27 @@ export default class ProcessHandler {
   async process(): Promise<void> {
     log.progress('processing')
 
-    // process wrapper.js
-    const wrapperJsTemplate = new TemplateHandler('wrapper.js')
+    // process wrapper file
+    let wrapperJsTemplate: TemplateHandler
+
+    if (this.settingsHandler.watch) {
+      wrapperJsTemplate = new TemplateHandler('wrapper-dev.js')
+    } else {
+      wrapperJsTemplate = new TemplateHandler('wrapper-prod.js')
+    }
+
     await wrapperJsTemplate.resolve()
     wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
     wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
-
-    // TODO implement watch mode
     wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
+
+    if (this.settingsHandler.watch) {
+      wrapperJsTemplate.replace('port', this.settingsHandler.port.toString())
+    }
+
     await wrapperJsTemplate.seal(this.settingsHandler, this.entryPath)
+
 
     if (!this.settingsHandler.createJar) {
       return
@@ -239,67 +249,9 @@ export default class ProcessHandler {
   }
 
   async serve(): Promise<void> {
-    await build({
-      logLevel: 'silent',
-      build: {
-        watch: {
-          include: ['src/**/*']
-        },
-        rollupOptions: {
-          plugins: [
-            {
-              name: 'replace',
-              closeBundle() {
-                console.log('close bundle')
-                void send()
-              }
-            }
-          ]
-        }
-      },
-    })
-
-    const bundle = await promisify(readFile)(this.entryPath)
-
-    const wss = new WebSocketServer({ port: 3002 });
-
-    wss.on('connection', async (ws) => {
-      console.log('connection ++')
-
-      this.sockets.push(ws)
-
-      ws.send(JSON.stringify({
-        script: bundle.toString(),
-        style: ''
-      }))
-
-      ws.on('close', () => {
-        console.log('connection --')
-
-        this.sockets.splice(this.sockets.indexOf(ws), 1)
-      })
-    });
-
-    const watcher = watch(this.entryPath, {
-      persistent: true
-    })
-
-    watcher
-      .on('change',  (file) => {
-        console.log('file changed', file)
-        void send()
-      })
-
-    const send = async (): Promise<void> => {
-      const bundle = await promisify(readFile)(this.entryPath)
-
-      for (const socket of this.sockets) {
-        socket.send(JSON.stringify({
-          script: bundle.toString(),
-          style: ''
-        }))
-      }
-    }
+    log.progress('serve')
+    await this.serveHandler.prepare(this.entryPath)
+    await this.serveHandler.serve()
   }
 
   async create(): Promise<void> {
