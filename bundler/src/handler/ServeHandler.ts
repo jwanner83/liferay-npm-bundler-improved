@@ -30,7 +30,7 @@ export class ServeHandler {
             {
               name: 'replace',
               closeBundle: () => {
-                console.log('rebuild')
+                console.log('rebuilt bundle')
                 void this.send()
               }
             }
@@ -42,12 +42,12 @@ export class ServeHandler {
     this.server = new WebSocketServer({ port: this.port })
 
     this.server.on('connection', async (ws) => {
-      console.log('connection ++')
+      console.log('connected to client')
       this.sockets.push(ws)
       void this.send()
 
       ws.on('close', () => {
-        console.log('connection --')
+        console.log('client disconnected')
         this.sockets.splice(this.sockets.indexOf(ws), 1)
       })
     })

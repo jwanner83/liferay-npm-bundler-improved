@@ -11,14 +11,29 @@ Liferay.Loader.define('{{name}}@{{version}}/{{main}}', ['module', 'exports', 're
 
     socket.addEventListener('open', function (event) {
       console.log('liferay-npm-bundler-improved: connected to server')
+      Liferay.Util.openToast({
+        title: 'liferay-npm-bundler-improved',
+        message: 'connected to server on port {{port}}',
+        type: 'success'
+      })
     })
 
     socket.addEventListener('close', function (event) {
       console.log('liferay-npm-bundler-improved: disconnected from server')
+      Liferay.Util.openToast({
+        title: 'liferay-npm-bundler-improved',
+        message: 'connection to server lost on port {{port}}. reload page to try again',
+        type: 'danger'
+      })
     })
 
     socket.addEventListener('message', function (event) {
       console.log('liferay-npm-bundler-improved: update from server')
+      Liferay.Util.openToast({
+        title: 'liferay-npm-bundler-improved',
+        message: 'new version of portlet {{name}}@{{version}} available',
+        type: 'info'
+      })
       const { script, style } = JSON.parse(event.data)
 
       const styleNode = document.getElementById(styleNodeId)
