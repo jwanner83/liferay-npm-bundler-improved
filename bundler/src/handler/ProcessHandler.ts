@@ -13,6 +13,7 @@ import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
 import ConfigurationHandler from './ConfigurationHandler'
 import { ServeHandler } from './ServeHandler'
+import { DeploymentHandler } from './DeploymentHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -257,5 +258,11 @@ export default class ProcessHandler {
   async create(): Promise<void> {
     log.progress('create jar')
     await this.jarHandler.create()
+  }
+
+  async deploy(): Promise<void> {
+    log.progress('deploy jar')
+    const deploymentHandler = new DeploymentHandler()
+    await deploymentHandler.deploy(this.settingsHandler.deploymentPath, this.jarHandler.outputPath, this.jarHandler.name)
   }
 }
