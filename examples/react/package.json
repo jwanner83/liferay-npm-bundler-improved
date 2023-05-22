@@ -21,7 +21,7 @@
     "vite": "^3.0.4"
   },
   "portlet": {
-    "com.liferay.portlet.header-portlet-css": "/style.css",
+    "com.liferay.portlet.header-portlet-css": "/styles.css",
     "javax.portlet.resource-bundle": "content.Language",
     "javax.portlet.security-role-ref": "power-user,user",
     "com.liferay.portlet.instanceable": true,

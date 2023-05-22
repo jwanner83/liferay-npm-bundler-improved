@@ -1,111 +1,112 @@
 import chalk from 'chalk'
+import dayjs from 'dayjs'
 import readline from 'readline'
 
 enum LogType {
-  progress = 'Progress',
-  success = 'Success',
-  warn = 'Warn',
-  error = 'Error'
+  progress = 'progress',
+  live = 'live',
+  success = 'success',
+  warn = 'warn',
+  error = 'error'
 }
 
 export default class LogHandler {
-  private readonly step = 10
 
-  private type: LogType = LogType.progress
-  private message = ''
-  private time = this.step
-  private readonly interval: NodeJS.Timer
-
+  private readonly start = performance.now()
   private readonly warnings: string[] = []
 
-  constructor() {
-    this.interval = setInterval(() => {
-      this.log()
-      this.time += this.step
-    }, this.step)
-  }
-
-  private log(): void {
+  private log(message: string, type: LogType = LogType.progress, persist: boolean = false): void {
     readline.clearLine(process.stdout, 0)
     readline.cursorTo(process.stdout, 0)
-    process.stdout.write(this.getMessage())
-  }
-
-  private getMessage(): string {
-    return `${this.getPrefix()}: ${this.message}`
-  }
-
-  private getPrefix(): string {
-    if (this.type === LogType.progress || this.type === LogType.warn) {
-      return `${this.getType()} going on ${this.getTime()}`
+    if (persist) {
+      console.log(this.getMessage(message, type))
     } else {
-      return `${this.getType()} in ${this.getTime()}`
+      process.stdout.write(this.getMessage(message, type))
     }
   }
 
-  private getType(): string {
-    switch (this.type) {
+  private getMessage(message: string, type: LogType): string {
+    if (type === LogType.live) {
+      return chalk.gray(`${this.getPrefix(type)}: ${message}`)
+    } else {
+      return `${this.getPrefix(type)}: ${message}`
+    }
+  }
+
+  private getPrefix(type: LogType): string {
+    if (type === LogType.progress || type === LogType.warn) {
+      return `${this.getType(type)} going on ${this.getTime()}`
+    } else if (type === LogType.live) {
+      return `${this.getType(type)} at ${dayjs().format('HH:mm:ss')}`
+    } else {
+      return `${this.getType(type)} in ${this.getTime()}`
+    }
+  }
+
+  private getType(type: LogType): string {
+    switch (type) {
       case LogType.progress:
-        return chalk.blue(this.type)
+        return chalk.blue(type)
       case LogType.success:
-        return chalk.green(this.type)
+        return chalk.green(type)
       case LogType.warn:
-        return chalk.yellow(this.type)
+        return chalk.yellow(type)
       case LogType.error:
-        return chalk.red(this.type)
+        return chalk.red(type)
+      case LogType.live:
+        return type
       default:
         return 'Information:'
     }
   }
 
   private getTime(): string {
-    return `${this.time / 1000}s`
+    return `${Math.floor(performance.now() - this.start)}ms`
   }
 
   close(): void {
-    clearInterval(this.interval)
-    this.log()
     console.log('') // removes zsh highlighted % sign
   }
 
-  progress(message): void {
-    this.type = LogType.progress
-    this.message = message
-    this.log()
+  live(message: string, persist: boolean = false): void {
+    this.log(message, LogType.live, persist)
   }
 
-  success(message): void {
-    this.type = LogType.success
+  progress(message: string): void {
+    this.log(message)
+  }
 
-    if (this.hasWarnings()) {
-      let additional = ' with '
+  success(message: string, info?: string, persist = false): void {
+    let final = message
 
-      if (this.warnings.length === 1) {
-        additional += 'one warning'
-      } else {
-        additional += `${this.warnings.length} warnings`
-      }
-
-      this.message = (message as unknown as string) + chalk.yellow(additional)
-    } else {
-      this.message = message
+    if (info) {
+      final += chalk.gray(` (${info})`)
     }
 
-    this.log()
+    if (this.hasWarnings()) {
+      let additional = ' '
+
+      if (this.warnings.length === 1) {
+        additional += 'there is one warning'
+      } else {
+        additional += `there are ${this.warnings.length} warnings`
+      }
+
+      final += chalk.yellow(additional)
+    }
+
+    if (persist) {
+      this.log(final, LogType.success, true)
+    }
   }
 
   warn(message): void {
     this.warnings.push(message)
-
-    this.type = LogType.warn
-    this.message = message
-    this.log()
+    this.log(message, LogType.warn)
   }
 
   error(message): void {
-    this.type = LogType.error
-    this.message = message
-    this.log()
+    this.log(message, LogType.error)
   }
 
   hasWarnings(): boolean {

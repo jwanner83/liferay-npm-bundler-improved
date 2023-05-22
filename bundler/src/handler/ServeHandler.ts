@@ -2,11 +2,14 @@ import { readFile } from 'fs'
 import { promisify } from 'util'
 import { build } from 'vite'
 import { WebSocket, WebSocketServer } from 'ws'
+import { log } from '../log'
+import chalk from 'chalk'
 
 export class ServeHandler {
   private readonly port: number
   private entryPath: string = ''
   private readonly sockets: WebSocket[] = []
+  private rebuildAmount: number = 0
 
   private server: WebSocketServer = undefined
 
@@ -30,7 +33,6 @@ export class ServeHandler {
             {
               name: 'replace',
               closeBundle: () => {
-                console.log('rebuilt bundle')
                 void this.send()
               }
             }
@@ -41,13 +43,15 @@ export class ServeHandler {
 
     this.server = new WebSocketServer({ port: this.port })
 
+    log.live(`serving websocket server on port ${chalk.blue(this.port)}`, true)
+
     this.server.on('connection', async (ws) => {
-      console.log('connected to client')
+      log.live('client connected', true)
       this.sockets.push(ws)
       void this.send()
 
       ws.on('close', () => {
-        console.log('client disconnected')
+        log.live('client disconnected', true)
         this.sockets.splice(this.sockets.indexOf(ws), 1)
       })
     })
@@ -64,5 +68,7 @@ export class ServeHandler {
         })
       )
     }
+
+    log.live(`bundle rebuilt ${chalk.blue((++this.rebuildAmount).toString() + (this.rebuildAmount > 1 ? ' times' : ' time'))} and sent to ${chalk.blue(this.sockets.length.toString() + (this.sockets.length === 1 ? ' client' : ' clients'))}`)
   }
 }

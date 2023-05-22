@@ -249,12 +249,6 @@ export default class ProcessHandler {
     }
   }
 
-  async serve(): Promise<void> {
-    log.progress('serve')
-    await this.serveHandler.prepare(this.entryPath)
-    await this.serveHandler.serve()
-  }
-
   async create(): Promise<void> {
     log.progress('create jar')
     await this.jarHandler.create()
@@ -264,5 +258,10 @@ export default class ProcessHandler {
     log.progress('deploy jar')
     const deploymentHandler = new DeploymentHandler()
     await deploymentHandler.deploy(this.settingsHandler.deploymentPath, this.jarHandler.outputPath, this.jarHandler.name)
+  }
+
+  async serve(): Promise<void> {
+    await this.serveHandler.prepare(this.entryPath)
+    await this.serveHandler.serve()
   }
 }

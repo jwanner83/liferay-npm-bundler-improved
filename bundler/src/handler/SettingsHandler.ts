@@ -4,7 +4,7 @@ import npmbundlerrc from '../types/npmbundlerrc.types'
 export default class SettingsHandler {
   public watch = false
   public port = 3002
-  public deploymentPath = undefined
+  public deploymentPath: string = undefined
   public createJar = false
   public copyAssets = false
   public copySources = false

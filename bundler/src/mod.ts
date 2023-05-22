@@ -26,14 +26,28 @@ void (async () => {
     }
 
     if (settings.watch) {
+      if (settings.deploymentPath) {
+        log.success('bundler done', `development bundle is deployed to ${settings.deploymentPath}`, true)
+      } else {
+        log.success('bundler done', `development bundle has to be deployed to the liferay instance for the dev mode to work`, true)
+      }
+
+      if (log.hasWarnings()) {
+        log.printWarnings()
+      }
+
       await process.serve()
-    }
+    } else {
+      if (settings.deploymentPath) {
+        log.success('bundler done', `file is deployed to ${settings.deploymentPath}`)
+      } else {
+        log.success('bundler done')
+      }
 
-    log.success('bundler done')
-    log.close()
-
-    if (log.hasWarnings()) {
-      log.printWarnings()
+      if (log.hasWarnings()) {
+        log.printWarnings()
+      }
+      log.close()
     }
   } catch (exception) {
     const kebab: string = exception

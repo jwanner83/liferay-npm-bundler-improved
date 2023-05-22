@@ -55,7 +55,8 @@ const config: RollupOptions = {
     'harmon',
     'ws',
     'chokidar',
-    'dotenv'
+    'dotenv',
+    'dayjs'
   ]
 }
 

@@ -32,6 +32,7 @@
     "cheerio": "1.0.0-rc.12",
     "chokidar": "^3.5.3",
     "connect": "^3.7.0",
+    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "harmon": "^1.4.4",
     "http-proxy": "^1.18.1",
