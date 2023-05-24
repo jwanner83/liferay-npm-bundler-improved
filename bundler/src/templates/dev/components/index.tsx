@@ -15,6 +15,7 @@ export default function App({
   window.module = { exports }
 
   const [status, setStatus] = useState<ConnectionStatus>(ConnectionStatus.DISCONNECTED)
+  let first = true
 
   const developmentNodeId = `${portletElementId}development`
   const styleNodeId = `${portletElementId}style`
@@ -33,7 +34,9 @@ export default function App({
 
   const onMessage = (event: MessageEvent<string>) => {
     console.log('liferay-npm-bundler-improved: message', event)
-    setStatus(ConnectionStatus.UPDATING)
+    if (!first ) {
+      setStatus(ConnectionStatus.UPDATING)
+    }
 
     const { script, style } = JSON.parse(event.data)
 
@@ -49,11 +52,15 @@ export default function App({
       portletNamespace
     })
 
-    setStatus(ConnectionStatus.UPDATED)
+    if (!first ) {
+      setStatus(ConnectionStatus.UPDATED)
+    }
 
     setTimeout(() => {
       setStatus(ConnectionStatus.CONNECTED)
     }, 1500)
+
+    first = false
   }
 
   const onOpen = () => {

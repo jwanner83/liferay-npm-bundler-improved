@@ -25,7 +25,7 @@ export default function Status ({ status }: StatusParams) {
             background: 'white',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            gap: '14px',
           }}
         >
           <div
