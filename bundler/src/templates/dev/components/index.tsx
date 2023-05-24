@@ -87,11 +87,11 @@ export default function App({
 
     setTimeout(() => {
       setStatus(ConnectionStatus.RECONNECTING)
-    }, 3000)
+    }, 2000)
 
     setTimeout(() => {
       connect()
-    }, 5000)
+    }, 3000)
   }
 
   return (
