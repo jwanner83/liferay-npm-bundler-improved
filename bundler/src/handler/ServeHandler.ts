@@ -1,16 +1,22 @@
-import { readFile } from 'fs'
+import chalk from 'chalk'
+import { readdir, readFile } from 'fs'
+import { RollupWatcher } from 'rollup'
 import { promisify } from 'util'
 import { build } from 'vite'
-import { WebSocket, WebSocketServer } from 'ws'
+import { WebSocket,WebSocketServer } from 'ws'
 import { log } from '../log'
-import chalk from 'chalk'
-import { RollupWatcher } from 'rollup'
+import FeaturesHandler from './FeaturesHandler'
+import { sep } from 'path'
+import { watch } from 'chokidar'
 
 export class ServeHandler {
   private readonly port: number
+  private readonly sockets: WebSocket[] = []
+
+  private hasLocalization: boolean = false
+  private localizationPath: string = ''
   private entryPathJs: string = ''
   private entryPathCss: string = ''
-  private readonly sockets: WebSocket[] = []
   private rebuildAmount: number = 0
   private latestPayload: string = ''
 
@@ -20,9 +26,11 @@ export class ServeHandler {
     this.port = port
   }
 
-  async prepare(entryPathJs: string, entryPathCss?: string): Promise<void> {
+  async prepare(entryPathJs: string, featuresHandler: FeaturesHandler, entryPathCss?: string): Promise<void> {
     this.entryPathJs = entryPathJs
     this.entryPathCss = entryPathCss
+    this.hasLocalization = featuresHandler.hasLocalization
+    this.localizationPath = featuresHandler.localizationPath
   }
 
   async serve(): Promise<void> {
@@ -30,7 +38,9 @@ export class ServeHandler {
       logLevel: 'silent',
       build: {
         watch: {
-          include: ['src/**/*']
+          include: [
+            'src/**/*'
+          ]
         },
         rollupOptions: {
           plugins: [
@@ -45,6 +55,16 @@ export class ServeHandler {
         }
       }
     }) as RollupWatcher
+
+    if (this.hasLocalization) {
+      const watcher = watch(this.localizationPath + '/**/*', {
+        persistent: true
+      })
+
+      watcher
+        .on('change', () => this.send())
+        .on('unlink', () => this.send())
+    }
 
     bundle.on('event', (event) => {
       if (event.code === 'ERROR') {
@@ -88,6 +108,7 @@ export class ServeHandler {
   private async send(ws?: WebSocket): Promise<void> {
     try {
       const bundle = (await promisify(readFile)(this.entryPathJs)).toString()
+      const processed = this.hasLocalization ? await this.translate(bundle) : bundle
       let css = ''
 
       if (this.entryPathCss) {
@@ -95,7 +116,7 @@ export class ServeHandler {
       }
 
       const payload = JSON.stringify({
-        script: bundle,
+        script: processed,
         style: css
       })
 
@@ -113,5 +134,54 @@ export class ServeHandler {
     } catch (exception) {
       // expect
     }
+  }
+
+  private async translate (bundle: string): Promise<string> {
+    let processed = bundle
+    const languageFiles: Map<string, string> = new Map()
+
+    const files = await promisify(readdir)(this.localizationPath)
+    for (const file of files) {
+      const content = (
+        await promisify(readFile)(`${this.localizationPath}${sep}${file}`)
+      ).toString()
+      languageFiles.set(file, content)
+    }
+
+    if (languageFiles.size === 0) {
+      // nothing to do. return plain bundle
+      return bundle
+    }
+
+    const liferayLanguageGetAppearances = processed.match(/Liferay.Language.get\(.*?\)/gm)
+    for (const liferayLanguageGetAppearance of liferayLanguageGetAppearances) {
+      let key = /\(.*?\)/.exec(liferayLanguageGetAppearance).toString()
+      key = key.slice(2)
+      key = key.slice(0, -2)
+
+      for (const content of languageFiles.values()) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        const valueRegExp = new RegExp(`^${key}=(.*)$`, 'gm')
+        const valueMatches = content.match(valueRegExp)
+        if (valueMatches.length === 0) {
+           continue
+        }
+
+        const value = valueMatches[0].split('=')[1]
+        if (value) {
+          processed = processed.replace(liferayLanguageGetAppearance, () => {
+            // with a callback, the special replacement pattern isn't applied
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+            return `'${value}'`
+          })
+
+          break
+        } else {
+          // ignore
+        }
+      }
+    }
+
+    return processed
   }
 }
