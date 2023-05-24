@@ -71,7 +71,7 @@ export default function App({
 
     setTimeout(() => {
       setStatus(ConnectionStatus.CONNECTED)
-    }, 2000)
+    }, 2500)
 
     first = false
   }

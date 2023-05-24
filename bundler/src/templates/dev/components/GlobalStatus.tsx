@@ -19,7 +19,7 @@ export default function GlobalStatus ({ status }: StatusParams) {
     if (active && getShouldDisappear(status)) {
       setTimeout(() => {
         setActive(false)
-      }, 3000)
+      }, 2500)
     }
   }, [status])
 
