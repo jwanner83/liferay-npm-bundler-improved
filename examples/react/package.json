@@ -3,8 +3,8 @@
   "description": "React",
   "version": "1.0.0",
   "scripts": {
-    "build": "vite build && liferay-npm-bundler-improved",
-    "dev": "vite build && liferay-npm-bundler-improved -w"
+    "build": "vite build && liferay-npm-bundler-improved -d",
+    "dev": "vite build && liferay-npm-bundler-improved -w -d"
   },
   "dependencies": {
     "react": "18.2.0"

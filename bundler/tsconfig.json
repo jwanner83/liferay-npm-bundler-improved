@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "jsx": "react-jsx"
   },
   "esModuleInterop": true,
   "exclude": ["examples/*", "bin/*", "dist/*", "bundler/src/old/*"]

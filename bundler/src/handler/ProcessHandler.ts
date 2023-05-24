@@ -109,26 +109,23 @@ export default class ProcessHandler {
     log.progress('processing')
 
     // process wrapper file
-    let wrapperJsTemplate: TemplateHandler
-
-    if (this.settingsHandler.watch) {
-      wrapperJsTemplate = new TemplateHandler('wrapper-dev.js')
-    } else {
-      wrapperJsTemplate = new TemplateHandler('wrapper-prod.js')
-    }
-
+    const wrapperJsTemplate = new TemplateHandler('wrapper.js')
     await wrapperJsTemplate.resolve()
     wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
     wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
-    wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
 
     if (this.settingsHandler.watch) {
-      wrapperJsTemplate.replace('port', this.settingsHandler.port.toString())
+      const devTemplate = new TemplateHandler('dev.js')
+      await devTemplate.resolve()
+      devTemplate.replace('port', this.settingsHandler.port.toString())
+
+      wrapperJsTemplate.replace('bundle', devTemplate.processed)
+    } else {
+      wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
     }
 
     await wrapperJsTemplate.seal(this.settingsHandler, this.entryPath)
-
 
     if (!this.settingsHandler.createJar) {
       return
