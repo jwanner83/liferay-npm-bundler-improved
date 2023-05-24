@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ConnectionStatus } from '../enums/ConnectionStatus'
 import { getIsActive, getShouldDisappear, getStatusColor, getStatusText } from '../methods/status'
@@ -13,11 +13,15 @@ export default function GlobalStatus ({ status }: StatusParams) {
 
   const [active, setActive] = useState(getIsActive(status))
 
-  if (active && getShouldDisappear(status)) {
-    setTimeout(() => {
-       setActive(false)
-    }, 5000)
-  }
+  useEffect(() => {
+    setActive(getIsActive(status))
+
+    if (active && getShouldDisappear(status)) {
+      setTimeout(() => {
+        setActive(false)
+      }, 3000)
+    }
+  }, [status])
 
   return (
     <>

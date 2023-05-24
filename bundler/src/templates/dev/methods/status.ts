@@ -64,7 +64,6 @@ export function getIsActive(status: ConnectionStatus) {
 export function getShouldDisappear(status: ConnectionStatus) {
   return (
     status === ConnectionStatus.UPDATED ||
-    status === ConnectionStatus.CONNECTED ||
-    ConnectionStatus.ERROR
+    status === ConnectionStatus.CONNECTED
   )
 }
