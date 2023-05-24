@@ -1,10 +1,10 @@
 import PortletEntryParams from '../types/PortletEntryParams'
-import Jboss from './Jboss'
+import Sub from './Sub'
 
 const App = (params: PortletEntryParams): any => {
   return (
     <div className="react">
-      <Jboss />
+      <Sub />
       <div>
         <span className="tag">{String(Liferay.Language.get('portlet-namespace'))}:</span>
         <span className="value"> {params.portletNamespace}</span>

@@ -72,7 +72,12 @@ export class ServeHandler {
 
     this.server.on('connection', async (ws) => {
       this.sockets.push(ws)
-      ws.send(this.latestPayload)
+
+      if (this.latestPayload) {
+        ws.send(this.latestPayload)
+      } else {
+        void this.send(ws)
+      }
 
       ws.on('close', () => {
         this.sockets.splice(this.sockets.indexOf(ws), 1)
