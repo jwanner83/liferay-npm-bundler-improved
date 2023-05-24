@@ -92,9 +92,11 @@ export default class ProcessHandler {
             `the entry file couldn't be found at the '${this.entryPath}'. to prevent a failing build, the sources where copied automatically (this is what the '--copy-sources' flag would do) from '${sourcePath}'. make sure to either place a file in the correct directory through a build step or add the '--copy-sources' flag to your bundler call.`
           )
         } catch {
-          throw new MissingEntryFileException(
-            `entry file doesn't exist either in '${this.entryPath}' or '${sourcePath}'.`
-          )
+          if (!this.settingsHandler.watch) {
+            throw new MissingEntryFileException(
+              `entry file doesn't exist either in '${this.entryPath}' or '${sourcePath}'.`
+            )
+          }
         }
       }
     }

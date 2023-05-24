@@ -1,6 +1,6 @@
 import Convert from 'ansi-to-html'
-import React from 'react'
 import { createPortal } from 'react-dom'
+import React from 'react'
 
 const convert = new Convert({
   newline: true
@@ -9,9 +9,10 @@ const convert = new Convert({
 type StatusParams = {
   message: string
   location: string
+  onClose: () => void
 }
 
-export default function PortletStatus({ message, location }: StatusParams) {
+export default function PortletStatus({ message, location, onClose }: StatusParams) {
   return (
     <>
       {createPortal(
@@ -30,16 +31,42 @@ export default function PortletStatus({ message, location }: StatusParams) {
         >
           <div
             style={{
-              height: '300px',
-              width: '500px',
+              maxHeight: '350px',
+              maxWidth: '80vw',
+              width: '700px',
               transition: '150ms',
               border: '2px solid #f16268',
               borderRadius: '3px',
               backgroundColor: 'rgba(210, 112, 116, 0.31)',
               padding: '20px',
-              overflow: 'auto'
+              overflow: 'auto',
+              position: 'relative'
             }}
           >
+            <div
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                padding: '15px',
+                cursor: 'pointer'
+              }}
+              onClick={() => onClose()}
+            >
+              <svg
+                style={{
+                  height: '25px'
+                }}
+                clipRule="evenodd"
+                fillRule="evenodd"
+                strokeLinejoin="round"
+                strokeMiterlimit="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z" />
+              </svg>
+            </div>
             <h3
               style={{
                 marginBottom: '15px'

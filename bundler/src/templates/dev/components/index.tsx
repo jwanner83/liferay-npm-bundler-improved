@@ -100,7 +100,7 @@ export default function App({
       <div id={developmentNodeId}></div>
 
       <GlobalStatus status={status} />
-      {error && <PortletStatus message={error.message} location={error.location} />}
+      {error && <PortletStatus message={error.message} location={error.location} onClose={() => setError(undefined)} />}
     </>
   )
 }
