@@ -119,6 +119,8 @@ export default class ProcessHandler {
       const devTemplate = new TemplateHandler('dev.js')
       await devTemplate.resolve()
       devTemplate.replace('port', this.settingsHandler.port.toString())
+      devTemplate.replace('name', this.packageHandler.pack.name)
+      devTemplate.replace('version', this.packageHandler.pack.version)
 
       wrapperJsTemplate.replace('bundle', devTemplate.processed)
     } else {
