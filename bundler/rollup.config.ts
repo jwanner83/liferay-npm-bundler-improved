@@ -14,6 +14,7 @@ const config: RollupOptions[] = [
     input: 'src/templates/dev/mod.tsx',
     plugins: [
       resolve(),
+      json(),
       commonjs(),
       esbuild(),
       replace({

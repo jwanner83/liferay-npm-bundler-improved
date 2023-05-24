@@ -7,7 +7,7 @@ type StatusParams = {
   status: ConnectionStatus
 }
 
-export default function Status ({ status }: StatusParams) {
+export default function GlobalStatus ({ status }: StatusParams) {
   const color = getStatusColor(status)
   const text = getStatusText(status)
 
@@ -26,6 +26,7 @@ export default function Status ({ status }: StatusParams) {
             display: 'flex',
             alignItems: 'center',
             gap: '14px',
+            boxShadow: 'rgba(0, 0, 0, 0.05) 0px 0px 10px 10px'
           }}
         >
           <div

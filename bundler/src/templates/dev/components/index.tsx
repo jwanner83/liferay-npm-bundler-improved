@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { ConnectionStatus } from '../enums/ConnectionStatus'
 import { render } from '../methods/render'
 import { PortletEntryParams } from '../types/liferay.types'
-import Status from './Status'
+import GlobalStatus from './GlobalStatus'
+import PortletStatus from './PortletStatus'
 
 export default function App({
   portletNamespace,
@@ -15,6 +16,7 @@ export default function App({
   window.module = { exports }
 
   const [status, setStatus] = useState<ConnectionStatus>(ConnectionStatus.DISCONNECTED)
+  const [error, setError] = useState<{ message: string; location: string }>(undefined)
   let first = true
 
   const developmentNodeId = `${portletElementId}development`
@@ -34,11 +36,22 @@ export default function App({
 
   const onMessage = (event: MessageEvent<string>) => {
     console.log('liferay-npm-bundler-improved: message', event)
-    if (!first ) {
+    if (!first) {
       setStatus(ConnectionStatus.UPDATING)
     }
 
-    const { script, style } = JSON.parse(event.data)
+    const payload = JSON.parse(event.data)
+
+    if (payload.error) {
+      console.log(payload)
+      setError(payload.error)
+      setStatus(ConnectionStatus.ERROR)
+      return
+    } else {
+      setError(undefined)
+    }
+
+    const { script, style } = payload
 
     const styleNode = document.getElementById(styleNodeId)
     styleNode.innerHTML = `<style>${style}</style>`
@@ -52,7 +65,7 @@ export default function App({
       portletNamespace
     })
 
-    if (!first ) {
+    if (!first) {
       setStatus(ConnectionStatus.UPDATED)
     }
 
@@ -82,11 +95,12 @@ export default function App({
   }
 
   return (
-    <div>
+    <>
       <div id={styleNodeId}></div>
       <div id={developmentNodeId}></div>
 
-      <Status status={status} />
-    </div>
+      <GlobalStatus status={status} />
+      {error && <PortletStatus message={error.message} location={error.location} />}
+    </>
   )
 }

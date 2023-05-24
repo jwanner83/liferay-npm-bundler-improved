@@ -12,6 +12,7 @@ export function getStatusColor (status: ConnectionStatus) {
       break
     case ConnectionStatus.DISCONNECTED:
     case ConnectionStatus.RECONNECTING:
+    case ConnectionStatus.ERROR:
       color = '#f16268'
       break
   }
@@ -34,6 +35,10 @@ export function getStatusText (status: ConnectionStatus) {
       break
     case ConnectionStatus.RECONNECTING:
       text = 'trying to reconnect'
+      break
+    case ConnectionStatus.ERROR:
+      text = 'error in application'
+      break
   }
 
   return text
