@@ -1,14 +1,19 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { PortletEntryParams } from '../types/liferay.types'
+import { render } from '../methods/render'
 
-
-const Index = ({ portletNamespace, portletElementId, configuration, contextPath }: PortletEntryParams) => {
+const Index = ({
+  portletNamespace,
+  portletElementId,
+  configuration,
+  contextPath
+}: PortletEntryParams) => {
   // required for portlet to register initializer method
   // @ts-ignore
   window.module = { exports }
 
   const developmentNodeId = `${portletElementId}development`
-  const styleNodeId = `${portletElementId}-style`
+  const styleNodeId = `${portletElementId}style`
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:{{port}}')
@@ -34,7 +39,12 @@ const Index = ({ portletNamespace, portletElementId, configuration, contextPath 
 
     eval(script)
 
-    render()
+    render({
+      developmentNodeId,
+      configuration,
+      contextPath,
+      portletNamespace
+    })
   }
 
   const onOpen = () => {
@@ -45,32 +55,12 @@ const Index = ({ portletNamespace, portletElementId, configuration, contextPath 
     console.log('liferay-npm-bundler-improved: close')
   }
 
-  const render = () => {
-    const main = module.exports
-
-    let initializer = undefined
-    if (typeof main === 'function') {
-      initializer = main
-    } else if (typeof main?.default === 'function') {
-      initializer = main.default
-    }
-
-    if (initializer) {
-      initializer({
-        portletElementId: developmentNodeId,
-        contextPath,
-        portletNamespace,
-        configuration,
-      })
-    } else {
-      console.error('liferay-npm-bundler-improved: no initializer function found in the main entrypoint.', module.exports)
-    }
-  }
-
-  return <div>
-    <div id={styleNodeId}></div>
-    <div id={developmentNodeId}></div>
-  </div>
+  return (
+    <div>
+      <div id={styleNodeId}></div>
+      <div id={developmentNodeId}></div>
+    </div>
+  )
 }
 
 export default Index
