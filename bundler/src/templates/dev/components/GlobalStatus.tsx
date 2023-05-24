@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ConnectionStatus } from '../enums/ConnectionStatus'
-import { getStatusColor, getStatusText } from '../methods/status'
+import { getIsActive, getShouldDisappear, getStatusColor, getStatusText } from '../methods/status'
 
 type StatusParams = {
   status: ConnectionStatus
@@ -11,10 +11,19 @@ export default function GlobalStatus ({ status }: StatusParams) {
   const color = getStatusColor(status)
   const text = getStatusText(status)
 
+  const [active, setActive] = useState(getIsActive(status))
+
+  if (active && getShouldDisappear(status)) {
+    setTimeout(() => {
+       setActive(false)
+    }, 5000)
+  }
+
   return (
     <>
       {createPortal(
         <div
+          className={`lnbi-global-status ${active ? 'active' : ''}`}
           style={{
             position: 'fixed',
             bottom: 0,
@@ -25,7 +34,6 @@ export default function GlobalStatus ({ status }: StatusParams) {
             background: 'white',
             display: 'flex',
             alignItems: 'center',
-            gap: '14px',
             boxShadow: 'rgba(0, 0, 0, 0.05) 0px 0px 10px 10px'
           }}
         >
@@ -35,11 +43,12 @@ export default function GlobalStatus ({ status }: StatusParams) {
               width: '20px',
               transition: '150ms',
               borderRadius: '10px',
-              background: color
+              background: color,
+              margin: '0 4px'
             }}
           />
 
-          <div style={{
+          <div className="lnbi-global-status-text" style={{
             display: 'flex',
             flexDirection: 'column'
           }}>
@@ -49,7 +58,8 @@ export default function GlobalStatus ({ status }: StatusParams) {
               fontStyle: 'italic',
               width: '175px',
               textOverflow: 'ellipsis',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              paddingLeft: '10px'
             }}>
               {`{{name}}-{{version}}`}
             </span>
@@ -59,7 +69,8 @@ export default function GlobalStatus ({ status }: StatusParams) {
               fontWeight: 'bold',
               width: '175px',
               textOverflow: 'ellipsis',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              paddingLeft: '10px'
             }}>
               {text}
             </span>

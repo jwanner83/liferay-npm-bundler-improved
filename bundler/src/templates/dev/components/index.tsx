@@ -96,6 +96,27 @@ export default function App({
 
   return (
     <>
+      <style>
+        {`
+        .lnbi-global-status {
+          opacity: 0.7;
+        }
+        
+        .lnbi-global-status:hover, .lnbi-global-status.active {
+          opacity: 1;
+        }
+        
+        .lnbi-global-status-text {
+          width: 0;
+          overflow: hidden;   
+          transition: 300ms;
+        }
+        
+        .lnbi-global-status:hover .lnbi-global-status-text, .lnbi-global-status.active .lnbi-global-status-text {
+          width: 175px;
+        }
+        `}
+      </style>
       <div id={styleNodeId}></div>
       <div id={developmentNodeId}></div>
 

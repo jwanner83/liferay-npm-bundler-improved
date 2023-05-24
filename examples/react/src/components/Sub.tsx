@@ -1,5 +1,5 @@
 export default function Sub () {
   return <>
-    <h1>Deger</h1>
+    <h1>Live</h1>
   </>
 }
