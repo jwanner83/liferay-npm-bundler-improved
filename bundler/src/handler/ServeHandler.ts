@@ -62,8 +62,12 @@ export class ServeHandler {
       })
 
       watcher
-        .on('change', () => this.send())
-        .on('unlink', () => this.send())
+        .on('change', () => {
+          void this.send()
+        })
+        .on('unlink', () => {
+          void this.send()
+        })
     }
 
     bundle.on('event', (event) => {
