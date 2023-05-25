@@ -99,7 +99,7 @@ export default function App({
       <style>
         {`
         .lnbi-global-status {
-          opacity: 0.7;
+          opacity: 0.6;
         }
         
         .lnbi-global-status:hover, .lnbi-global-status.active {

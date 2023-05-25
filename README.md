@@ -1,18 +1,35 @@
 # liferay-npm-bundler-improved
 
-A non-official but **ultrafast** drop-in replacement for the
-[`liferay-npm-bundler` \*](https://www.npmjs.com/package/liferay-npm-bundler)
+A non-official, **ultrafast** drop-in replacement for the
+[`liferay-npm-bundler`\*](https://www.npmjs.com/package/liferay-npm-bundler)
+with a watch mode.
+
+## getting started
+
+### existing portlet
+
+#### differences
+
+`copy assets` / `copy sources`
+
+`deduplication`
+
+`system settings`
+
+### new portlet
+
+`examples/react`, `examples/vue` & `examples/plain`
 
 ## advantages
 
-the two main advantages are _**speed**_ and _**traceability**_.
+the two main advantages are _**speed**_ and _**developer experience**_.
 
 ### speed
 
 a build of an average portlet with the `liferay-npm-bundler-improved` takes about **_0.1s_** \*\*, no matter how big the
 module is. if you worked with the official `liferay-npm-bundler` before, you know how much of an improvement this is.
 
-### traceability
+### developer experience
 
 the `liferay-npm-bundler-improved` tries its best to tell you, if you do something wrong. this helps the developer a
 lot if he is trying to figure out why something isn't working as expected. some examples.
