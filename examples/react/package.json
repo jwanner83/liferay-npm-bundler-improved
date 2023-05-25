@@ -3,6 +3,7 @@
   "description": "React",
   "version": "1.0.0",
   "scripts": {
+    "vite:dev": "vite dev",
     "build": "vite build && liferay-npm-bundler-improved -d",
     "dev": "liferay-npm-bundler-improved -w -d"
   },

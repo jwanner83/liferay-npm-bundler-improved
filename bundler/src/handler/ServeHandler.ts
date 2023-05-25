@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { readdir, readFile } from 'fs'
+import { access, readdir, readFile } from 'fs'
 import { RollupWatcher } from 'rollup'
 import { promisify } from 'util'
 import { build } from 'vite'
@@ -8,6 +8,7 @@ import { log } from '../log'
 import FeaturesHandler from './FeaturesHandler'
 import { sep } from 'path'
 import { watch } from 'chokidar'
+import ServeError from '../exceptions/ServeError'
 
 export class ServeHandler {
   private readonly port: number
@@ -112,7 +113,15 @@ export class ServeHandler {
   private async send(ws?: WebSocket): Promise<void> {
     try {
       const bundle = (await promisify(readFile)(this.entryPathJs)).toString()
-      const processed = this.hasLocalization ? await this.translate(bundle) : bundle
+      let processed
+
+      try {
+        processed = this.hasLocalization ? await this.translate(bundle) : bundle
+      } catch (exception) {
+        log.live(`${chalk.yellow('failed to resolve the language keys.')} the bundle will be served as it is.`)
+        processed = bundle
+      }
+
       let css = ''
 
       if (this.entryPathCss) {
@@ -136,13 +145,20 @@ export class ServeHandler {
 
       log.live(`bundle rebuilt ${chalk.blue((this.rebuildAmount).toString() + (this.rebuildAmount > 1 ? ' times' : ' time'))} and sent to ${chalk.blue(this.sockets.length.toString() + (this.sockets.length === 1 ? ' client' : ' clients'))}`)
     } catch (exception) {
-      // expect
+      throw new ServeError(exception.message)
     }
   }
 
   private async translate (bundle: string): Promise<string> {
     let processed = bundle
     const languageFiles: Map<string, string> = new Map()
+
+    try {
+      await promisify(access)(this.localizationPath)
+    } catch (exception) {
+      log.warn('the configured localization path is not present in your file structure. the bundle will be returned without modification.')
+      return bundle
+    }
 
     const files = await promisify(readdir)(this.localizationPath)
     for (const file of files) {
@@ -160,28 +176,35 @@ export class ServeHandler {
     const liferayLanguageGetAppearances = processed.match(/Liferay.Language.get\(.*?\)/gm)
     for (const liferayLanguageGetAppearance of liferayLanguageGetAppearances) {
       let key = /\(.*?\)/.exec(liferayLanguageGetAppearance).toString()
-      key = key.slice(2)
-      key = key.slice(0, -2)
 
-      for (const content of languageFiles.values()) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        const valueRegExp = new RegExp(`^${key}=(.*)$`, 'gm')
-        const valueMatches = content.match(valueRegExp)
-        if (valueMatches.length === 0) {
-           continue
-        }
+      if (key) {
+        key = key.slice(2)
+        key = key.slice(0, -2)
 
-        const value = valueMatches[0].split('=')[1]
-        if (value) {
-          processed = processed.replace(liferayLanguageGetAppearance, () => {
-            // with a callback, the special replacement pattern isn't applied
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
-            return `'${value}'`
-          })
+        for (const content of languageFiles.values()) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          const valueRegExp = new RegExp(`^${key}=(.*)$`, 'gm')
+          const valueMatches = content.match(valueRegExp)
+          if (valueMatches && Array.isArray(valueMatches) && valueMatches.length === 0) {
+            continue
+          }
 
-          break
-        } else {
-          // ignore
+          const valueMatchSplit = valueMatches[0].split('=')
+          if (valueMatchSplit.length > 0) {
+            const value = valueMatches[0].split('=')[1]
+
+            if (value) {
+              processed = processed.replace(liferayLanguageGetAppearance, () => {
+                // with a callback, the special replacement pattern isn't applied
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
+                return `'${value}'`
+              })
+
+              break
+            } else {
+              // continue
+            }
+          }
         }
       }
     }
