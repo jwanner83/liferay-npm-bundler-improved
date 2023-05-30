@@ -8,5 +8,6 @@ void (async () => {
     await process.initialize()
   } catch (error) {
     // handle error
+    console.error(error.name, error.message)
   }
 })()

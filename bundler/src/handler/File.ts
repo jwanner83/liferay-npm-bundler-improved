@@ -21,7 +21,7 @@ export default class File<FileType = string> {
     return path.replace(/\//g, sep)
   }
 
-  public async resolve(path: string, required: boolean, json: boolean = false): Promise<void> {
+  private async resolve(path: string, required: boolean, json: boolean): Promise<void> {
     this.path = File.getCleanPath(path)
     this.name = this.path.split(sep).pop()
     let file

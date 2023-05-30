@@ -19,8 +19,8 @@ export default class Flags {
     })
 
     this.WATCH = args['--watch']
+    this.DEPLOY = args['--deploy']
     this.COPY_ASSSETS = args['--copy-assets']
     this.COPY_SOURCES = args['--copy-sources']
-    this.DEPLOY = args['--deploy']
   }
 }
