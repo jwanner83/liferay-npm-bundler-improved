@@ -9,6 +9,7 @@ import FileMissingAttributeException from '../exceptions/FileMissingAttributeExc
 export default class File<FileType = string> {
   public name: string
   public path: string
+  public exists: boolean = false
   public content: FileType
 
   public static async getFile<FileType = string>(path: string, required: boolean, json: boolean = true): Promise<File<FileType>> {
@@ -28,6 +29,7 @@ export default class File<FileType = string> {
 
     try {
       file = (await promisify(readFile)(this.path)).toString()
+      this.exists = true
     } catch {
       if (required) {
         throw new FileNotFoundException(

@@ -26,6 +26,9 @@ export default class Process {
 
     // adding features
     Store.features.headerCSS = new HeaderCSSFeature()
+    if (Store.features.headerCSS.active) {
+      await Store.features.headerCSS.resolve()
+    }
     Store.features.localization = new LocalizationFeature()
     if (Store.features.localization.active) {
       await Store.features.localization.resolve()
@@ -129,8 +132,13 @@ export default class Process {
     }
 
     // process header css
-    if (Store.features.headerCSS.active) {
-      // process header css
+    if (Store.features.headerCSS.active && Store.features.headerCSS.file) {
+      Store.archive.file.append(Store.features.headerCSS.file.content, {
+        name: `/META-INF/resources/${Store.features.headerCSS.file.name}`
+      })
     }
+
+    // process configuration
+
   }
 }
