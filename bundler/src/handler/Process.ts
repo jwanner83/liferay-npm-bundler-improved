@@ -13,6 +13,7 @@ import File from './File'
 import Flags from './Flags'
 import Template from './Template'
 import ConfigurationFeature from './features/ConfigurationFeature'
+import Folder from './Folder'
 
 export default class Process {
   public async initialize(): Promise<void> {
@@ -152,7 +153,17 @@ export default class Process {
 
     // handle copy assets
     if (Store.flags.COPY_ASSETS) {
-
+      addFolder(await Folder.getFolder(`.${sep}assets`, true))
+      function addFolder (folder: Folder): void {
+        for (const file of folder.files) {
+          Store.archive.file.append(file.content, {
+            name: `/META-INF/resources/${file.name}`
+          })
+        }
+        for (const subfolder of folder.folders) {
+          addFolder(subfolder)
+        }
+      }
     }
   }
 }

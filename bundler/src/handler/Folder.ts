@@ -9,6 +9,7 @@ export default class Folder {
   public path: string
   public exists: boolean = false
   public files: File[] = []
+  public folders: Folder[] = []
 
   public static async getFolder(path: string, required: boolean): Promise<Folder> {
     const folder = new Folder()
@@ -39,12 +40,15 @@ export default class Folder {
     }
 
     if (files) {
-      this.files = await Promise.all(
-        files.map(async (sub: string) => {
-          const filePath = File.getCleanPath(`${this.path}${sep}${sub}`)
-          return (await promisify(stat)(filePath)).isDirectory() ? await Folder.getFolder(filePath, required) : await File.getFile(filePath, required)
-        })
-      )
+      for (const file of files) {
+        const filePath = File.getCleanPath(`${this.path}${sep}${file as string}`)
+        const item = await promisify(stat)(filePath)
+        if (item.isDirectory()) {
+          this.folders.push(await Folder.getFolder(filePath, false))
+        } else {
+          this.files.push(await File.getFile(filePath, false))
+        }
+      }
     }
   }
 }
