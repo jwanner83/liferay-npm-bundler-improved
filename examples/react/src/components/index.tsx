@@ -1,4 +1,4 @@
-import PortletEntryParams from '../types/PortletEntryParams'
+import { PortletEntryParams } from '../types/liferay.types'
 import Sub from './Sub'
 
 const App = (params: PortletEntryParams): any => {

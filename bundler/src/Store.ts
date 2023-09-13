@@ -5,6 +5,7 @@ import File from './handler/File'
 import LocalizationFeature from './handler/features/LocalizationFeature'
 import HeaderCSSFeature from './handler/features/HeaderCSSFeature'
 import Archive from './handler/Archive'
+import ConfigurationFeature from './handler/features/ConfigurationFeature'
 
 interface StoreType {
   portlet?: {
@@ -55,6 +56,7 @@ interface StoreType {
   archive?: Archive
   flags?: Flags
   features: {
+    configuration?: ConfigurationFeature
     localization?: LocalizationFeature
     headerCSS?: HeaderCSSFeature
   }

@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './components/index'
-import PortletEntryParams from './types/PortletEntryParams'
+import { PortletEntryParams } from './types/liferay.types'
 import './style.css'
 
 /**

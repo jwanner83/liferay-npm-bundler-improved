@@ -12,6 +12,7 @@ import LocalizationFeature from './features/LocalizationFeature'
 import File from './File'
 import Flags from './Flags'
 import Template from './Template'
+import ConfigurationFeature from './features/ConfigurationFeature'
 
 export default class Process {
   public async initialize(): Promise<void> {
@@ -32,6 +33,10 @@ export default class Process {
     Store.features.localization = new LocalizationFeature()
     if (Store.features.localization.active) {
       await Store.features.localization.resolve()
+    }
+    Store.features.configuration = new ConfigurationFeature()
+    if (Store.features.configuration.active) {
+      await Store.features.configuration.resolve()
     }
 
     // adding archive
@@ -120,7 +125,7 @@ export default class Process {
     Store.archive.file.append(wrapper.processed, {
       name: `/META-INF/resources/${Store.portlet.input.filename}`
     })
-    Store.archive.file.append(JSON.stringify(Store.files.pack.content), {
+    Store.archive.file.append(JSON.stringify(Store.files.pack.content, null, 2), {
       name: '/META-INF/resources/package.json'
     })
 
@@ -139,6 +144,15 @@ export default class Process {
     }
 
     // process configuration
+    if (Store.features.configuration.active) {
+      Store.archive.file.append(JSON.stringify(Store.features.configuration.processed, null, 2), {
+        name: `/features/portlet_preferences.json`
+      })
+    }
 
+    // handle copy assets
+    if (Store.flags.COPY_ASSETS) {
+
+    }
   }
 }

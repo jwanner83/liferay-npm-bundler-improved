@@ -3,7 +3,7 @@ import arg from 'arg'
 export default class Flags {
   public readonly WATCH: boolean
   public readonly DEPLOY: boolean
-  public readonly COPY_ASSSETS: boolean
+  public readonly COPY_ASSETS: boolean
   public readonly COPY_SOURCES: boolean
 
   constructor() {
@@ -20,7 +20,7 @@ export default class Flags {
 
     this.WATCH = args['--watch']
     this.DEPLOY = args['--deploy']
-    this.COPY_ASSSETS = args['--copy-assets']
+    this.COPY_ASSETS = args['--copy-assets']
     this.COPY_SOURCES = args['--copy-sources']
   }
 }
