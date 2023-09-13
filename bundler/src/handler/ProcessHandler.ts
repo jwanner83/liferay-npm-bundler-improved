@@ -5,15 +5,15 @@ import { version } from '../../package.json'
 import CopySourcesException from '../exceptions/CopySourcesException'
 import MissingEntryFileException from '../exceptions/MissingEntryFileException'
 import { log } from '../log'
+import ConfigurationHandler from './ConfigurationHandler'
+import { DeploymentHandler } from './DeploymentHandler'
 import FeaturesHandler from './FeaturesHandler'
 import { FileHandler } from './FileHandler'
 import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
+import { ServeHandler } from './ServeHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
-import ConfigurationHandler from './ConfigurationHandler'
-import { ServeHandler } from './ServeHandler'
-import { DeploymentHandler } from './DeploymentHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
@@ -79,24 +79,12 @@ export default class ProcessHandler {
       try {
         await promisify(access)(this.entryPath)
       } catch {
-        // copy sources as a fallback
-        const sourcePath = `src${sep}${this.entryPoint}.js`
-        await FileHandler.createFolderStructure(`.${sep}build`)
-
-        try {
-          // validate if entry file exists in source
-          await promisify(access)(sourcePath)
-          await promisify(copyFile)(sourcePath, this.entryPath)
-
-          log.warn(
-            `the entry file couldn't be found at the '${this.entryPath}'. to prevent a failing build, the sources where copied automatically (this is what the '--copy-sources' flag would do) from '${sourcePath}'. make sure to either place a file in the correct directory through a build step or add the '--copy-sources' flag to your bundler call.`
+        if (this.settingsHandler.watch) {
+          throw new MissingEntryFileException(
+            `entry file doesn't exist in '${this.entryPath}'. there can be multiple reasons for this error. make sure to run the build command before running the watch command. e.g. 'vite build && liferay-npm-bundler-improved -w'. also make sure, that your build command outputs a file with the name '${this.entryPoint}.js' in the 'build' folder or edit the 'main' attribute in the package.json to match the output file.`
           )
-        } catch {
-          if (!this.settingsHandler.watch) {
-            throw new MissingEntryFileException(
-              `entry file doesn't exist either in '${this.entryPath}' or '${sourcePath}'.`
-            )
-          }
+        } else {
+          throw new MissingEntryFileException(`entry file doesn't exist in '${this.entryPath}'.`)
         }
       }
     }
@@ -216,13 +204,19 @@ export default class ProcessHandler {
 
     // process configuration
     if (this.featuresHandler.hasConfiguration) {
-      await this.configurationHandler.resolve(this.featuresHandler.configurationPath, this.languageFiles)
+      await this.configurationHandler.resolve(
+        this.featuresHandler.configurationPath,
+        this.languageFiles
+      )
 
       if (this.configurationHandler.configuration.portletInstance?.fields !== undefined) {
         await this.configurationHandler.process(this.languageFiles)
-        this.jarHandler.archive.append(JSON.stringify(this.configurationHandler.processed, null, 2), {
-          name: `/features/portlet_preferences.json`
-        })
+        this.jarHandler.archive.append(
+          JSON.stringify(this.configurationHandler.processed, null, 2),
+          {
+            name: `/features/portlet_preferences.json`
+          }
+        )
       }
     }
 
@@ -258,7 +252,11 @@ export default class ProcessHandler {
   async deploy(): Promise<void> {
     log.progress('deploy jar')
     const deploymentHandler = new DeploymentHandler()
-    await deploymentHandler.deploy(this.settingsHandler.deploymentPath, this.jarHandler.outputPath, this.jarHandler.name)
+    await deploymentHandler.deploy(
+      this.settingsHandler.deploymentPath,
+      this.jarHandler.outputPath,
+      this.jarHandler.name
+    )
   }
 
   async serve(): Promise<void> {
