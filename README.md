@@ -4,21 +4,38 @@ A non-official, **ultrafast** drop-in replacement for the
 [`liferay-npm-bundler`\*](https://www.npmjs.com/package/liferay-npm-bundler)
 with a watch mode.
 
+## description
+
+the `liferay-npm-bundler-improved` is a drop-in replacement for the official `liferay-npm-bundler` with a few
+improvements. it is a bundler for liferay portlets which bundles all dependencies into a single file. it also copies
+the assets into the `build` folder and makes them available through the web context url. it also supports a watch mode
+which rebuilds the portlet if a file changes.
+
 ## getting started
+
+### installation
+
+`pnpm i --D liferay-npm-bundler-improved`
 
 ### existing portlet
 
-#### differences
+replace `liferay-npm-bundler` with `liferay-npm-bundler-improved` in your build command. 
 
-`copy assets` / `copy sources`
+#### copy sources
 
-`deduplication`
+if you have `lnbs-copy-sources` inside of your build command, remove it and add `--copy-sources` to the
+`liferay-npm-bundler-improved` command.
 
-`system settings`
+#### copy assets
+
+if you have assets inside the `assets` folder which should be available through the web context url, remove the
+`lnbs-copy-assets` command from your existing build command and add `--copy-assets` to the
+`liferay-npm-bundler-improved` call
 
 ### new portlet
 
-`examples/react`, `examples/vue` & `examples/plain`
+have a look at the examples folder for an example on how to use the `liferay-npm-bundler-improved` in a `react`, `vue`
+and plain `js` portlet.
 
 ## advantages
 
@@ -79,33 +96,6 @@ original implementation.
 - package deduplication - _not planned \*\*\*_
 - system configuration - [gathering interest](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/55) \
   ↳ portlet instance configuration works since 1.4.0 [#8](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/8)
-
-## usage
-
-To use the bundler, you have to install it from the `npmjs.org` registry `pnpm i --D liferay-npm-bundler-improved`
-and edit your existing build command to use `liferay-npm-bundler-improved` instead of `liferay-npm-bundler`. most of the
-features will work out of the box.
-
-### copy sources
-
-if you have `lnbs-copy-sources` inside of your build command, remove it and add `--copy-sources` to the
-`liferay-npm-bundler-improved` command.
-
-### copy assets
-
-if you have assets inside the `assets` folder which should be available through the web context url, remove the
-`lnbs-copy-assets` command from your existing build command and add `--copy-assets` to the
-`liferay-npm-bundler-improved` call
-
-### configuration
-portlet instance configuration will work the same way as in the official bundler. see the `examples/plain/features/configuration.json` 
-file for all available options. it is also possible to add translated labels, descriptions and default values with 
-language keys. the keys have to be defined inside the portlets own localization files. 
-
-### examples
-
-see the examples folder for an example on how to use the `liferay-npm-bundler-improved` in a `react`, `vue` and plain `js`
-portlet.
 
 \
 _\* the official bundler is

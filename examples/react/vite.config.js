@@ -1,6 +1,7 @@
 import replace from '@rollup/plugin-replace'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   plugins: [
@@ -9,7 +10,8 @@ export default defineConfig({
       preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify('production'),
       'process.env.BUILD': JSON.stringify('web')
-    })
+    }),
+    tsconfigPaths()
   ],
   build: {
     outDir: 'build',
