@@ -34,7 +34,7 @@ export default function GlobalStatus ({ status }: StatusParams) {
             right: 0,
             margin: '30px',
             padding: '10px 13px',
-            borderRadius: '3px',
+            borderRadius: '10px',
             background: 'white',
             display: 'flex',
             alignItems: 'center',
