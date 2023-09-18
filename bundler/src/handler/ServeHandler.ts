@@ -55,6 +55,8 @@ export class ServeHandler {
           ]
         }
       }
+    }).catch(error => {
+      throw new ServeError('failed to build the bundle, error occurred during the build process. ' + String(error.message))
     }) as RollupWatcher
 
     if (this.hasLocalization) {
