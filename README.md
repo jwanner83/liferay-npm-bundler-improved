@@ -99,6 +99,11 @@ this is especially useful if you're developing a portlet and want to see the cha
 > [!IMPORTANT]  
 > the watch mode currently only works if you use vite as your build tool. if you use anything else, it will not work. as well the watch mode only works if the bundle is not to big (the complete build should not take more than 10 seconds, otherwise it won't be as useful)
 
+### deploy mode
+
+if the `--deploy` option or `-d` is set, the bundler will deploy the portlet to the server after the build is done, if you have a `.env` file which contains the following variable: `LIFERAY_DEPLOYMENT_PATH`. this variable should contain the path to the liferay deployment folder.
+
+
 ## missing features
 
 the current implementation works for most use cases. but there are a few things which aren't currently working as the
