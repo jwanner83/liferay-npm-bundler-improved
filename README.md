@@ -88,6 +88,17 @@ Success in 0.04s: bundler done with one warning
 ↳ the 'com.liferay.portlet.header-portlet-css' property is set but the according css file can't either be found in 'src/index.css' or in 'build/index.css'. please make sure, the css file is present in one of the directories or remove the property.
 ```
 
+### watch mode
+
+the `liferay-npm-bundler-improved` also supports a watch mode. if you add the `--watch` option or `-w` to the build command, the bundler first will deploy a special development portlet but with the same specifiers as the normal one and then starts watching the files. 
+
+if a file changes, it will rebuild the code and push it automatically to the development portlet via websocket. 
+
+this is especially useful if you're developing a portlet and want to see the changes immediately.
+
+> [!IMPORTANT]  
+> the watch mode currently only works if you use vite as your build tool. if you use anything else, it will not work. as well the watch mode only works if the bundle is not to big (the complete build should not take more than 10 seconds, otherwise it won't be as useful)
+
 ## missing features
 
 the current implementation works for most use cases. but there are a few things which aren't currently working as the
