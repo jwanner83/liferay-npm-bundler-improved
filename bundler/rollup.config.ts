@@ -6,7 +6,7 @@ import copy from 'rollup-plugin-copy'
 import esbuild from 'rollup-plugin-esbuild'
 import resolve from '@rollup/plugin-node-resolve'
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs'
-import { RollupOptions } from 'rollup'
+import { Plugin, RollupOptions } from 'rollup'
 import replace from '@rollup/plugin-replace'
 
 const config: RollupOptions[] = [
@@ -47,7 +47,7 @@ const config: RollupOptions[] = [
             dest: 'dist/templates/'
           }
         ]
-      }),
+      }) as Plugin,
       getBabelOutputPlugin({
         presets: ['@babel/preset-env']
       })
