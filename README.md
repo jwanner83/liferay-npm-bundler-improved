@@ -90,7 +90,7 @@ Success in 0.04s: bundler done with one warning
 
 ### watch mode
 
-the `liferay-npm-bundler-improved` also supports a watch mode. if you add the `--watch` option or `-w` to the build command, the bundler first will deploy a special development portlet but with the same specifiers as the normal one and then starts watching the files. 
+the `liferay-npm-bundler-improved` also supports a watch mode. if you add the `--watch` option or `-w` to the build command, the bundler first will build (and deploy if you have the `deploy mode` enabled) a special development portlet but with the same specifiers as the normal one and then starts watching the files. 
 
 if a file changes, it will rebuild the code and push it automatically to the development portlet via websocket. 
 
