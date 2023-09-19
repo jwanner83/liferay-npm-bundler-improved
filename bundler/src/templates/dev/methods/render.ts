@@ -1,5 +1,3 @@
-import { PortletEntryParams } from '../types/liferay.types'
-
 type RenderParams = {
   developmentNodeId: string,
   contextPath: string

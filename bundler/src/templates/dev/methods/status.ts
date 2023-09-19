@@ -1,30 +1,29 @@
 import { ConnectionStatus } from '../enums/ConnectionStatus'
 
-export enum StatusColors {
-  GREEN = '#00dc38',
-  BLUE = '#0066ff',
-  RED = '#f32028',
-  GRAY = '#a8a8a8'
+export enum StatusIcons {
+  LOADING = 'reload',
+  SUCCESS = 'check-circle',
+  ERROR = 'exclamation-full'
 }
 
-export function getStatusColor(status: ConnectionStatus) {
-  let color = StatusColors.GRAY
+export function getStatusIcon(status: ConnectionStatus) {
+  let icon = StatusIcons.LOADING
 
   switch (status) {
     case ConnectionStatus.CONNECTED:
-      color = StatusColors.GREEN
+      icon = StatusIcons.SUCCESS
       break
     case ConnectionStatus.UPDATED:
-      color = StatusColors.BLUE
+      icon = StatusIcons.LOADING
       break
     case ConnectionStatus.DISCONNECTED:
     case ConnectionStatus.RECONNECTING:
     case ConnectionStatus.ERROR:
-      color = StatusColors.RED
+      icon = StatusIcons.ERROR
       break
   }
 
-  return color
+  return icon
 }
 
 export function getStatusText(status: ConnectionStatus) {
@@ -49,21 +48,4 @@ export function getStatusText(status: ConnectionStatus) {
   }
 
   return text
-}
-
-export function getIsActive(status: ConnectionStatus) {
-  return (
-    status === ConnectionStatus.UPDATED ||
-    status === ConnectionStatus.DISCONNECTED ||
-    status === ConnectionStatus.RECONNECTING ||
-    status === ConnectionStatus.ERROR ||
-    status === ConnectionStatus.CONNECTED
-  )
-}
-
-export function getShouldDisappear(status: ConnectionStatus) {
-  return (
-    status === ConnectionStatus.UPDATED ||
-    status === ConnectionStatus.CONNECTED
-  )
 }
