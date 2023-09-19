@@ -5,10 +5,9 @@ import { createPortal } from 'react-dom'
 
 type StatusOverlayParams = {
   status: ConnectionStatus
-  connect: () => void
 }
 
-export default function StatusOverlay({ status, connect }: StatusOverlayParams) {
+export default function StatusOverlay({ status }: StatusOverlayParams) {
   const [container, setContainer] = React.useState<Element | null>(null)
   const [element, setElement] = React.useState<Element | null>(null)
 

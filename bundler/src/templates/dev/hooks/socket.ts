@@ -17,11 +17,7 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
     connect()
   }, [])
 
-  const connect = (active?: boolean) => {
-    if (active) {
-      setStatus(ConnectionStatus.RECONNECTING)
-    }
-
+  const connect = () => {
     const socket = new WebSocket('ws://localhost:{{port}}')
 
     socket.addEventListener('open', onOpen)

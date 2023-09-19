@@ -13,7 +13,7 @@ export default function App({
   const developmentNodeId = `${portletElementId}development`
   const styleNodeId = `${portletElementId}style`
 
-  const { status, error, resetError, connect } = useSocket({
+  const { status, error, resetError } = useSocket({
     portletNamespace,
     portletElementId,
     configuration,
@@ -27,7 +27,7 @@ export default function App({
       <div id={styleNodeId}></div>
       <div id={developmentNodeId}></div>
 
-      <StatusOverlay status={status} connect={() => connect(true)} />
+      <StatusOverlay status={status} />
 
       {error && (
         <ErrorOverlay error={error} close={resetError} />
