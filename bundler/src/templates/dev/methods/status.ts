@@ -14,10 +14,10 @@ export function getStatusIcon(status: ConnectionStatus) {
       icon = StatusIcons.SUCCESS
       break
     case ConnectionStatus.UPDATED:
+    case ConnectionStatus.RECONNECTING:
       icon = StatusIcons.LOADING
       break
     case ConnectionStatus.DISCONNECTED:
-    case ConnectionStatus.RECONNECTING:
     case ConnectionStatus.ERROR:
       icon = StatusIcons.ERROR
       break
