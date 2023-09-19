@@ -30,12 +30,10 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
   }
 
   const onMessage = (event: MessageEvent<string>) => {
-    console.log('liferay-npm-bundler-improved: message', event)
     setStatus(ConnectionStatus.UPDATING)
     const payload = JSON.parse(event.data)
 
     if (payload.error) {
-      console.error('liferay-npm-bundler-improved: error', payload.error)
       setStatus(ConnectionStatus.ERROR)
 
       const message = payload.error.message.replace(payload.error.location + ': ', '').split('\n')[0]
@@ -63,16 +61,13 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
   }
 
   const onOpen = () => {
-    console.log('liferay-npm-bundler-improved: open')
     setStatus(ConnectionStatus.CONNECTED)
   }
 
   const onClose = () => {
-    console.log('liferay-npm-bundler-improved: close')
     setStatus(ConnectionStatus.DISCONNECTED)
 
     setTimeout(() => {
-      console.log('liferay-npm-bundler-improved: reconnecting')
       setStatus(ConnectionStatus.RECONNECTING)
       connect()
     }, 3000)
