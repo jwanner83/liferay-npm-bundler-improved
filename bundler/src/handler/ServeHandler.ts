@@ -8,7 +8,6 @@ import { log } from '../log'
 import FeaturesHandler from './FeaturesHandler'
 import { sep } from 'path'
 import { watch } from 'chokidar'
-import ServeError from '../exceptions/ServeError'
 
 export class ServeHandler {
   private readonly port: number
@@ -55,8 +54,8 @@ export class ServeHandler {
           ]
         }
       }
-    }).catch(error => {
-      throw new ServeError('failed to build the bundle, error occurred during the build process. ' + String(error.message))
+    }).catch(() => {
+      // silent. the error will be reported to the client via websocket
     }) as RollupWatcher
 
     if (this.hasLocalization) {
@@ -146,8 +145,8 @@ export class ServeHandler {
       this.latestPayload = payload
 
       log.live(`bundle rebuilt ${chalk.blue((this.rebuildAmount).toString() + (this.rebuildAmount > 1 ? ' times' : ' time'))} and sent to ${chalk.blue(this.sockets.length.toString() + (this.sockets.length === 1 ? ' client' : ' clients'))}`)
-    } catch (exception) {
-      throw new ServeError(exception.message)
+    } catch {
+      // silent. the error will be reported to the client via websocket
     }
   }
 
