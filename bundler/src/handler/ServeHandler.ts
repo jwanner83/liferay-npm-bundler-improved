@@ -61,25 +61,6 @@ export class ServeHandler {
       // silent. the error will be reported to the client via websocket
     }) as RollupWatcher
 
-    // watcher for files to notify the client on start of build
-    const changeWatcher = watch('**/*', {
-      persistent: true
-    })
-
-    changeWatcher
-      .on('change', () => {
-        const payload = JSON.stringify({
-          name: `${this.packageHandler.pack.name}@${this.packageHandler.pack.version}`,
-          updating: true
-        })
-
-        for (const socket of this.sockets) {
-          socket.send(payload)
-        }
-
-        log.live('rebuilding bundle...')
-      })
-
     if (this.hasLocalization) {
       const watcher = watch(this.localizationPath + '/**/*', {
         persistent: true
@@ -112,6 +93,19 @@ export class ServeHandler {
         }
 
         this.latestPayload = payload
+      }
+
+      if (event.code === 'START') {
+        const payload = JSON.stringify({
+          name: `${this.packageHandler.pack.name}@${this.packageHandler.pack.version}`,
+          updating: true
+        })
+
+        for (const socket of this.sockets) {
+          socket.send(payload)
+        }
+
+        log.live('rebuilding bundle...')
       }
     })
 
