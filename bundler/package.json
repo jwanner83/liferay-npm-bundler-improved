@@ -3,7 +3,7 @@
   "description": "A non-official but ultrafast drop-in replacement for the liferay-npm-bundler",
   "version": "1.5.0-beta.10",
   "author": "Jonas Wanner",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jwanner83/liferay-npm-bundler-improved"
