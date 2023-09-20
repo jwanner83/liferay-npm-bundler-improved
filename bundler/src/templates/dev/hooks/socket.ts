@@ -81,7 +81,7 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
     setTimeout(() => {
       setStatus(ConnectionStatus.RECONNECTING)
       connect()
-    }, 3000)
+    }, 2000)
   }
 
   const performRender = (payload: { script: string, style: string }) => {
