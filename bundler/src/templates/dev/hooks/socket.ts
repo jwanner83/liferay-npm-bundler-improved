@@ -19,11 +19,19 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
   }, [])
 
   const connect = () => {
-    const socket = new WebSocket('ws://localhost:{{port}}')
+    setStatus(ConnectionStatus.RECONNECTING)
 
+    const socket = new WebSocket('ws://localhost:{{port}}')
     socket.addEventListener('open', onOpen)
     socket.addEventListener('message', onMessage)
     socket.addEventListener('close', onClose)
+
+    setTimeout(() => {
+      if (socket.OPEN) {
+        return
+      }
+      connect()
+    }, 2000)
   }
 
   const onMessage = (event: MessageEvent<string>) => {
