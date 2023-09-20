@@ -29,7 +29,7 @@ export default function App({
     <React.Fragment>
       <div id={styleNodeId}></div>
       <div id={developmentContainerNodeId} style={status === ConnectionStatus.UPDATING ? {
-        opacity: 0.5,
+        opacity: 0.4,
         transition: '150ms'
       } : {
         transition: '150ms'

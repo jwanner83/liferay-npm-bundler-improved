@@ -58,7 +58,7 @@ export default function StatusOverlay({ status }: StatusOverlayParams) {
             focusable="false"
             style={
               status === ConnectionStatus.RECONNECTING || status === ConnectionStatus.UPDATED || status === ConnectionStatus.UPDATING ? {
-                animation: 'loading-animation-circle 2500ms'
+                animation: status === ConnectionStatus.UPDATING ? 'loading-animation-circle 1s infinite' : 'loading-animation-circle 2500ms'
               } : {}
             }
           >
