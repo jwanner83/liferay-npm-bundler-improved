@@ -20,8 +20,6 @@ export default function StatusOverlay({ status }: StatusOverlayParams) {
       li.className = 'control-menu-nav-item'
       ul.prepend(li)
       setElement(li)
-    } else {
-      setElement(document.body)
     }
 
     return () => {
