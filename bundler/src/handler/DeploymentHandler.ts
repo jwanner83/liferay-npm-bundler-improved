@@ -1,5 +1,4 @@
-import { promisify } from 'util'
-import { copyFile } from 'fs'
+import { copyFileSync } from 'fs'
 import { sep } from 'path'
 import DeploymentException from '../exceptions/DeploymentException'
 
@@ -11,7 +10,7 @@ export class DeploymentHandler {
     }
 
     try {
-      await promisify(copyFile)(jarPath, `${fullDeploymentPath}${jarName}.jar`)
+      copyFileSync(jarPath, `${fullDeploymentPath}${jarName}.jar`)
     } catch (error) {
       throw new DeploymentException(`Could not deploy ${jarName}.jar to ${fullDeploymentPath}`)
     }
