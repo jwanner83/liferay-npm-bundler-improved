@@ -260,7 +260,7 @@ export default class ProcessHandler {
   }
 
   async serve(): Promise<void> {
-    await this.serveHandler.prepare(this.entryPath, this.featuresHandler, this.entryPathCSS)
+    await this.serveHandler.prepare(this.entryPath, this.featuresHandler, this.packageHandler, this.entryPathCSS)
     await this.serveHandler.serve()
   }
 }

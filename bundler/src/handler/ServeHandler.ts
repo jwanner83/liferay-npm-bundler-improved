@@ -8,6 +8,7 @@ import { log } from '../log'
 import FeaturesHandler from './FeaturesHandler'
 import { sep } from 'path'
 import { watch } from 'chokidar'
+import PackageHandler from './PackageHandler'
 
 export class ServeHandler {
   private readonly port: number
@@ -19,6 +20,7 @@ export class ServeHandler {
   private entryPathCss: string = ''
   private rebuildAmount: number = 0
   private latestPayload: string = ''
+  private packageHandler: PackageHandler = undefined
 
   private server: WebSocketServer = undefined
 
@@ -26,11 +28,12 @@ export class ServeHandler {
     this.port = port
   }
 
-  async prepare(entryPathJs: string, featuresHandler: FeaturesHandler, entryPathCss?: string): Promise<void> {
+  async prepare(entryPathJs: string, featuresHandler: FeaturesHandler, packageHandler: PackageHandler, entryPathCss?: string): Promise<void> {
     this.entryPathJs = entryPathJs
     this.entryPathCss = entryPathCss
     this.hasLocalization = featuresHandler.hasLocalization
     this.localizationPath = featuresHandler.localizationPath
+    this.packageHandler = packageHandler
   }
 
   async serve(): Promise<void> {
@@ -39,7 +42,7 @@ export class ServeHandler {
       build: {
         watch: {
           include: [
-            'src/**/*'
+            '**/*'
           ]
         },
         rollupOptions: {
@@ -57,6 +60,25 @@ export class ServeHandler {
     }).catch(() => {
       // silent. the error will be reported to the client via websocket
     }) as RollupWatcher
+
+    // watcher for files to notify the client on start of build
+    const changeWatcher = watch('**/*', {
+      persistent: true
+    })
+
+    changeWatcher
+      .on('change', () => {
+        const payload = JSON.stringify({
+          name: `${this.packageHandler.pack.name}@${this.packageHandler.pack.version}`,
+          updating: true
+        })
+
+        for (const socket of this.sockets) {
+          socket.send(payload)
+        }
+
+        log.live('rebuilding bundle...')
+      })
 
     if (this.hasLocalization) {
       const watcher = watch(this.localizationPath + '/**/*', {
@@ -78,6 +100,7 @@ export class ServeHandler {
         log.live(`${chalk.red('bundle failed to rebuild')}. error sent to ${chalk.blue(this.sockets.length.toString() + (this.sockets.length === 1 ? ' client' : ' clients'))}`, true)
 
         const payload = JSON.stringify({
+          name: `${this.packageHandler.pack.name}@${this.packageHandler.pack.version}`,
           error: {
             location: event.error.id,
             message: event.error.message
@@ -130,6 +153,7 @@ export class ServeHandler {
       }
 
       const payload = JSON.stringify({
+        name: `${this.packageHandler.pack.name}@${this.packageHandler.pack.version}`,
         script: processed,
         style: css
       })
