@@ -57,7 +57,7 @@ export default function StatusOverlay({ status }: StatusOverlayParams) {
             className="lexicon-icon"
             focusable="false"
             style={
-              status === ConnectionStatus.RECONNECTING || status === ConnectionStatus.UPDATED ? {
+              status === ConnectionStatus.RECONNECTING || status === ConnectionStatus.UPDATED || status === ConnectionStatus.UPDATING ? {
                 animation: 'loading-animation-circle 2500ms'
               } : {}
             }

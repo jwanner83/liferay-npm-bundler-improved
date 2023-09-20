@@ -6,10 +6,11 @@ import { ErrorPayload } from '../types/portlet.types'
 
 interface useSocketParams extends PortletEntryParams {
   developmentNodeId: string,
+  developmentContainerNodeId: string,
   styleNodeId: string
 }
 
-export function useSocket ({ portletElementId, portletNamespace, configuration, contextPath, developmentNodeId, styleNodeId }: useSocketParams) {
+export function useSocket ({ portletElementId, portletNamespace, configuration, contextPath, developmentNodeId, developmentContainerNodeId, styleNodeId }: useSocketParams) {
   const [status, setStatus] = React.useState<ConnectionStatus>(ConnectionStatus.DISCONNECTED)
   const [error, setError] = React.useState<ErrorPayload | undefined>(undefined)
 
@@ -26,8 +27,12 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
   }
 
   const onMessage = (event: MessageEvent<string>) => {
-    setStatus(ConnectionStatus.UPDATING)
     const payload = JSON.parse(event.data)
+
+    if (payload.name !== '{{name}}@{{version}}') {
+      console.info('liferay-npm-bundler-improved:info', '{{name}}@{{version}} is not the current package. ignoring payload.')
+      return
+    }
 
     if (payload.error) {
       setStatus(ConnectionStatus.ERROR)
@@ -40,12 +45,22 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
         stack: stack,
         location: payload.error.location
       })
+
+      console.info('liferay-npm-bundler-improved:error', {
+        message: message,
+        stack: stack,
+        location: payload.error.location
+      })
+
       return
     } else {
       resetError()
     }
 
-    localStorage.setItem('liferay-npm-bundler-improved:payload:{{name}}', JSON.stringify(payload))
+    if (payload.updating) {
+      setStatus(ConnectionStatus.UPDATING)
+      return
+    }
 
     performRender(payload)
 
@@ -67,16 +82,16 @@ export function useSocket ({ portletElementId, portletNamespace, configuration, 
       setStatus(ConnectionStatus.RECONNECTING)
       connect()
     }, 3000)
-
-    const oldPayload = localStorage.getItem('liferay-npm-bundler-improved:payload:{{name}}')
-    if (oldPayload) {
-      performRender(JSON.parse(oldPayload))
-    }
   }
 
   const performRender = (payload: { script: string, style: string }) => {
     const styleNode = document.getElementById(styleNodeId)
     styleNode.innerHTML = `<style>${payload.style}</style>`
+
+    const developmentContainerNode = document.getElementById(developmentContainerNodeId)
+    developmentContainerNode.innerHTML = `
+      <div id="${developmentNodeId}"></div>
+    `
 
     eval(payload.script)
 

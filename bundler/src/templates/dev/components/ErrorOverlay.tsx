@@ -71,7 +71,9 @@ export default function ErrorOverlay({ error, close }: ErrorOverlayParams) {
               marginTop: '6px',
               fontSize: '20px',
               fontWeight: 'bold',
-              fontFamily: 'monospace'
+              fontFamily: 'monospace',
+              wordBreak: 'break-all',
+              paddingRight: '48px'
             }}
           >
             error in the {'{{name}}'} portlet
@@ -126,30 +128,35 @@ export default function ErrorOverlay({ error, close }: ErrorOverlayParams) {
               style={{
                 fontFamily: 'monospace',
                 fontSize: '12px',
-                marginBottom: '16px'
+                marginBottom: '0'
               }}
             >
               {error.message}
             </p>
 
-            <p
-              style={{
-                fontFamily: 'monospace',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                marginBottom: '6px'
-              }}
-            >
-              stack
-            </p>
-            <pre
-              style={{
-                margin: 0,
-                fontFamily: 'monospace',
-                fontSize: '12px'
-              }}
-              dangerouslySetInnerHTML={{ __html: convert.toHtml(error.stack) }}
-            />
+            {error.stack && (
+              <React.Fragment>
+                <p
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    marginBottom: '6px',
+                    marginTop: '16px'
+                  }}
+                >
+                  stack
+                </p>
+                <pre
+                  style={{
+                    margin: 0,
+                    fontFamily: 'monospace',
+                    fontSize: '12px'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: convert.toHtml(error.stack) }}
+                />
+              </React.Fragment>
+            )}
           </div>
         </div>
       </div>

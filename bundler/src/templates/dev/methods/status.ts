@@ -14,6 +14,7 @@ export function getStatusIcon(status: ConnectionStatus) {
       icon = StatusIcons.SUCCESS
       break
     case ConnectionStatus.UPDATED:
+    case ConnectionStatus.UPDATING:
     case ConnectionStatus.RECONNECTING:
       icon = StatusIcons.LOADING
       break
@@ -35,6 +36,9 @@ export function getStatusText(status: ConnectionStatus) {
       break
     case ConnectionStatus.UPDATED:
       text = 'portlet has been updated'
+      break
+    case ConnectionStatus.UPDATING:
+      text = 'portlet is updating'
       break
     case ConnectionStatus.DISCONNECTED:
       text = 'watch mode not connected'
