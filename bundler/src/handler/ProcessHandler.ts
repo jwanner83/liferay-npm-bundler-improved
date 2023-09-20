@@ -1,5 +1,5 @@
-import { access, copyFile, readdir, readFile } from 'fs'
-import { join, sep } from 'path'
+import { access,copyFile,readdir,readFile } from 'fs'
+import { join,sep } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
 import CopySourcesException from '../exceptions/CopySourcesException'
@@ -251,6 +251,19 @@ export default class ProcessHandler {
 
   async deploy(): Promise<void> {
     log.progress('deploy jar')
+
+    /*
+      this pause is required to prevent liferay from
+      throwing the error 'zip END header not found' when deploying the jar file
+     */
+    await(
+      new Promise<void>((resolve) =>
+        setTimeout(() => {
+          resolve()
+        }, 5)
+      )
+    )
+
     const deploymentHandler = new DeploymentHandler()
     await deploymentHandler.deploy(
       this.settingsHandler.deploymentPath,
