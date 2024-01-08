@@ -9,6 +9,7 @@ export default class JarHandler {
   public name: string
   public archive: Archiver
   public output: WriteStream
+  public outputPath: string = ''
 
   constructor() {
     this.archive = archiver('zip')
@@ -21,9 +22,10 @@ export default class JarHandler {
       outputDir = dir
     }
 
-    await FileHandler.createFolderStructure(`.${sep}${outputDir}`)
+    this.outputPath = `${outputDir}${sep}${this.name}.jar`
 
-    this.output = createWriteStream(`${outputDir}${sep}${this.name}.jar`)
+    await FileHandler.createFolderStructure(`.${sep}${outputDir}`)
+    this.output = createWriteStream(this.outputPath)
 
     this.archive.on('warning', function (err) {
       if (err.code === 'ENOENT') {

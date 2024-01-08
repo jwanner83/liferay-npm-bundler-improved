@@ -1,100 +1,90 @@
 # liferay-npm-bundler-improved
 
-A non-official but **ultrafast** drop-in replacement for the
-[`liferay-npm-bundler` \*](https://www.npmjs.com/package/liferay-npm-bundler)
+`liferay-npm-bundler-improved` is a **high-speed**, unofficial drop-in replacement for
+the [`liferay-npm-bundler`](https://www.npmjs.com/package/liferay-npm-bundler) with added watch mode functionality.
+
+## description
+
+`liferay-npm-bundler-improved` is a bundler for liferay portlets that consolidates all dependencies into a single file.
+Additionally, it copies assets into the `build` folder and provides access to them through the web context URL. The tool
+also offers a watch mode that rebuilds the portlet upon file changes.
+
+## getting started
+
+### installation
+
+To install, run the following command:
+
+```bash
+pnpm i --D liferay-npm-bundler-improved
+```
+
+### existing portlet
+
+To use `liferay-npm-bundler-improved` in an existing portlet, replace instances of `liferay-npm-bundler`
+with `liferay-npm-bundler-improved` in your build command.
+
+#### copy sources
+
+If your build command includes `lnbs-copy-sources`, remove it and add `--copy-sources` to
+the `liferay-npm-bundler-improved` command.
+
+#### copy assets
+
+For assets located in the `assets` folder that need to be available through the web context URL, remove
+the `lnbs-copy-assets` command from your existing build command and add `--copy-assets` to
+the `liferay-npm-bundler-improved` call.
+
+### new portlet
+
+Refer to the examples folder for guidance on using `liferay-npm-bundler-improved` in a `react`, `vue`, or plain `js`
+portlet.
 
 ## advantages
 
-the two main advantages are _**speed**_ and _**traceability**_.
+The main advantages of using `liferay-npm-bundler-improved` are enhanced **speed** and a better **developer experience
+**.
 
 ### speed
 
-a build of an average portlet with the `liferay-npm-bundler-improved` takes about **_0.1s_** \*\*, no matter how big the
-module is. if you worked with the official `liferay-npm-bundler` before, you know how much of an improvement this is.
+The build time for an average portlet with `liferay-npm-bundler-improved` is approximately **0.1s**, regardless of
+module size. This represents a significant improvement over the official `liferay-npm-bundler`.
 
-### traceability
+### developer experience
 
-the `liferay-npm-bundler-improved` tries its best to tell you, if you do something wrong. this helps the developer a
-lot if he is trying to figure out why something isn't working as expected. some examples.
+`liferay-npm-bundler-improved` offers detailed error reporting, aiding developers in identifying and resolving issues.
+Examples include identifying missing keys in `package.json` and detecting missing entry files.
 
-#### missing key in `package.json`
+### deploy mode
 
-if you forgot a required key in the `package.json`, it tells you which key you're missing and lets the build fail.
-for example, if you forgot the `name` key, the console output would look something like this:
+When the `--deploy` option or `-d` is set, the bundler deploys the portlet to the server after the build, using the path
+specified in the `.env` file under `LIFERAY_DEPLOYMENT_PATH`.
 
-```
-Error in 0.01s: bundler failed. invalid-package-exception: required property "name" doesn't exist in the package.json file.
-```
+### watch mode
 
-#### missing entry file
+`liferay-npm-bundler-improved` supports a watch mode, allowing automatic portlet rebuilds upon file changes. This is
+invaluable for immediate feedback during portlet development. Include the `--watch` option or `-w` in the build command
+to enable watch mode. (It is possible to use the `--deploy` option in conjunction with the `--watch` option.)
 
-if, for some reason, the in the `main` property defined entry js file is missing, the bundler will show the following
-output. _(the original bundler wouldn't even fail if the entry file was not found. it would just tell you that its
-finished.)_
-
-with the `--copy-sources` option activated:
-
-```
-Error in 0.01s: bundler failed. copy-sources-exception: sources could not be copied from "src/entry.js"
-```
-
-without:
-
-```
-Error in 0.01s: bundler failed. missing-entry-file-exception: entry file doesn't exist in "build/entry.js". if there is no build step and you need the source entry file, you may want to enable the copy sources option: '--copy-sources'
-```
-
-#### missing css file if `header-portlet-css` is enabled
-
-if the `header-portlet-css` option is active and the defined css file can't be found, the bundler doesn't fail but shows
-a warning after the build is done.
-
-```
-Success in 0.04s: bundler done with one warning
-↳ the 'com.liferay.portlet.header-portlet-css' property is set but the according css file can't either be found in 'src/index.css' or in 'build/index.css'. please make sure, the css file is present in one of the directories or remove the property.
-```
+> [!IMPORTANT]
+> The watch mode currently works exclusively with vite as the build tool. It is highly efficient for smaller bundles but
+> may not be as effective for larger ones (taking more than 10 seconds to complete).
 
 ## missing features
 
-the current implementation works for most use cases. but there are a few things which aren't currently working as the
-original implementation.
+While the current implementation is suitable for most use cases, there are a few features from the original
+implementation that are not yet supported:
 
-- package deduplication - _not planned \*\*\*_
-- system configuration - [gathering interest](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/55) \
-  ↳ portlet instance configuration works since 1.4.0 [#8](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/8)
+- Package deduplication (not planned for implementation)
+- System configuration - Gathering interest for
+  implementation ([link](https://github.com/jwanner83/liferay-npm-bundler-improved/issues/55))
 
-## usage
-
-To use the bundler, you have to install it from the `npmjs.org` registry `pnpm i --D liferay-npm-bundler-improved`
-and edit your existing build command to use `liferay-npm-bundler-improved` instead of `liferay-npm-bundler`. most of the
-features will work out of the box.
-
-### copy sources
-
-if you have `lnbs-copy-sources` inside of your build command, remove it and add `--copy-sources` to the
-`liferay-npm-bundler-improved` command.
-
-### copy assets
-
-if you have assets inside the `assets` folder which should be available through the web context url, remove the
-`lnbs-copy-assets` command from your existing build command and add `--copy-assets` to the
-`liferay-npm-bundler-improved` call
-
-### configuration
-portlet instance configuration will work the same way as in the official bundler. see the `examples/plain/features/configuration.json` 
-file for all available options. it is also possible to add translated labels, descriptions and default values with 
-language keys. the keys have to be defined inside the portlets own localization files. 
-
-### examples
-
-see the examples folder for an example on how to use the `liferay-npm-bundler-improved` in a `react`, `vue` and plain `js`
-portlet.
-
-\
-_\* the official bundler is
-[available on github](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/js-toolkit/packages/npm-bundler)_
 <br>
-_\*\* on a apple m1 macbook pro. on windows it takes about 0.3s._<br>
-_\*\*\* the package deduplication feature is currently not planned because of the cost/income ratio. if this feature would be
-implemented, the speed of the bundler would decrease a lot and because we didn't use this feature anyway in the company
-i worked, i left it out._
+
+_\* The official bundler
+is [available on GitHub](https://github.com/liferay/liferay-frontend-projects/tree/master/projects/js-toolkit/packages/npm-bundler)_
+
+_\*\* Timings are based on an Apple M1 MacBook Pro. On Windows, the timing is approximately 0.3s._
+
+_\*\*\* The package deduplication feature is not planned due to its potential impact on bundler speed and the perceived
+low usage in practice._

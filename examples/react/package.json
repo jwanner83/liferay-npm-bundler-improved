@@ -3,7 +3,10 @@
   "description": "React",
   "version": "1.0.0",
   "scripts": {
-    "build": "vite build && liferay-npm-bundler-improved"
+    "build": "vite build && liferay-npm-bundler-improved",
+    "deploy": "vite build && liferay-npm-bundler-improved -d",
+    "dev": "vite build && liferay-npm-bundler-improved -w -d",
+    "watch": "vite build && liferay-npm-bundler-improved -w -d"
   },
   "dependencies": {
     "react": "18.2.0"
@@ -14,10 +17,13 @@
     "@types/react-dom": "^17.0.7",
     "@vitejs/plugin-react": "^2.0.0",
     "liferay-npm-bundler-improved": "workspace:^",
+    "postcss": "^8.4.29",
     "react-dom": "18.2.0",
     "rollup": "^2.78.1",
+    "tailwindcss": "^3.3.3",
     "tslib": "^2.3.1",
-    "vite": "^3.0.4"
+    "vite": "^3.0.4",
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "portlet": {
     "com.liferay.portlet.header-portlet-css": "/style.css",

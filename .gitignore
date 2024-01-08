@@ -1,3 +1,4 @@
 **/dist
 **/build
 .pnpm-debug.log
+**/.env

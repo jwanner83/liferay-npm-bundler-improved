@@ -1,3 +1,5 @@
 packages:
   - 'bundler/**'
+  - 'addon/**'
   - 'examples/**'
+  - 'server/**'

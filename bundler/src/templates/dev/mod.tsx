@@ -1,17 +1,8 @@
-import { StrictMode } from 'react'
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './components/index'
 import { PortletEntryParams } from './types/liferay.types'
-import './style.css'
 
-/**
- * Main portlet entrypoint for Liferay.
- *
- * @param portletNamespace
- * @param contextPath
- * @param portletElementId
- * @param configuration
- */
 export default function main({
   portletNamespace,
   contextPath,
@@ -21,14 +12,18 @@ export default function main({
   const container = document.getElementById(portletElementId)
   const root = createRoot(container)
 
+  // required for portlet to register initializer method
+  // @ts-ignore
+  window.module = { exports }
+
   root.render(
-    <StrictMode>
+    <React.StrictMode>
       <App
         portletNamespace={portletNamespace}
         contextPath={contextPath}
         portletElementId={portletElementId}
         configuration={configuration}
       />
-    </StrictMode>
+    </React.StrictMode>
   )
 }

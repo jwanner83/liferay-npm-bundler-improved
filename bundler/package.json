@@ -1,9 +1,9 @@
 {
   "name": "liferay-npm-bundler-improved",
   "description": "A non-official but ultrafast drop-in replacement for the liferay-npm-bundler",
-  "version": "1.4.0",
+  "version": "1.5.0-beta.11",
   "author": "Jonas Wanner",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jwanner83/liferay-npm-bundler-improved"
@@ -26,10 +26,20 @@
   },
   "dependencies": {
     "@types/archiver": "^5.1.1",
+    "ansi-to-html": "^0.7.2",
     "archiver": "^5.3.0",
     "arg": "^5.0.1",
     "chalk": "^4.1.2",
-    "regenerator-runtime": "^0.13.9"
+    "cheerio": "1.0.0-rc.12",
+    "chokidar": "^3.5.3",
+    "connect": "^3.7.0",
+    "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
+    "harmon": "^1.4.4",
+    "http-proxy": "^1.18.1",
+    "regenerator-runtime": "^0.13.9",
+    "vite": "^3.0.4",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
@@ -38,6 +48,9 @@
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "4.0.0",
     "esbuild": "^0.12.28",
@@ -47,6 +60,8 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "readline": "^1.3.0",
     "regenerator-runtime": "^0.13.9",
     "rollup": "^2.60.2",

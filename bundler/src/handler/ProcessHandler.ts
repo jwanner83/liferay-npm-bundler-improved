@@ -1,21 +1,25 @@
-import { access, copyFile, readdir, readFile } from 'fs'
-import { join, sep } from 'path'
+import { access,copyFile,readdir,readFile } from 'fs'
+import { join,sep } from 'path'
 import { promisify } from 'util'
 import { version } from '../../package.json'
 import CopySourcesException from '../exceptions/CopySourcesException'
 import MissingEntryFileException from '../exceptions/MissingEntryFileException'
 import { log } from '../log'
+import ConfigurationHandler from './ConfigurationHandler'
+import { DeploymentHandler } from './DeploymentHandler'
 import FeaturesHandler from './FeaturesHandler'
 import { FileHandler } from './FileHandler'
 import JarHandler from './JarHandler'
 import PackageHandler from './PackageHandler'
+import { ServeHandler } from './ServeHandler'
 import SettingsHandler from './SettingsHandler'
 import TemplateHandler from './TemplateHandler'
-import ConfigurationHandler from './ConfigurationHandler'
 
 export default class ProcessHandler {
   private entryPoint: string
   private entryPath: string
+
+  private entryPathCSS: string = ''
 
   private readonly languageFiles: Map<string, string> = new Map()
 
@@ -24,6 +28,7 @@ export default class ProcessHandler {
   private readonly jarHandler: JarHandler
   private readonly featuresHandler: FeaturesHandler
   private readonly configurationHandler: ConfigurationHandler
+  private readonly serveHandler: ServeHandler
 
   constructor(settingsHandler: SettingsHandler) {
     this.settingsHandler = settingsHandler
@@ -31,6 +36,7 @@ export default class ProcessHandler {
     this.jarHandler = new JarHandler()
     this.featuresHandler = new FeaturesHandler()
     this.configurationHandler = new ConfigurationHandler()
+    this.serveHandler = new ServeHandler(this.settingsHandler.port)
   }
 
   async prepare(): Promise<void> {
@@ -73,22 +79,12 @@ export default class ProcessHandler {
       try {
         await promisify(access)(this.entryPath)
       } catch {
-        // copy sources as a fallback
-        const sourcePath = `src${sep}${this.entryPoint}.js`
-        await FileHandler.createFolderStructure(`.${sep}build`)
-
-        try {
-          // validate if entry file exists in source
-          await promisify(access)(sourcePath)
-          await promisify(copyFile)(sourcePath, this.entryPath)
-
-          log.warn(
-            `the entry file couldn't be found at the '${this.entryPath}'. to prevent a failing build, the sources where copied automatically (this is what the '--copy-sources' flag would do) from '${sourcePath}'. make sure to either place a file in the correct directory through a build step or add the '--copy-sources' flag to your bundler call.`
-          )
-        } catch {
+        if (this.settingsHandler.watch) {
           throw new MissingEntryFileException(
-            `entry file doesn't exist either in '${this.entryPath}' or '${sourcePath}'.`
+            `entry file doesn't exist in '${this.entryPath}'. there can be multiple reasons for this error. make sure to run the build command before running the watch command. e.g. 'vite build && liferay-npm-bundler-improved -w'. also make sure, that your build command outputs a file with the name '${this.entryPoint}.js' in the 'build' folder or edit the 'main' attribute in the package.json to match the output file.`
           )
+        } else {
+          throw new MissingEntryFileException(`entry file doesn't exist in '${this.entryPath}'.`)
         }
       }
     }
@@ -102,13 +98,25 @@ export default class ProcessHandler {
   async process(): Promise<void> {
     log.progress('processing')
 
-    // process wrapper.js
+    // process wrapper file
     const wrapperJsTemplate = new TemplateHandler('wrapper.js')
     await wrapperJsTemplate.resolve()
     wrapperJsTemplate.replace('name', this.packageHandler.pack.name)
     wrapperJsTemplate.replace('version', this.packageHandler.pack.version)
     wrapperJsTemplate.replace('main', this.entryPoint)
-    wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
+
+    if (this.settingsHandler.watch) {
+      const devTemplate = new TemplateHandler('dev.js')
+      await devTemplate.resolve()
+      devTemplate.replace('port', this.settingsHandler.port.toString())
+      devTemplate.replace('name', this.packageHandler.pack.name)
+      devTemplate.replace('version', this.packageHandler.pack.version)
+
+      wrapperJsTemplate.replace('bundle', devTemplate.processed)
+    } else {
+      wrapperJsTemplate.replace('bundle', (await promisify(readFile)(this.entryPath)).toString())
+    }
+
     await wrapperJsTemplate.seal(this.settingsHandler, this.entryPath)
 
     if (!this.settingsHandler.createJar) {
@@ -168,15 +176,13 @@ export default class ProcessHandler {
       const buildPath = join('build', this.featuresHandler.headerCSSPath)
       const srcPath = join('src', this.featuresHandler.headerCSSPath)
 
-      let path: string
-
       try {
         await promisify(access)(buildPath)
-        path = buildPath
+        this.entryPathCSS = buildPath
       } catch {
         try {
           await promisify(access)(srcPath)
-          path = srcPath
+          this.entryPathCSS = srcPath
         } catch {
           log.warn(
             `the 'com.liferay.portlet.header-portlet-css' property is set but the according css file can't either be found in '${srcPath}' or in '${buildPath}'. please make sure, the css file is present in one of the directories or remove the property.`
@@ -184,13 +190,13 @@ export default class ProcessHandler {
         }
       }
 
-      if (path) {
+      if (this.entryPathCSS) {
         let filename = this.featuresHandler.headerCSSPath.replace(sep, '/')
         if (filename.startsWith('/')) {
           filename = filename.substring(1)
         }
 
-        this.jarHandler.archive.append(await promisify(readFile)(path), {
+        this.jarHandler.archive.append(await promisify(readFile)(this.entryPathCSS), {
           name: `/META-INF/resources/${filename}`
         })
       }
@@ -198,13 +204,19 @@ export default class ProcessHandler {
 
     // process configuration
     if (this.featuresHandler.hasConfiguration) {
-      await this.configurationHandler.resolve(this.featuresHandler.configurationPath, this.languageFiles)
+      await this.configurationHandler.resolve(
+        this.featuresHandler.configurationPath,
+        this.languageFiles
+      )
 
       if (this.configurationHandler.configuration.portletInstance?.fields !== undefined) {
         await this.configurationHandler.process(this.languageFiles)
-        this.jarHandler.archive.append(JSON.stringify(this.configurationHandler.processed, null, 2), {
-          name: `/features/portlet_preferences.json`
-        })
+        this.jarHandler.archive.append(
+          JSON.stringify(this.configurationHandler.processed, null, 2),
+          {
+            name: `/features/portlet_preferences.json`
+          }
+        )
       }
     }
 
@@ -235,5 +247,33 @@ export default class ProcessHandler {
   async create(): Promise<void> {
     log.progress('create jar')
     await this.jarHandler.create()
+  }
+
+  async deploy(): Promise<void> {
+    log.progress('deploy jar')
+
+    /*
+      this pause is required to prevent liferay from
+      throwing the error 'zip END header not found' when deploying the jar file
+     */
+    await(
+      new Promise<void>((resolve) =>
+        setTimeout(() => {
+          resolve()
+        }, 5)
+      )
+    )
+
+    const deploymentHandler = new DeploymentHandler()
+    await deploymentHandler.deploy(
+      this.settingsHandler.deploymentPath,
+      this.jarHandler.outputPath,
+      this.jarHandler.name
+    )
+  }
+
+  async serve(): Promise<void> {
+    await this.serveHandler.prepare(this.entryPath, this.featuresHandler, this.packageHandler, this.entryPathCSS)
+    await this.serveHandler.serve()
   }
 }
