@@ -1,5 +1,6 @@
 packages:
-  - 'bundler/**'
-  - 'addon/**'
-  - 'examples/**'
-  - 'server/**'
+  - bundler/**
+  - examples/**
+
+onlyBuiltDependencies:
+  - esbuild

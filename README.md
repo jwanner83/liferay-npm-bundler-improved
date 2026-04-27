@@ -35,6 +35,10 @@ For assets located in the `assets` folder that need to be available through the 
 the `lnbs-copy-assets` command from your existing build command and add `--copy-assets` to
 the `liferay-npm-bundler-improved` call.
 
+
+> [!NOTE]
+> Use the `--omit-version` flag to remove the version number from the output jar.
+
 ### new portlet
 
 Refer to the examples folder for guidance on using `liferay-npm-bundler-improved` in a `react`, `vue`, or plain `js`

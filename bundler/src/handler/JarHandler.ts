@@ -10,9 +10,11 @@ export default class JarHandler {
   public archive: Archiver
   public output: WriteStream
   public outputPath: string = ''
+  private readonly omitVersion: boolean = false
 
-  constructor() {
+  constructor(omitVersion: boolean = false) {
     this.archive = archiver('zip')
+    this.omitVersion = omitVersion
   }
 
   async initialize(npmbundlerrc: npmbundlerrc): Promise<void> {
@@ -43,7 +45,11 @@ export default class JarHandler {
   }
 
   setName(pack: Pack): void {
-    this.name = `${pack.name}-${pack.version}`
+    if (this.omitVersion) {
+      this.name = pack.name
+    } else {
+      this.name = `${pack.name}-${pack.version}`
+    }
   }
 
   async create(): Promise<void> {

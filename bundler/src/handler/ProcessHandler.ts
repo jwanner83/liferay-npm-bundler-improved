@@ -33,7 +33,7 @@ export default class ProcessHandler {
   constructor(settingsHandler: SettingsHandler) {
     this.settingsHandler = settingsHandler
     this.packageHandler = new PackageHandler()
-    this.jarHandler = new JarHandler()
+    this.jarHandler = new JarHandler(this.settingsHandler.omitVersion)
     this.featuresHandler = new FeaturesHandler()
     this.configurationHandler = new ConfigurationHandler()
     this.serveHandler = new ServeHandler(this.settingsHandler.port)

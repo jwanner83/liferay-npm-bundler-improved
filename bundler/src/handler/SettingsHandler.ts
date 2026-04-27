@@ -9,6 +9,7 @@ export default class SettingsHandler {
   public createJar = false
   public copyAssets = false
   public copySources = false
+  public omitVersion = false
 
   constructor() {
     const args = arg({
@@ -21,7 +22,9 @@ export default class SettingsHandler {
       '--copy-sources': Boolean,
       '-cs': '--copy-sources',
       '--copy-assets': Boolean,
-      '-ca': '--copy-assets'
+      '-ca': '--copy-assets',
+      '--omit-version': Boolean,
+      '-ov': '--omit-version'
     })
 
     if (args['--watch']) {
@@ -42,6 +45,10 @@ export default class SettingsHandler {
 
     if (args['--deploy']) {
       this.deployment = true
+    }
+
+    if (args['--omit-version']) {
+      this.omitVersion = true
     }
 
     if (this.deployment && process.env.LIFERAY_DEPLOYMENT_PATH) {
